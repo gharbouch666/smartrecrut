@@ -1,0 +1,123 @@
+package com.smartrecrute.smartrecrute.service;
+
+import com.smartrecrute.smartrecrute.dto.ChangePasswordRequest;
+import com.smartrecrute.smartrecrute.dto.ForgotPasswordRequest;
+import com.smartrecrute.smartrecrute.dto.ResetPasswordRequest;
+import com.smartrecrute.smartrecrute.dto.UserRegistrationRequest;
+import com.smartrecrute.smartrecrute.enums.Role;
+import com.smartrecrute.smartrecrute.utilisateur.Administrateur;
+import com.smartrecrute.smartrecrute.utilisateur.Candidat;
+import com.smartrecrute.smartrecrute.utilisateur.Recruteur;
+import com.smartrecrute.smartrecrute.utilisateur.Utilisateur;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    @Autowired
+    private AdministrateurService administrateurService;
+
+    @Autowired
+    private CandidatService candidatService;
+
+    @Autowired
+    private RecruteurService recruteurService;
+
+    @Autowired
+    private PasswordService passwordService;
+
+    public Utilisateur register(UserRegistrationRequest request) {
+        // Encode password
+        String encodedPassword = passwordService.encodePassword(request.getMotDePasse());
+
+        switch (request.getRole()) {
+            case ADMIN:
+                Administrateur admin = new Administrateur(request.getNom(), request.getEmail(), encodedPassword);
+                return administrateurService.create(admin);
+            case CANDIDAT:
+                Candidat candidat = new Candidat(request.getNom(), request.getEmail(), encodedPassword, null, null, null);
+                return candidatService.create(candidat);
+            case RECRUTEUR:
+                Recruteur recruteur = new Recruteur(request.getNom(), request.getEmail(), encodedPassword, null);
+                return recruteurService.create(recruteur);
+            default:
+                throw new IllegalArgumentException("Invalid role: " + request.getRole());
+        }
+    }
+
+    public void changePassword(String email, ChangePasswordRequest request) {
+        // Find user by email across all types
+        Utilisateur user = findUserByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Verify old password
+        if (!passwordService.matches(request.getOldPassword(), user.getMotDePasse())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        // Check new password confirmation
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("New passwords do not match");
+        }
+
+        // Encode and update password
+        String encodedNewPassword = passwordService.encodePassword(request.getNewPassword());
+        user.setMotDePasse(encodedNewPassword);
+
+        // Save based on user type
+        saveUser(user);
+    }
+
+    public void forgotPassword(ForgotPasswordRequest request) {
+        // In a real application, you would:
+        // 1. Find user by email
+        // 2. Generate a reset token
+        // 3. Store token with expiration
+        // 4. Send email with reset link
+        // For now, just validate user exists
+        Utilisateur user = findUserByEmail(request.getEmail());
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        // TODO: Implement email sending and token generation
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        // In a real application, you would:
+        // 1. Validate token
+        // 2. Check token expiration
+        // 3. Find user and update password
+        // For now, just basic validation
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+        // TODO: Implement token validation and password reset
+    }
+
+    private Utilisateur findUserByEmail(String email) {
+        // Check each user type
+        Administrateur admin = administrateurService.findByEmail(email);
+        if (admin != null) return admin;
+
+        Candidat candidat = candidatService.findByEmail(email);
+        if (candidat != null) return candidat;
+
+        Recruteur recruteur = recruteurService.findByEmail(email);
+        if (recruteur != null) return recruteur;
+
+        return null;
+    }
+
+    private void saveUser(Utilisateur user) {
+        if (user instanceof Administrateur) {
+            administrateurService.create((Administrateur) user);
+        } else if (user instanceof Candidat) {
+            candidatService.create((Candidat) user);
+        } else if (user instanceof Recruteur) {
+            recruteurService.create((Recruteur) user);
+        }
+    }
+}

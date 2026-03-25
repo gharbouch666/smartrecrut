@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class adminservicec implements adminservice {
+public class adminserviceimpl implements adminservice {
 
 	private final adminrepo repo;
 
 	@Autowired
-	public adminservicec(adminrepo repo) {
+	public adminserviceimpl(adminrepo repo) {
 		this.repo = repo;
 	}
 

@@ -1,7 +1,12 @@
 package com.smartrecrute.smartrecrute.config;
 
-import com.smartrecrute.smartrecrute.utilisateur.utilisateur;
-import com.smartrecrute.smartrecrute.utilisateur.utilisateurrepo;
+import com.smartrecrute.smartrecrute.repository.AdministrateurRepository;
+import com.smartrecrute.smartrecrute.repository.CandidatRepository;
+import com.smartrecrute.smartrecrute.repository.RecruteurRepository;
+import com.smartrecrute.smartrecrute.utilisateur.Administrateur;
+import com.smartrecrute.smartrecrute.utilisateur.Candidat;
+import com.smartrecrute.smartrecrute.utilisateur.Recruteur;
+import com.smartrecrute.smartrecrute.utilisateur.Utilisateur;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,25 +26,44 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class securityconfig {
 
-	private final utilisateurrepo repo;
+	private final AdministrateurRepository adminRepo;
+	private final CandidatRepository candidatRepo;
+	private final RecruteurRepository recruteurRepo;
 
-	public securityconfig(utilisateurrepo repo) {
-		this.repo = repo;
+	public securityconfig(AdministrateurRepository adminRepo, CandidatRepository candidatRepo, RecruteurRepository recruteurRepo) {
+		this.adminRepo = adminRepo;
+		this.candidatRepo = candidatRepo;
+		this.recruteurRepo = recruteurRepo;
 	}
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return username -> {
-			utilisateur user = repo.findByUsername(username);
-			if (user == null) {
-				throw new UsernameNotFoundException("Utilisateur non trouvé");
+		return email -> {
+			// Try to find user by email in all repositories
+			Administrateur admin = adminRepo.findByEmail(email);
+			if (admin != null) {
+				return createUserDetails(admin.getEmail(), admin.getMotDePasse(), admin.getRole().name());
 			}
-			UserDetails userDetails = User.withUsername(user.getUsername())
-				.password(user.getPassword())
-				.roles(user.getRole().name())
-				.build();
-			return userDetails;
+
+			Candidat candidat = candidatRepo.findByEmail(email);
+			if (candidat != null) {
+				return createUserDetails(candidat.getEmail(), candidat.getMotDePasse(), candidat.getRole().name());
+			}
+
+			Recruteur recruteur = recruteurRepo.findByEmail(email);
+			if (recruteur != null) {
+				return createUserDetails(recruteur.getEmail(), recruteur.getMotDePasse(), recruteur.getRole().name());
+			}
+
+			throw new UsernameNotFoundException("Utilisateur non trouvé avec l'email: " + email);
 		};
+	}
+
+	private UserDetails createUserDetails(String email, String password, String role) {
+		return User.withUsername(email)
+			.password(password)
+			.roles(role)
+			.build();
 	}
 
 	@Bean
@@ -66,6 +90,8 @@ public class securityconfig {
 			.csrf().disable()
 			.authorizeHttpRequests()
 			.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+			.requestMatchers("/api/administrateurs/**").hasRole("ADMIN")
+			.requestMatchers("/api/recruteurs/**").hasAnyRole("ADMIN", "RECRUTEUR")
 			.anyRequest().authenticated()
 			.and().httpBasic();
 		return http.build();
