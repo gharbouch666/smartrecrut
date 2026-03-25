@@ -33,13 +33,25 @@ public class AuthService {
 
         switch (request.getRole()) {
             case ADMIN:
-                Administrateur admin = new Administrateur(request.getNom(), request.getEmail(), encodedPassword);
+                Administrateur admin = new Administrateur();
+                admin.setNom(request.getNom());
+                admin.setEmail(request.getEmail());
+                admin.setMotDePasse(encodedPassword);
+                admin.setRole(Role.ADMIN);
                 return administrateurService.create(admin);
             case CANDIDAT:
-                Candidat candidat = new Candidat(request.getNom(), request.getEmail(), encodedPassword, null, null, null);
+                Candidat candidat = new Candidat();
+                candidat.setNom(request.getNom());
+                candidat.setEmail(request.getEmail());
+                candidat.setMotDePasse(encodedPassword);
+                candidat.setRole(Role.CANDIDAT);
                 return candidatService.create(candidat);
             case RECRUTEUR:
-                Recruteur recruteur = new Recruteur(request.getNom(), request.getEmail(), encodedPassword, null);
+                Recruteur recruteur = new Recruteur();
+                recruteur.setNom(request.getNom());
+                recruteur.setEmail(request.getEmail());
+                recruteur.setMotDePasse(encodedPassword);
+                recruteur.setRole(Role.RECRUTEUR);
                 return recruteurService.create(recruteur);
             default:
                 throw new IllegalArgumentException("Invalid role: " + request.getRole());
