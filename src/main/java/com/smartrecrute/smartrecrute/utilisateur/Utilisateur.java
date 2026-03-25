@@ -2,9 +2,17 @@ package com.smartrecrute.smartrecrute.utilisateur;
 
 import com.smartrecrute.smartrecrute.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Utilisateur {
 
     @Id
@@ -24,11 +32,6 @@ public abstract class Utilisateur {
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
-    public Utilisateur() {
-        this.dateCreation = LocalDateTime.now();
-        this.dateModification = LocalDateTime.now();
-    }
-
     public Utilisateur(String nom, String email, String motDePasse, Role role) {
         this.nom = nom;
         this.email = email;
@@ -38,28 +41,8 @@ public abstract class Utilisateur {
         this.dateModification = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getMotDePasse() { return motDePasse; }
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
         this.dateModification = LocalDateTime.now();
     }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
-
-    public LocalDateTime getDateCreation() { return dateCreation; }
-    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
-
-    public LocalDateTime getDateModification() { return dateModification; }
-    public void setDateModification(LocalDateTime dateModification) { this.dateModification = dateModification; }
 }

@@ -1,9 +1,17 @@
 package com.smartrecrute.smartrecrute.tag;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tag")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tag {
 
     @Id
@@ -12,21 +20,4 @@ public class Tag {
 
     private String libelle;
     private String categorie;
-
-    public Tag() {}
-
-    public Tag(String libelle, String categorie) {
-        this.libelle = libelle;
-        this.categorie = categorie;
-    }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getLibelle() { return libelle; }
-    public void setLibelle(String libelle) { this.libelle = libelle; }
-
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
 }
