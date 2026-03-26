@@ -1,8 +1,8 @@
-package com.smartrecrute.smartrecrute.candidature;
+package com.smartrecrute.smartrecrute.entity;
 
 import com.smartrecrute.smartrecrute.enums.StatutKanban;
-import com.smartrecrute.smartrecrute.offre.Offre;
-import com.smartrecrute.smartrecrute.utilisateur.Candidat;
+import com.smartrecrute.smartrecrute.entity.Candidat;
+import com.smartrecrute.smartrecrute.entity.Offre;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

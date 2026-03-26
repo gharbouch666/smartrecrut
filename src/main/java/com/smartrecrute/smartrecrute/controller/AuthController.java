@@ -2,7 +2,7 @@ package com.smartrecrute.smartrecrute.controller;
 
 import com.smartrecrute.smartrecrute.dto.*;
 import com.smartrecrute.smartrecrute.service.AuthService;
-import com.smartrecrute.smartrecrute.utilisateur.Utilisateur;
+import com.smartrecrute.smartrecrute.entity.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

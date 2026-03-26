@@ -1,9 +1,9 @@
-package com.smartrecrute.smartrecrute.offre;
+package com.smartrecrute.smartrecrute.entity;
 
 import com.smartrecrute.smartrecrute.enums.StatutOffre;
 import com.smartrecrute.smartrecrute.enums.TypeContrat;
 import com.smartrecrute.smartrecrute.enums.NiveauExperience;
-import com.smartrecrute.smartrecrute.utilisateur.Recruteur;
+import com.smartrecrute.smartrecrute.entity.Recruteur;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.smartrecrute.smartrecrute.service;
 
 import com.smartrecrute.smartrecrute.repository.TagRepository;
-import com.smartrecrute.smartrecrute.tag.Tag;
+import com.smartrecrute.smartrecrute.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

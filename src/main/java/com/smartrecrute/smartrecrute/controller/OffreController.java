@@ -1,7 +1,7 @@
 package com.smartrecrute.smartrecrute.controller;
 
 import com.smartrecrute.smartrecrute.service.OffreService;
-import com.smartrecrute.smartrecrute.offre.Offre;
+import com.smartrecrute.smartrecrute.entity.Offre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

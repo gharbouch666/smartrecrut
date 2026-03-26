@@ -1,6 +1,6 @@
 package com.smartrecrute.smartrecrute.service;
 
-import com.smartrecrute.smartrecrute.tag.Tag;
+import com.smartrecrute.smartrecrute.entity.Tag;
 import java.util.List;
 
 public interface TagService {

@@ -1,7 +1,7 @@
 package com.smartrecrute.smartrecrute.controller;
 
 import com.smartrecrute.smartrecrute.service.TagService;
-import com.smartrecrute.smartrecrute.tag.Tag;
+import com.smartrecrute.smartrecrute.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

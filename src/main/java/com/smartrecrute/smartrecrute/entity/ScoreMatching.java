@@ -1,4 +1,4 @@
-package com.smartrecrute.smartrecrute.candidature;
+package com.smartrecrute.smartrecrute.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.smartrecrute.smartrecrute.service;
 
-import com.smartrecrute.smartrecrute.candidature.Candidature;
+import com.smartrecrute.smartrecrute.entity.Candidature;
 import java.util.List;
 
 public interface CandidatureService {

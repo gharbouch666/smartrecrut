@@ -1,4 +1,4 @@
-package com.smartrecrute.smartrecrute.utilisateur;
+package com.smartrecrute.smartrecrute.entity;
 
 import com.smartrecrute.smartrecrute.enums.Role;
 import jakarta.persistence.Entity;
@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "recruteur")
+@Table(name = "administrateur")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Recruteur extends Utilisateur {
-
-    private String poste;
+public class Administrateur extends Utilisateur {
 }

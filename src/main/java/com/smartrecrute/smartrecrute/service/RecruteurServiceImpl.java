@@ -1,7 +1,7 @@
 package com.smartrecrute.smartrecrute.service;
 
 import com.smartrecrute.smartrecrute.repository.RecruteurRepository;
-import com.smartrecrute.smartrecrute.utilisateur.Recruteur;
+import com.smartrecrute.smartrecrute.entity.Recruteur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

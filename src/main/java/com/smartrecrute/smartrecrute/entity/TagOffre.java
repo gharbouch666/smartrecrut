@@ -1,7 +1,6 @@
-package com.smartrecrute.smartrecrute.tag;
+package com.smartrecrute.smartrecrute.entity;
 
-import com.smartrecrute.smartrecrute.enums.NiveauExpertise;
-import com.smartrecrute.smartrecrute.utilisateur.Candidat;
+import com.smartrecrute.smartrecrute.entity.Offre;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,23 +8,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "profil_tag")
+@Table(name = "tag_offre")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfilTag {
+public class TagOffre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private NiveauExpertise niveau;
+    private Boolean obligatoire;
+    private Double poids;
 
     @ManyToOne
-    @JoinColumn(name = "candidat_id")
-    private Candidat candidat;
+    @JoinColumn(name = "offre_id")
+    private Offre offre;
 
     @ManyToOne
     @JoinColumn(name = "tag_id")

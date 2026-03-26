@@ -1,6 +1,6 @@
 package com.smartrecrute.smartrecrute.repository;
 
-import com.smartrecrute.smartrecrute.candidature.ScoreMatching;
+import com.smartrecrute.smartrecrute.entity.ScoreMatching;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

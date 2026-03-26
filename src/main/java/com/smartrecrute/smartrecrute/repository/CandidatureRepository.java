@@ -1,6 +1,6 @@
 package com.smartrecrute.smartrecrute.repository;
 
-import com.smartrecrute.smartrecrute.candidature.Candidature;
+import com.smartrecrute.smartrecrute.entity.Candidature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

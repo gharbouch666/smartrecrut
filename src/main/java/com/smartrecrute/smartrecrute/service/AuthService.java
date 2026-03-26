@@ -5,10 +5,10 @@ import com.smartrecrute.smartrecrute.dto.ForgotPasswordRequest;
 import com.smartrecrute.smartrecrute.dto.ResetPasswordRequest;
 import com.smartrecrute.smartrecrute.dto.UserRegistrationRequest;
 import com.smartrecrute.smartrecrute.enums.Role;
-import com.smartrecrute.smartrecrute.utilisateur.Administrateur;
-import com.smartrecrute.smartrecrute.utilisateur.Candidat;
-import com.smartrecrute.smartrecrute.utilisateur.Recruteur;
-import com.smartrecrute.smartrecrute.utilisateur.Utilisateur;
+import com.smartrecrute.smartrecrute.entity.Administrateur;
+import com.smartrecrute.smartrecrute.entity.Candidat;
+import com.smartrecrute.smartrecrute.entity.Recruteur;
+import com.smartrecrute.smartrecrute.entity.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

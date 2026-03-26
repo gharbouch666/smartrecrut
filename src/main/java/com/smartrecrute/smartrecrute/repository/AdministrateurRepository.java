@@ -1,6 +1,6 @@
 package com.smartrecrute.smartrecrute.repository;
 
-import com.smartrecrute.smartrecrute.utilisateur.Administrateur;
+import com.smartrecrute.smartrecrute.entity.Administrateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

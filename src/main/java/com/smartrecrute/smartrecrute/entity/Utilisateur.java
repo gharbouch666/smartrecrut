@@ -1,4 +1,4 @@
-package com.smartrecrute.smartrecrute.utilisateur;
+package com.smartrecrute.smartrecrute.entity;
 
 import com.smartrecrute.smartrecrute.enums.Role;
 import jakarta.persistence.*;
@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
