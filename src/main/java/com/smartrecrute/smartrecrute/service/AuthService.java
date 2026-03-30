@@ -10,10 +10,13 @@ import com.smartrecrute.smartrecrute.entity.Candidat;
 import com.smartrecrute.smartrecrute.entity.Recruteur;
 import com.smartrecrute.smartrecrute.entity.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService {
+public class AuthService implements UserDetailsService {
 
     @Autowired
     private AdministrateurService administrateurService;
@@ -131,5 +134,14 @@ public class AuthService {
         } else if (user instanceof Recruteur) {
             recruteurService.create((Recruteur) user);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Utilisateur user = findUserByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + username);
+        }
+        return user;
     }
 }
