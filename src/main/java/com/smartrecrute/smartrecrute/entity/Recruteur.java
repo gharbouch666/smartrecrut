@@ -9,10 +9,16 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "recruteur")
-@Getter
-@Setter
 @NoArgsConstructor
 public class Recruteur extends Utilisateur {
 
     private String poste;
+
+    public String getPoste() {
+        return poste;
+    }
+
+    public void setPoste(String poste) {
+        this.poste = poste;
+    }
 }

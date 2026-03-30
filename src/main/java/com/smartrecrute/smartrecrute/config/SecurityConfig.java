@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class securityconfig {
+public class SecurityConfig {
 
 	private final AuthService authService;
 	private final JwtFilter jwtFilter;
@@ -33,7 +33,7 @@ public class securityconfig {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return cryptpassword.passwordEncoder();
+		return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
 	}
 
 	@Bean

@@ -2,10 +2,6 @@ package com.smartrecrute.smartrecrute.entity;
 
 import com.smartrecrute.smartrecrute.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +12,6 @@ import java.util.Collections;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public abstract class Utilisateur implements UserDetails {
 
     @Id
@@ -41,6 +33,10 @@ public abstract class Utilisateur implements UserDetails {
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
+    public Utilisateur() {
+        // required by JPA
+    }
+
     public Utilisateur(String nom, String email, String motDePasse, Role role) {
         this.nom = nom;
         this.email = email;
@@ -51,9 +47,71 @@ public abstract class Utilisateur implements UserDetails {
         this.dateModification = LocalDateTime.now();
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+        this.dateModification = LocalDateTime.now();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        this.dateModification = LocalDateTime.now();
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
         this.dateModification = LocalDateTime.now();
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public boolean isActif() {
+        return actif;
+    }
+
+    public void setActif(boolean actif) {
+        this.actif = actif;
+    }
+
+    public LocalDateTime getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(LocalDateTime dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public LocalDateTime getDateModification() {
+        return dateModification;
+    }
+
+    public void setDateModification(LocalDateTime dateModification) {
+        this.dateModification = dateModification;
     }
 
     @Override
