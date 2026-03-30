@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
