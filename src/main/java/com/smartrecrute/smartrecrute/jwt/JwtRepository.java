@@ -1,9 +1,11 @@
 package com.smartrecrute.smartrecrute.jwt;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -22,4 +24,9 @@ public interface JwtRepository extends JpaRepository<Jwt, Long> {
     Stream<Jwt> findTokensByUserEmail(@Param("email") String email);
 
     void deleteAllByExpiredAndDesactivated(boolean expired, boolean desactivated);
+    
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "DELETE FROM jwt WHERE user_id = :userId", nativeQuery = true)
+    void deleteByUserId(@Param("userId") Long userId);
 }

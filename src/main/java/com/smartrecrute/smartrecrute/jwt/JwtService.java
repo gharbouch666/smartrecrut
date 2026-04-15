@@ -71,14 +71,19 @@ public class JwtService {
         final long accessExpiration = currentTime + (300 * 60 * 1000); // 300 minutes 5h
         final long refreshExpiration = currentTime + (24 * 60 * 60 * 1000); // 24 heures
 
+        // Get role from entity - handle both enum and custom implementations
+        String role = utilisateur.getClass().getSimpleName();
+        
         final String accessToken = Jwts.builder()
                 .setIssuedAt(new Date(currentTime))
                 .setExpiration(new Date(accessExpiration))
                 .setSubject(utilisateur.getEmail())
                 .addClaims(Map.of(
                         "nom", utilisateur.getNom(),
-                        "type", "access"
+                        "type", "access",
+                        "role", role
                 ))
+                .claim("roles", List.of("ROLE_" + role))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 

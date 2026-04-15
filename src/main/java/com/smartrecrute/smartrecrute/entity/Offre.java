@@ -16,6 +16,8 @@ public class Offre {
     private Long id;
 
     private String titre;
+    
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -27,6 +29,7 @@ public class Offre {
     @Enumerated(EnumType.STRING)
     private NiveauExperience experienceRequise;
 
+    @Column(columnDefinition = "TEXT")
     private String avantages;
     private Double scoreMinimum;
     private Integer nbCandidatsMax;

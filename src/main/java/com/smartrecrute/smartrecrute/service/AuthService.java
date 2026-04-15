@@ -30,17 +30,20 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private PasswordService passwordService;
 
+    // DON'T inject passwordEncoder - causes circular dependency!
+
     public Utilisateur register(UserRegistrationRequest request) {
         // Encode password
         String encodedPassword = passwordService.encodePassword(request.getMotDePasse());
 
         switch (request.getRole()) {
             case ADMIN:
+            case ADMINISTRATEUR:
                 Administrateur admin = new Administrateur();
                 admin.setNom(request.getNom());
                 admin.setEmail(request.getEmail());
                 admin.setMotDePasse(encodedPassword);
-                admin.setRole(Role.ADMIN);
+                admin.setRole(Role.ADMINISTRATEUR);
                 return administrateurService.create(admin);
             case CANDIDAT:
                 Candidat candidat = new Candidat();
@@ -61,6 +64,16 @@ public class AuthService implements UserDetailsService {
         }
     }
 
+public void setPasswordDirect(String email, String newPassword) {
+        Utilisateur user = findUserByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        String encodedNewPassword = passwordService.encodePassword(newPassword);
+        user.setMotDePasse(encodedNewPassword);
+        saveUser(user);
+    }
+
     public void changePassword(String email, ChangePasswordRequest request) {
         // Find user by email across all types
         Utilisateur user = findUserByEmail(email);
@@ -68,12 +81,21 @@ public class AuthService implements UserDetailsService {
             throw new RuntimeException("User not found");
         }
 
-        // Verify old password
-        if (!passwordService.matches(request.getOldPassword(), user.getMotDePasse())) {
+        // OLD PASSWORD IS REQUIRED
+        if (request.getOldPassword() == null || request.getOldPassword().isEmpty()) {
+            throw new RuntimeException("Old password is required");
+        }
+
+        // Verify old password using PasswordService (same BCrypt as registration)
+        boolean matches = passwordService.matches(request.getOldPassword(), user.getMotDePasse());
+        if (!matches) {
             throw new RuntimeException("Old password is incorrect");
         }
 
         // Check new password confirmation
+        if (request.getNewPassword() == null || request.getConfirmPassword() == null) {
+            throw new RuntimeException("New password is required");
+        }
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new RuntimeException("New passwords do not match");
         }
@@ -112,7 +134,7 @@ public class AuthService implements UserDetailsService {
         // TODO: Implement token validation and password reset
     }
 
-    private Utilisateur findUserByEmail(String email) {
+    public Utilisateur findUserByEmail(String email) {
         // Check each user type
         Administrateur admin = administrateurService.findByEmail(email);
         if (admin != null) return admin;

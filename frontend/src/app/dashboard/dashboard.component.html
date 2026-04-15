@@ -1,0 +1,100 @@
+<div class="page-header">
+  <h1 class="page-title">SmartRecrute</h1>
+  <p class="page-subtitle">
+    {{isAdmin ? 'Platform overview' : isRecruiter ? 'Your recruitment pipeline' : 'Track your applications'}}
+  </p>
+</div>
+
+<!-- Admin View: Platform Stats -->
+<div *ngIf="isAdmin" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+  <div class="stat-card animate-in stagger-1">
+    <div class="stat-value">{{stats.totalOffres || 0}}</div>
+    <div class="stat-label">Total Jobs</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-2">
+    <div class="stat-value">{{stats.totalCandidats || 0}}</div>
+    <div class="stat-label">Candidates</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-3">
+    <div class="stat-value">{{stats.totalCandidatures || 0}}</div>
+    <div class="stat-label">Applications</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-4">
+    <div class="stat-value">{{stats.totalCandidats || 0}}</div>
+    <div class="stat-label">Admins</div>
+  </div>
+</div>
+
+<!-- Recruiter View: My Jobs Stats -->
+<div *ngIf="isRecruiter" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+  <div class="stat-card animate-in stagger-1">
+    <div class="stat-value">{{myJobs.length}}</div>
+    <div class="stat-label">My Jobs</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-2">
+    <div class="stat-value">{{stats.totalCandidatures || 0}}</div>
+    <div class="stat-label">Applications</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-3">
+    <div class="stat-value">{{openJobsCount}}</div>
+    <div class="stat-label">Open Positions</div>
+  </div>
+
+  <div class="stat-card animate-in stagger-4">
+    <div class="stat-value">85%</div>
+    <div class="stat-label">Avg. Score</div>
+  </div>
+</div>
+
+<!-- Candidate View: My Applications -->
+<div *ngIf="isCandidate" class="space-y-6">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <div class="stat-card animate-in stagger-1">
+      <div class="stat-value">{{myApplications.length}}</div>
+      <div class="stat-label">Jobs Applied</div>
+    </div>
+    <div class="stat-card animate-in stagger-2">
+      <div class="stat-value" style="color: var(--amber);">{{inConsiderationCount}}</div>
+      <div class="stat-label">In Consideration</div>
+    </div>
+    <div class="stat-card animate-in stagger-3">
+      <div class="stat-value">{{pendingCount}}</div>
+      <div class="stat-label">Pending</div>
+    </div>
+  </div>
+
+  <h2 class="page-title" style="font-size: 1.25rem; margin-top: 1.5rem;">My Applications</h2>
+  <div class="space-y-2">
+    <div *ngFor="let app of myApplications" 
+      class="card animate-in" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3 style="font-weight: 600; color: var(--text);">{{app.offre?.titre || 'Unknown Job'}}</h3>
+        <p class="mono" style="font-size: 0.75rem; color: var(--text-muted);">Applied: {{app.datePostulation | date:'mediumDate'}}</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span class="pill" 
+          [class.pill-amber]="app.statut === 'A_TRIER'"
+          [class.pill-blue]="app.statut === 'ENTRETIEN'"
+          [class.pill-green]="app.statut === 'RETENU'"
+          [class.pill-red]="app.statut === 'REFUSE'">
+          {{app.statut === 'A_TRIER' ? 'To Review' : app.statut === 'ENTRETIEN' ? 'Interview' : app.statut === 'RETENU' ? 'Accepted' : 'Rejected'}}
+        </span>
+        <span class="score-num" 
+          [class.score-high]="(app.scoreTotal || 0) >= 80"
+          [class.score-mid]="(app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80"
+          [class.score-low]="(app.scoreTotal || 0) < 50">
+          {{app.scoreTotal || 0}}%
+        </span>
+      </div>
+    </div>
+    <div *ngIf="myApplications.length === 0" class="text-center" style="padding: 3rem; color: var(--text-muted);">
+      <p>You haven't applied to any jobs yet.</p>
+      <a href="/jobs" style="color: var(--accent); margin-top: 0.5rem; display: inline-block;">Browse available jobs</a>
+    </div>
+  </div>
+</div>

@@ -17,6 +17,7 @@ public class Jwt implements Serializable {
 
     private boolean expired = false;
     private boolean desactivated = false;
+    @Column(length = 2000)
     private String value;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})

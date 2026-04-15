@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartRecrute - AI-Powered Recruitment</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* CSS VARIABLES */
+:root{
+  --navy:#060A17;
+  --navy2:#0D1425;
+  --navy3:#111D35;
+  --blue:#2563EB;
+  --blue-bright:#3B82F6;
+  --cyan:#06B6D4;
+  --white:#FFFFFF;
+  --off-white:#F8FAFF;
+  --gray-light:#F1F5FB;
+  --gray-mid:#CBD5E1;
+  --gray:#94A3B8;
+  --text-dark:#0F172A;
+  --text-mid:#334155;
+  --text-light:#64748B;
+  --accent-green:#10B981;
+  --font-head:'Syne',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+/* Force dark theme on landing page */
+body, html { background: #060A17 !important; color: #FFFFFF !important; }
+
+/* ANIMATIONS */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse-glow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes grid-move{0%{background-position:0 0}100%{background-position:60px 60px}}
+
+/* NAVBAR */
+.navbar{background:rgba(13,20,37,.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;padding:0 24px;border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-inner{max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;gap:8px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo svg{width:34px;height:34px}
+.nav-logo span{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.nav-logo span em{color:var(--cyan);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:24px;flex:1;margin-left:40px}
+.nav-links a{color:rgba(255,255,255,.6);font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+.btn-ghost{background:none;border:1px solid rgba(255,255,255,.15);color:var(--white);font-size:13px;font-weight:500;padding:8px 18px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 20px rgba(6,182,212,.2)}
+.btn-primary{background:var(--blue);border:none;color:var(--white);font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .25s;box-shadow:0 4px 14px rgba(37,99,235,.3)}
+.btn-primary:hover{background:var(--blue-bright);transform:translateY(-2px);box-shadow:0 6px 24px rgba(37,99,235,.5)}
+
+/* HERO */
+.hero{background:var(--navy);position:relative;padding:100px 24px 80px;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(37,99,235,.2) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(6,182,212,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 20% 90%,rgba(16,185,129,.08) 0%,transparent 50%);animation:pulse-glow 8s ease-in-out infinite}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;animation:grid-move 20s linear infinite}
+.hero-content{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.hero h1{font-family:var(--font-head);font-size:clamp(40px,6vw,64px);font-weight:800;color:var(--white);line-height:1.05;letter-spacing:-2.5px;margin:0 auto 20px;animation:fadeUp .6s ease-out}
+.hero h1 em{color:var(--cyan);font-style:normal}
+.hero-sub{font-size:17px;color:var(--gray);max-width:500px;margin:0 auto 36px;line-height:1.7;animation:fadeUp .6s ease-out .1s both}
+.hero-ctas{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;animation:fadeUp .6s ease-out .2s both}
+.btn-hero{background:var(--blue);color:var(--white);font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .25s;box-shadow:0 4px 20px rgba(37,99,235,.4)}
+.btn-hero:hover{background:var(--blue-bright);transform:translateY(-3px);box-shadow:0 8px 32px rgba(37,99,235,.6)}
+.btn-hero-outline{background:rgba(255,255,255,.04);color:var(--white);font-size:15px;font-weight:500;padding:14px 32px;border-radius:10px;text-decoration:none;border:1px solid rgba(255,255,255,.12);display:inline-flex;align-items:center;gap:10px;transition:all .25s}
+.btn-hero-outline:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);transform:translateY(-2px)}
+
+/* PLATFORM */
+.platform{background:var(--gray-light);padding:80px 24px}
+.platform-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center}
+.platform-text h2{font-family:var(--font-head);font-size:clamp(30px,4vw,44px);font-weight:800;color:var(--text-dark);line-height:1.1;letter-spacing:-1.5px;margin-bottom:16px}
+.platform-text p{font-size:15px;color:var(--text-light);line-height:1.7;margin-bottom:28px}
+.features{display:flex;flex-direction:column;gap:20px}
+.feat{display:flex;align-items:flex-start;gap:16px;padding:16px;background:var(--white);border-radius:12px;transition:all .25s;border:1px solid transparent}
+.feat:hover{transform:translateX(4px);box-shadow:0 8px 30px rgba(0,0,0,.08);border-color:rgba(37,99,235,.2)}
+.feat-icon{width:40px;height:40px;background:linear-gradient(135deg,rgba(37,99,235,.15),rgba(6,182,212,.1));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-icon svg{width:18px;height:18px}
+.feat h4{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.feat p{font-size:13px;color:var(--text-light);line-height:1.5}
+.platform-visual{background:linear-gradient(145deg,var(--navy),var(--navy2));border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05)}
+.pv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.pv-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--white)}
+.pv-tag{font-size:11px;background:rgba(16,185,129,.2);color:var(--accent-green);padding:4px 10px;border-radius:99px;font-weight:600;animation:pulse-glow 2s ease-in-out infinite}
+.pipeline{display:flex;gap:8px;margin-bottom:20px}
+.stage{flex:1;text-align:center;padding:12px;border-radius:10px;font-size:11px;font-weight:600;transition:all .2s}
+.stage.s1{background:rgba(37,99,235,.2);color:#93C5FD}
+.stage.s2{background:rgba(6,182,212,.2);color:#67E8F9}
+.stage.s3{background:rgba(139,92,246,.2);color:#C4B5FD}
+.stage.s4{background:rgba(16,185,129,.2);color:#6EE7B7}
+.stage:hover{transform:scale(1.05)}
+.stage-count{font-size:22px;font-family:var(--font-head);display:block}
+.pv-cand{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:all .2s}
+.pv-cand:hover{background:rgba(255,255,255,.06)}
+.pv-av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.pv-info{flex:1}
+.pv-name{font-size:13px;font-weight:600;color:var(--white)}
+.pv-role{font-size:11px;color:var(--gray)}
+.pv-score{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px}
+
+/* CTA */
+.cta{background:var(--navy);padding:80px 24px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(37,99,235,.2) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(6,182,212,.15) 0%,transparent 50%);animation:pulse-glow 6s ease-in-out infinite}
+.cta-inner{max-width:540px;margin:0 auto;position:relative;z-index:1}
+.cta h2{font-family:var(--font-head);font-size:clamp(32px,5vw,48px);font-weight:800;color:var(--white);line-height:1.1;letter-spacing:-1.5px;margin-bottom:16px}
+.cta h2 em{color:var(--cyan);font-style:normal}
+.cta p{font-size:15px;color:var(--gray);margin-bottom:32px}
+.cta-btns{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+
+/* FOOTER */
+footer{background:#03060A;padding:48px 24px 24px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-brand{margin-bottom:28px}
+.footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:14px}
+.footer-logo svg{width:26px;height:26px}
+.footer-logo span{font-family:var(--font-head);font-size:17px;font-weight:700;color:var(--white)}
+.footer-logo span em{color:var(--cyan);font-style:normal}
+.footer-brand p{font-size:13px;color:var(--gray);line-height:1.7;max-width:260px}
+.footer-links{display:flex;gap:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.05)}
+.footer-links a{font-size:12px;color:var(--gray);text-decoration:none;transition:all .2s}
+.footer-links a:hover{color:var(--white)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .platform-inner{grid-template-columns:1fr;gap:40px}
+  .platform-visual{display:block}
+}
+@media(max-width:768px){
+  .nav-inner{height:56px}
+  .nav-links{display:none}
+  .hero{padding:70px 24px 50px}
+  .hero h1{font-size:34px}
+  .platform{padding:50px 24px}
+  .cta{padding:50px 24px}
+  .features{gap:12px}
+  .feat{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a routerLink="/" class="nav-logo">
+      <svg viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="17" fill="#2563EB"/><path d="M9 17.5L14.5 23L25 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Smart<em>Recrute</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="nav-actions">
+      <a routerLink="/login" class="btn-ghost">Log In</a>
+      <a routerLink="/register" class="btn-primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Hire Smarter with <em>AI-Powered</em> Recruitment</h1>
+    <p class="hero-sub">Find the best talent faster with AI matching, kanban pipelines, and real-time chat. Built for modern hiring teams.</p>
+    <div class="hero-ctas">
+      <a routerLink="/register" class="btn-hero">Get Started Free</a>
+      <a href="#features" class="btn-hero-outline">See Features</a>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="platform" id="features">
+  <div class="platform-inner">
+    <div class="platform-text">
+      <h2>Everything You Need to Hire Better</h2>
+      <p>SmartRecrute combines AI matching with intuitive tools to help you find, screen, and hire the best talent.</p>
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="5" r="3" stroke="#2563EB" stroke-width="1.5"/><path d="M3 15c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h4>AI-Powered Matching</h4>
+            <p>Score candidates based on skills and experience</p>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="#2563EB" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="#2563EB" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="#2563EB" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="#2563EB" stroke-width="1.5"/></svg>
+          </div>
+          <div>
+            <h4>Kanban Pipeline</h4>
+            <p>Track applications with drag-and-drop boards</p>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9h12" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h4>Real-Time Chat</h4>
+            <p>Message candidates directly in the platform</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="platform-visual">
+      <div class="pv-header">
+        <span class="pv-title">Hiring Pipeline</span>
+        <span class="pv-tag">Live</span>
+      </div>
+      <div class="pipeline">
+        <div class="stage s1"><span class="stage-count">12</span>New</div>
+        <div class="stage s2"><span class="stage-count">8</span>Screen</div>
+        <div class="stage s3"><span class="stage-count">4</span>Interview</div>
+        <div class="stage s4"><span class="stage-count">2</span>Offer</div>
+      </div>
+      <div class="pv-cand">
+        <div class="pv-av" style="background:rgba(37,99,237,.3);color:#93C5FD">JD</div>
+        <div class="pv-info">
+          <div class="pv-name">John Doe</div>
+          <div class="pv-role">Frontend Dev</div>
+        </div>
+        <div class="pv-score" style="background:rgba(16,185,129,.2);color:#34D399">92%</div>
+      </div>
+      <div class="pv-cand">
+        <div class="pv-av" style="background:rgba(6,182,212,.25);color:#67E8F9">AS</div>
+        <div class="pv-info">
+          <div class="pv-name">Anna Smith</div>
+          <div class="pv-role">Backend Dev</div>
+        </div>
+        <div class="pv-score" style="background:rgba(16,185,129,.2);color:#34D399">88%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <h2>Ready to transform your <em>hiring</em>?</h2>
+    <p>Join teams using SmartRecrute to hire faster and smarter.</p>
+    <div class="cta-btns">
+      <a routerLink="/register" class="btn-hero">Start Free Trial</a>
+      <a routerLink="/login" class="btn-hero-outline">Talk to Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a routerLink="/" class="footer-logo">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="13" fill="#2563EB"/><path d="M6 13.5L11 18L20 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Smart<em>Recrute</em></span>
+      </a>
+      <p>AI-Powered recruitment platform for modern hiring teams.</p>
+    </div>
+    <div class="footer-links">
+      <a routerLink="/login">Log In</a>
+      <a routerLink="/register">Sign Up</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
