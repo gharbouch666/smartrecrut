@@ -1,0 +1,115 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.smartrecrute:smartrecrute >--------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.5.12:run (default-cli) > test-compile @ smartrecrute >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ smartrecrute ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ smartrecrute ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ smartrecrute ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ smartrecrute ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.5.12:run (default-cli) < test-compile @ smartrecrute <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.12:run (default-cli) @ smartrecrute ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.12)
+
+2026-05-01T13:30:52.193+01:00  INFO 584195 --- [SmartRecruite] [           main] c.s.s.SmartrecruteApplication            : Starting SmartrecruteApplication using Java 17.0.18 with PID 584195 (/home/silversurfer/Bureau/pfe/smartrecrute/target/classes started by silversurfer in /home/silversurfer/Bureau/pfe/smartrecrute)
+2026-05-01T13:30:52.195+01:00  INFO 584195 --- [SmartRecruite] [           main] c.s.s.SmartrecruteApplication            : No active profile set, falling back to 1 default profile: "default"
+2026-05-01T13:30:52.626+01:00  INFO 584195 --- [SmartRecruite] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-01T13:30:52.686+01:00  INFO 584195 --- [SmartRecruite] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 13 JPA repository interfaces.
+2026-05-01T13:30:53.005+01:00  INFO 584195 --- [SmartRecruite] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8000 (http)
+2026-05-01T13:30:53.017+01:00  INFO 584195 --- [SmartRecruite] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-01T13:30:53.017+01:00  INFO 584195 --- [SmartRecruite] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-05-01T13:30:53.045+01:00  INFO 584195 --- [SmartRecruite] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-01T13:30:53.046+01:00  INFO 584195 --- [SmartRecruite] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 827 ms
+2026-05-01T13:30:53.119+01:00  INFO 584195 --- [SmartRecruite] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-01T13:30:53.143+01:00  INFO 584195 --- [SmartRecruite] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.44.Final
+2026-05-01T13:30:53.161+01:00  INFO 584195 --- [SmartRecruite] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-01T13:30:53.298+01:00  INFO 584195 --- [SmartRecruite] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-01T13:30:53.316+01:00  INFO 584195 --- [SmartRecruite] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-01T13:30:53.480+01:00  INFO 584195 --- [SmartRecruite] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5f3f57ff
+2026-05-01T13:30:53.481+01:00  INFO 584195 --- [SmartRecruite] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-01T13:30:53.500+01:00  WARN 584195 --- [SmartRecruite] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-01T13:30:53.513+01:00  INFO 584195 --- [SmartRecruite] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.13
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-01T13:30:54.100+01:00  INFO 584195 --- [SmartRecruite] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-01T13:30:54.208+01:00  INFO 584195 --- [SmartRecruite] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-01T13:30:54.388+01:00  INFO 584195 --- [SmartRecruite] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-01T13:30:54.893+01:00  WARN 584195 --- [SmartRecruite] [           main] r$InitializeUserDetailsManagerConfigurer : Found 2 UserDetailsService beans, with names [authService, userDetailsService]. Global Authentication Manager will not use a UserDetailsService for username/password login. Consider publishing a single UserDetailsService bean.
+2026-05-01T13:30:54.947+01:00  WARN 584195 --- [SmartRecruite] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-01T13:30:55.031+01:00  INFO 584195 --- [SmartRecruite] [           main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-05-01T13:30:55.316+01:00  INFO 584195 --- [SmartRecruite] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8000 (http) with context path '/'
+2026-05-01T13:30:55.324+01:00  INFO 584195 --- [SmartRecruite] [           main] c.s.s.SmartrecruteApplication            : Started SmartrecruteApplication in 3.368 seconds (process running for 3.548)
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+Hibernate: select t1_0.id,t1_0.categorie,t1_0.libelle from tag t1_0
+✅ Seeded 38 skills in 5 categories!
+2026-05-01T13:32:49.363+01:00  INFO 584195 --- [SmartRecruite] [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-01T13:32:49.366+01:00  INFO 584195 --- [SmartRecruite] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-05-01T13:32:49.369+01:00  INFO 584195 --- [SmartRecruite] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-01T13:32:49.371+01:00  INFO 584195 --- [SmartRecruite] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-01T13:32:49.375+01:00  INFO 584195 --- [SmartRecruite] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
