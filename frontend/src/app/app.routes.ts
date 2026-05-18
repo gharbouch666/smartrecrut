@@ -3,13 +3,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CandidatesComponent } from './candidates/candidates.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { ApplicationsComponent } from './applications/applications.component';
-import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { TagsComponent } from './admin/tags/tags.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersComponent } from './admin/users.component';
 import { ProfileComponent } from './profile/profile.component';
+import { RecruteurProfileComponent } from './recruteur-profile/recruteur-profile.component';
+import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { ChatComponent } from './chat/chat.component';
 import { LandingComponent } from './landing/landing.component';
 
@@ -50,9 +51,14 @@ export const routes: Routes = [
     data: { roles: ['CANDIDAT'] }
   },
   { 
-    path: 'settings', 
-    component: SettingsComponent,
-    data: { roles: ['ADMIN', 'RECRUTEUR', 'CANDIDAT'] }
+    path: 'recruteur-profile', 
+    component: RecruteurProfileComponent,
+    data: { roles: ['RECRUTEUR'] }
+  },
+  { 
+    path: 'admin-profile', 
+    component: AdminProfileComponent,
+    data: { roles: ['ADMIN'] }
   },
   { 
     path: 'admin', 

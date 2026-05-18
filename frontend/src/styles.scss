@@ -490,15 +490,16 @@ body::before {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   border-radius: 8px;
   color: var(--text-muted);
   font-family: 'Manrope', sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
   position: relative;
+  margin-bottom: 2px;
 }
 .nav-item:hover {
   background: var(--surface);
@@ -793,4 +794,30 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* Sidebar nav sections */
+.nav-section {
+  margin-bottom: 0.5rem;
+}
+
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0 0.75rem;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
 }

@@ -1,100 +1,223 @@
-<div class="page-header">
-  <h1 class="page-title">SmartRecrute</h1>
-  <p class="page-subtitle">
-    {{isAdmin ? 'Platform overview' : isRecruiter ? 'Your recruitment pipeline' : 'Track your applications'}}
+<!-- ══════════════════════════
+     HEADER
+══════════════════════════ -->
+<header class="dash-header animate-in">
+  <div class="dash-header__left">
+    <p class="dash-header__role">
+      <span class="role-dot"></span>
+      {{ isAdmin ? 'Admin' : isRecruiter ? 'Recruiter' : 'Candidate' }}
+    </p>
+    <h1 class="dash-header__title">SmartRecrute</h1>
+  </div>
+  <p class="dash-header__sub">
+    <span *ngIf="isAdmin">Full platform visibility.</span>
+    <span *ngIf="isRecruiter">Your recruitment pipeline.</span>
+    <span *ngIf="isCandidate">Track your applications.</span>
   </p>
-</div>
+</header>
 
-<!-- Admin View: Platform Stats -->
-<div *ngIf="isAdmin" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-  <div class="stat-card animate-in stagger-1">
-    <div class="stat-value">{{stats.totalOffres || 0}}</div>
-    <div class="stat-label">Total Jobs</div>
-  </div>
 
-  <div class="stat-card animate-in stagger-2">
-    <div class="stat-value">{{stats.totalCandidats || 0}}</div>
-    <div class="stat-label">Candidates</div>
-  </div>
+<!-- ══════════════════════════
+     ADMIN
+══════════════════════════ -->
+<ng-container *ngIf="isAdmin">
 
-  <div class="stat-card animate-in stagger-3">
-    <div class="stat-value">{{stats.totalCandidatures || 0}}</div>
-    <div class="stat-label">Applications</div>
-  </div>
-
-  <div class="stat-card animate-in stagger-4">
-    <div class="stat-value">{{stats.totalCandidats || 0}}</div>
-    <div class="stat-label">Admins</div>
-  </div>
-</div>
-
-<!-- Recruiter View: My Jobs Stats -->
-<div *ngIf="isRecruiter" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-  <div class="stat-card animate-in stagger-1">
-    <div class="stat-value">{{myJobs.length}}</div>
-    <div class="stat-label">My Jobs</div>
-  </div>
-
-  <div class="stat-card animate-in stagger-2">
-    <div class="stat-value">{{stats.totalCandidatures || 0}}</div>
-    <div class="stat-label">Applications</div>
-  </div>
-
-  <div class="stat-card animate-in stagger-3">
-    <div class="stat-value">{{openJobsCount}}</div>
-    <div class="stat-label">Open Positions</div>
-  </div>
-
-  <div class="stat-card animate-in stagger-4">
-    <div class="stat-value">85%</div>
-    <div class="stat-label">Avg. Score</div>
-  </div>
-</div>
-
-<!-- Candidate View: My Applications -->
-<div *ngIf="isCandidate" class="space-y-6">
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-    <div class="stat-card animate-in stagger-1">
-      <div class="stat-value">{{myApplications.length}}</div>
-      <div class="stat-label">Jobs Applied</div>
+  <div class="metrics-row animate-in delay-1">
+    <div class="metric-hero">
+      <span class="metric-hero__label">Total Applications</span>
+      <span class="metric-hero__num">{{ stats.totalCandidatures || 0 }}</span>
+      <span class="metric-hero__sub">across all active jobs</span>
     </div>
-    <div class="stat-card animate-in stagger-2">
-      <div class="stat-value" style="color: var(--amber);">{{inConsiderationCount}}</div>
-      <div class="stat-label">In Consideration</div>
-    </div>
-    <div class="stat-card animate-in stagger-3">
-      <div class="stat-value">{{pendingCount}}</div>
-      <div class="stat-label">Pending</div>
-    </div>
-  </div>
-
-  <h2 class="page-title" style="font-size: 1.25rem; margin-top: 1.5rem;">My Applications</h2>
-  <div class="space-y-2">
-    <div *ngFor="let app of myApplications" 
-      class="card animate-in" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <h3 style="font-weight: 600; color: var(--text);">{{app.offre?.titre || 'Unknown Job'}}</h3>
-        <p class="mono" style="font-size: 0.75rem; color: var(--text-muted);">Applied: {{app.datePostulation | date:'mediumDate'}}</p>
+    <div class="metrics-secondary">
+      <div class="metric-card metric-card--blue">
+        <span class="metric-card__num">{{ stats.totalOffres || 0 }}</span>
+        <span class="metric-card__label">Jobs posted</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <span class="pill" 
-          [class.pill-amber]="app.statut === 'A_TRIER'"
-          [class.pill-blue]="app.statut === 'ENTRETIEN'"
-          [class.pill-green]="app.statut === 'RETENU'"
-          [class.pill-red]="app.statut === 'REFUSE'">
-          {{app.statut === 'A_TRIER' ? 'To Review' : app.statut === 'ENTRETIEN' ? 'Interview' : app.statut === 'RETENU' ? 'Accepted' : 'Rejected'}}
-        </span>
-        <span class="score-num" 
-          [class.score-high]="(app.scoreTotal || 0) >= 80"
-          [class.score-mid]="(app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80"
-          [class.score-low]="(app.scoreTotal || 0) < 50">
-          {{app.scoreTotal || 0}}%
-        </span>
+      <div class="metric-card metric-card--green">
+        <span class="metric-card__num">{{ stats.totalCandidats || 0 }}</span>
+        <span class="metric-card__label">Candidates</span>
+      </div>
+      <div class="metric-card metric-card--dim">
+        <span class="metric-card__num">{{ stats.totalCandidats || 0 }}</span>
+        <span class="metric-card__label">Admins</span>
       </div>
     </div>
-    <div *ngIf="myApplications.length === 0" class="text-center" style="padding: 3rem; color: var(--text-muted);">
-      <p>You haven't applied to any jobs yet.</p>
-      <a href="/jobs" style="color: var(--accent); margin-top: 0.5rem; display: inline-block;">Browse available jobs</a>
+  </div>
+
+  <div class="admin-bottom animate-in delay-2">
+
+    <div class="breakdown-panel">
+      <h2 class="panel-title">Pipeline breakdown</h2>
+      <div class="breakdown-list">
+        <div class="breakdown-row">
+          <span class="breakdown-label"><span class="bdot bdot--amber"></span>To Review</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar breakdown-bar--amber" style="width:62%"></div></div>
+          <span class="breakdown-pct">62%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label"><span class="bdot bdot--blue"></span>Interview</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar breakdown-bar--blue" style="width:24%"></div></div>
+          <span class="breakdown-pct">24%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label"><span class="bdot bdot--green"></span>Accepted</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar breakdown-bar--green" style="width:9%"></div></div>
+          <span class="breakdown-pct">9%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label"><span class="bdot bdot--red"></span>Rejected</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar breakdown-bar--red" style="width:5%"></div></div>
+          <span class="breakdown-pct">5%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-panel">
+      <h2 class="panel-title">Quick actions</h2>
+      <div class="action-list">
+        <a class="action-link" href="/jobs/new">
+          <span class="action-link__text">Post a new job</span>
+          <span class="action-link__arrow">→</span>
+        </a>
+        <a class="action-link" href="/candidates">
+          <span class="action-link__text">View all candidates</span>
+          <span class="action-link__arrow">→</span>
+        </a>
+<a class="action-link" href="/applications">
+           <span class="action-link__text">Review applications</span>
+           <span class="action-link__arrow">→</span>
+         </a>
+        <a class="action-link" href="/admin-profile">
+           <span class="action-link__text">View Profile</span>
+           <span class="action-link__arrow">→</span>
+         </a>
+       </div>
+    </div>
+
+  </div>
+</ng-container>
+
+
+<!-- ══════════════════════════
+     RECRUITER
+══════════════════════════ -->
+<ng-container *ngIf="isRecruiter">
+
+  <div class="metrics-row animate-in delay-1">
+    <div class="metric-hero">
+      <span class="metric-hero__label">Total Applications</span>
+      <span class="metric-hero__num">{{ stats.totalCandidatures || 0 }}</span>
+      <span class="metric-hero__sub">across your job listings</span>
+    </div>
+    <div class="metrics-secondary">
+      <div class="metric-card metric-card--blue">
+        <span class="metric-card__num">{{ myJobs.length }}</span>
+        <span class="metric-card__label">My jobs</span>
+      </div>
+      <div class="metric-card metric-card--green">
+        <span class="metric-card__num">{{ openJobsCount }}</span>
+        <span class="metric-card__label">Open</span>
+      </div>
+      <div class="metric-card metric-card--dim">
+        <span class="metric-card__num">85<span style="font-size:.85rem">%</span></span>
+        <span class="metric-card__label">Avg score</span>
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="pipeline animate-in delay-2">
+    <h2 class="panel-title">Funnel</h2>
+    <div class="funnel-row">
+      <div class="funnel-stage">
+        <span class="funnel-num funnel-num--amber">—</span>
+        <span class="funnel-label">To Review</span>
+        <div class="funnel-track"><div class="funnel-fill funnel-fill--amber" style="width:100%"></div></div>
+      </div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-stage">
+        <span class="funnel-num funnel-num--blue">—</span>
+        <span class="funnel-label">Interview</span>
+        <div class="funnel-track"><div class="funnel-fill funnel-fill--blue" style="width:65%"></div></div>
+      </div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-stage">
+        <span class="funnel-num funnel-num--green">—</span>
+        <span class="funnel-label">Accepted</span>
+        <div class="funnel-track"><div class="funnel-fill funnel-fill--green" style="width:30%"></div></div>
+      </div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-stage">
+        <span class="funnel-num funnel-num--red">—</span>
+        <span class="funnel-label">Rejected</span>
+        <div class="funnel-track"><div class="funnel-fill funnel-fill--red" style="width:20%"></div></div>
+      </div>
+    </div>
+  </div>
+
+<div class="action-list action-list--row animate-in delay-3">
+     <a class="action-link" href="/jobs/new"><span class="action-link__text">Post new job</span><span class="action-link__arrow">→</span></a>
+     <a class="action-link" href="/applications"><span class="action-link__text">Review applications</span><span class="action-link__arrow">→</span></a>
+     <a class="action-link" href="/recruteur-profile"><span class="action-link__text">View Profile</span><span class="action-link__arrow">→</span></a>
+   </div>
+</ng-container>
+
+
+<!-- ══════════════════════════
+     CANDIDATE
+══════════════════════════ -->
+<ng-container *ngIf="isCandidate">
+
+  <div class="metrics-row animate-in delay-1">
+    <div class="metric-hero">
+      <span class="metric-hero__label">Jobs Applied</span>
+      <span class="metric-hero__num">{{ myApplications.length }}</span>
+      <span class="metric-hero__sub">total submissions</span>
+    </div>
+    <div class="metrics-secondary">
+      <div class="metric-card metric-card--green">
+        <span class="metric-card__num">{{ inConsiderationCount }}</span>
+        <span class="metric-card__label">In consideration</span>
+      </div>
+      <div class="metric-card metric-card--amber">
+        <span class="metric-card__num">{{ pendingCount }}</span>
+        <span class="metric-card__label">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-list animate-in delay-2">
+    <h2 class="panel-title">Applications</h2>
+
+    <div *ngFor="let app of myApplications; let i = index"
+         class="app-row"
+         [style.animation-delay]="(0.25 + i * 0.05) + 's'">
+      <div class="app-row__left">
+        <div class="app-avatar">{{ (app.offre?.titre || 'J').charAt(0).toUpperCase() }}</div>
+        <div class="app-info">
+          <span class="app-title">{{ app.offre?.titre || 'Unknown Job' }}</span>
+          <span class="app-date">{{ app.datePostulation | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="app-row__right">
+        <span class="status-tag"
+          [class.tag--amber]="app.statut === 'A_TRIER'"
+          [class.tag--blue]="app.statut === 'ENTRETIEN'"
+          [class.tag--green]="app.statut === 'RETENU'"
+          [class.tag--red]="app.statut === 'REFUSE'">
+          {{ app.statut === 'A_TRIER' ? 'To Review' : app.statut === 'ENTRETIEN' ? 'Interview' : app.statut === 'RETENU' ? 'Accepted' : 'Rejected' }}
+        </span>
+        <span class="score-badge"
+          [class.score--high]="(app.scoreTotal || 0) >= 80"
+          [class.score--mid]="(app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80"
+          [class.score--low]="(app.scoreTotal || 0) < 50">
+          {{ app.scoreTotal || 0 }}%
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="myApplications.length === 0" class="empty-state">
+      <p class="empty-state__text">No applications yet.</p>
+      <a href="/jobs" class="empty-state__cta">Browse open jobs →</a>
+    </div>
+  </div>
+</ng-container>

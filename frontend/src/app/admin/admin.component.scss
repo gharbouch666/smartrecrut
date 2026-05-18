@@ -1,0 +1,515 @@
+// ─────────────────────────────
+// TOKENS (mirrors dashboard)
+// ─────────────────────────────
+$blue:    #5c6dff;
+$green:   #b6f542;
+$amber:   #f59e0b;
+$red:     #ef4444;
+$surface: rgba(18, 21, 28, 0.9);
+$border:  rgba(255, 255, 255, 0.06);
+$text:    #e8eaf2;
+$muted:   rgba(160, 168, 195, 0.6);
+$r-lg:    18px;
+$r-md:    12px;
+$r-sm:    8px;
+
+// ─────────────────────────────
+// ANIMATION
+// ─────────────────────────────
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bar-grow {
+  from { width: 0 !important; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0;
+}
+
+.animate-in {
+  opacity: 0;
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.delay-1 { animation-delay: 0.07s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.25s; }
+
+// Shared label
+.panel-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: $muted;
+  margin: 0 0 1.25rem;
+}
+
+
+// ─────────────────────────────
+// HEADER
+// ─────────────────────────────
+.admin-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 2.5rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $r-lg;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, $blue, $green 50%, transparent);
+    opacity: 0.45;
+  }
+}
+
+.header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $muted;
+  margin: 0 0 0.4rem;
+}
+
+.live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: $green;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.header-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  color: $text;
+  line-height: 1;
+  margin: 0;
+}
+
+.add-user-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 99px;
+  background: rgba($blue, 0.12);
+  border: 1px solid rgba($blue, 0.28);
+  color: lighten($blue, 22%);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($blue, 0.2);
+    border-color: rgba($blue, 0.45);
+  }
+}
+
+
+// ─────────────────────────────
+// STATS ROW
+// ─────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 800px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.stat-tile {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $r-lg;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s;
+
+  &:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: $r-lg $r-lg 0 0;
+  }
+  &--green::after { background: $green; }
+  &--blue::after  { background: $blue; }
+  &--amber::after { background: $amber; }
+  &--dim::after   { background: rgba(255,255,255,0.1); }
+}
+
+.stat-tile__num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: $text;
+  line-height: 1;
+}
+
+.stat-tile__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+
+// ─────────────────────────────
+// ADD USER FORM
+// ─────────────────────────────
+.add-user-panel {
+  background: $surface;
+  border: 1px solid rgba($blue, 0.2);
+  border-radius: $r-lg;
+  padding: 1.75rem 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.form-input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $border;
+  border-radius: $r-sm;
+  padding: 0.6rem 0.875rem;
+  color: $text;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+
+  &::placeholder { color: $muted; }
+  &:focus { border-color: rgba($blue, 0.45); }
+
+  option { background: #1a1e28; color: $text; }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-primary {
+  padding: 0.6rem 1.25rem;
+  border-radius: 99px;
+  background: rgba($blue, 0.15);
+  border: 1px solid rgba($blue, 0.3);
+  color: lighten($blue, 20%);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) { background: rgba($blue, 0.25); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btn-ghost {
+  padding: 0.6rem 1.25rem;
+  border-radius: 99px;
+  background: transparent;
+  border: 1px solid $border;
+  color: $muted;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { border-color: rgba(255,255,255,0.12); color: $text; }
+}
+
+
+// ─────────────────────────────
+// ANALYSIS ROW
+// ─────────────────────────────
+.analysis-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.chart-panel {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $r-lg;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 36px;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.chart-row__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(160, 168, 195, 0.75);
+  white-space: nowrap;
+}
+
+.chart-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--amber { background: $amber; }
+  &--blue  { background: $blue; }
+  &--green { background: $green; }
+  &--red   { background: $red; }
+}
+
+.chart-bar-wrap {
+  height: 5px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.chart-bar {
+  height: 100%;
+  border-radius: 99px;
+  min-width: 2px;
+  animation: bar-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+
+  &--amber { background: $amber; }
+  &--blue  { background: $blue; }
+  &--green { background: $green; }
+  &--red   { background: $red; }
+}
+
+.chart-row__count {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $muted;
+  text-align: right;
+}
+
+.chart-empty {
+  font-size: 0.82rem;
+  color: $muted;
+  text-align: center;
+  padding: 2rem 0;
+  flex: 1;
+}
+
+// Skills CTA link
+.skills-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding: 0.7rem 0.875rem;
+  border-radius: $r-sm;
+  border: 1px solid $border;
+  text-decoration: none;
+  color: $muted;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba($blue, 0.25);
+    color: $text;
+
+    .skills-cta__arrow { transform: translateX(3px); color: $blue; }
+  }
+}
+
+.skills-cta__arrow {
+  transition: transform 0.2s, color 0.2s;
+}
+
+
+// ─────────────────────────────
+// USER MANAGEMENT
+// ─────────────────────────────
+.users-panel {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $r-lg;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.user-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.user-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.user-section__role {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.7rem;
+  border-radius: 99px;
+  border: 1px solid;
+
+  &--green { background: rgba($green, 0.08); border-color: rgba($green, 0.2); color: $green; }
+  &--blue  { background: rgba($blue, 0.08);  border-color: rgba($blue, 0.2);  color: lighten($blue, 18%); }
+  &--amber { background: rgba($amber, 0.08); border-color: rgba($amber, 0.2); color: $amber; }
+}
+
+.user-count {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $muted;
+}
+
+// Table
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  thead tr {
+    border-bottom: 1px solid $border;
+  }
+
+  th {
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.15s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: rgba(255,255,255,0.02); }
+  }
+
+  td {
+    padding: 0.7rem 0.75rem;
+    color: rgba($text, 0.8);
+    vertical-align: middle;
+  }
+}
+
+.td-id    { font-family: 'Syne', sans-serif; font-weight: 700; color: $muted !important; width: 48px; }
+.td-name  { font-weight: 500; color: $text !important; }
+.td-email { color: $muted !important; font-size: 0.82rem; }
+.td-action { text-align: right; }
+.td-empty {
+  text-align: center;
+  padding: 1.5rem !important;
+  color: $muted !important;
+  font-size: 0.8rem;
+}
+
+.delete-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.65rem;
+  border-radius: 99px;
+  border: 1px solid rgba($red, 0.2);
+  background: rgba($red, 0.06);
+  color: rgba($red, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba($red, 0.14);
+    border-color: rgba($red, 0.35);
+    color: lighten($red, 12%);
+  }
+}
+
+
+// ─────────────────────────────
+// RESPONSIVE
+// ─────────────────────────────
+@media (max-width: 600px) {
+  .admin-header { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; align-items: flex-start; }
+  .users-panel, .chart-panel { padding: 1.25rem; }
+  .chart-row { grid-template-columns: 80px 1fr 30px; }
+}

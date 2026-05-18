@@ -36,17 +36,51 @@ interface Admin {
       </div>
 
 <!-- Basic Profile View -->
-       <div *ngIf="!configureMode && !loading" class="card" style="margin-bottom: 2rem;">
-         <div style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem;">
-           <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem;">
-             {{admin?.nom?.charAt(0)?.toUpperCase() || 'U'}}
-           </div>
-           <div>
-             <h2 class="page-title">{{admin?.nom || 'Your Name'}}</h2>
-             <p class="mono" style="color: var(--text-muted);">{{admin?.email}}</p>
-           </div>
-         </div>
-       </div>
+        <div *ngIf="!configureMode && !loading" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+          <!-- Profile Card -->
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+              <div class="avatar" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                {{admin?.nom?.charAt(0)?.toUpperCase() || 'U'}}
+              </div>
+              <div>
+                <h2 class="page-title" style="font-size: 1.5rem;">{{admin?.nom || 'Your Name'}}</h2>
+                <p class="mono" style="font-size: 0.875rem; color: var(--text-muted);">{{admin?.email}}</p>
+              </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
+                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Role</p>
+                <p style="font-weight: 500; color: var(--text);">{{admin?.role || 'Admin'}}</p>
+              </div>
+              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
+                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Status</p>
+                <p style="font-weight: 500; color: var(--text);">{{admin?.actif ? 'Active' : 'Inactive'}}</p>
+              </div>
+              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
+                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Member Since</p>
+                <p style="font-weight: 500; color: var(--text);">{{admin?.dateCreation | date:'mediumDate'}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Card -->
+          <div class="card">
+            <h2 class="page-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Security</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div style="padding: 1rem; background: var(--surface); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <p style="font-weight: 600; color: var(--text);">Password</p>
+                    <p class="mono" style="font-size: 0.75rem; color: var(--text-muted);">Last changed: Never</p>
+                  </div>
+                  <button (click)="configureMode = true; activeTab = 'security'" class="btn-primary" style="padding: 0.5rem 1rem;">Change</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       <!-- Configure Mode -->
       <div *ngIf="configureMode && !loading">

@@ -14,7 +14,6 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { CandidatesComponent } from './candidates/candidates.component';
 import { ApplicationsComponent } from './applications/applications.component';
-import { SettingsComponent } from './settings/settings.component';
 import { routes } from './app.routes';
 
 @NgModule({
@@ -24,8 +23,7 @@ import { routes } from './app.routes';
     SidebarComponent,
     JobsComponent,
     CandidatesComponent,
-    ApplicationsComponent,
-    SettingsComponent
+    ApplicationsComponent
   ],
   imports: [
     BrowserModule,
