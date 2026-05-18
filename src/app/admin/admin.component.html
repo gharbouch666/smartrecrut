@@ -1,0 +1,269 @@
+<!-- ══════════════════════════
+     HEADER
+══════════════════════════ -->
+<header class="admin-header animate-in">
+  <div>
+    <p class="header-eyebrow"><span class="live-dot"></span>Admin Console</p>
+    <h1 class="header-title">Platform Overview</h1>
+  </div>
+  <button class="add-user-btn" (click)="toggleAddUser()">
+    <span>{{ showAddUser ? '✕ Cancel' : '+ Add user' }}</span>
+  </button>
+</header>
+
+
+<!-- ══════════════════════════
+     STATS ROW
+══════════════════════════ -->
+<div class="stats-row animate-in delay-1">
+
+  <div class="stat-tile stat-tile--green">
+    <span class="stat-tile__num">{{ stats.totalCandidates || 0 }}</span>
+    <span class="stat-tile__label">Candidates</span>
+  </div>
+
+  <div class="stat-tile stat-tile--blue">
+    <span class="stat-tile__num">{{ stats.totalRecruiters || 0 }}</span>
+    <span class="stat-tile__label">Recruiters</span>
+  </div>
+
+  <div class="stat-tile stat-tile--amber">
+    <span class="stat-tile__num">{{ stats.totalOffres || 0 }}</span>
+    <span class="stat-tile__label">Job offers</span>
+  </div>
+
+  <div class="stat-tile stat-tile--dim">
+    <span class="stat-tile__num">{{ stats.totalCandidatures || 0 }}</span>
+    <span class="stat-tile__label">Applications</span>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════
+     ADD USER FORM
+══════════════════════════ -->
+<div *ngIf="showAddUser" class="add-user-panel animate-in">
+  <h2 class="panel-title">New user</h2>
+  <div class="form-grid">
+    <div class="form-field">
+      <label class="form-label">Full name</label>
+      <input [(ngModel)]="newUser.nom" placeholder="Jane Doe" class="form-input">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Email</label>
+      <input [(ngModel)]="newUser.email" placeholder="jane@company.com" type="email" class="form-input">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Password</label>
+      <input [(ngModel)]="newUser.password" placeholder="••••••••" type="password" class="form-input">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Role</label>
+      <select [(ngModel)]="newUser.role" class="form-input">
+        <option value="RECRUTEUR">Recruiter</option>
+        <option value="ADMINISTRATEUR">Administrator</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button (click)="addNewUser()" [disabled]="savingUser" class="btn-primary">
+      {{ savingUser ? 'Creating…' : 'Create user' }}
+    </button>
+    <button (click)="showAddUser = false" class="btn-ghost">Cancel</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     ANALYSIS ROW
+══════════════════════════ -->
+<div class="analysis-row animate-in delay-2">
+
+  <!-- Pipeline breakdown -->
+  <div class="chart-panel">
+    <h2 class="panel-title">Applications pipeline</h2>
+    <div class="chart-list">
+
+      <div class="chart-row">
+        <span class="chart-row__label">
+          <span class="chart-dot chart-dot--amber"></span>To Review
+        </span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar chart-bar--amber"
+               [style.width.%]="(statusCounts.aTrier || 0) / maxCount * 100"></div>
+        </div>
+        <span class="chart-row__count">{{ statusCounts.aTrier || 0 }}</span>
+      </div>
+
+      <div class="chart-row">
+        <span class="chart-row__label">
+          <span class="chart-dot chart-dot--blue"></span>Interview
+        </span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar chart-bar--blue"
+               [style.width.%]="(statusCounts.entretien || 0) / maxCount * 100"></div>
+        </div>
+        <span class="chart-row__count">{{ statusCounts.entretien || 0 }}</span>
+      </div>
+
+      <div class="chart-row">
+        <span class="chart-row__label">
+          <span class="chart-dot chart-dot--green"></span>Hired
+        </span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar chart-bar--green"
+               [style.width.%]="(statusCounts.retenu || 0) / maxCount * 100"></div>
+        </div>
+        <span class="chart-row__count">{{ statusCounts.retenu || 0 }}</span>
+      </div>
+
+      <div class="chart-row">
+        <span class="chart-row__label">
+          <span class="chart-dot chart-dot--red"></span>Rejected
+        </span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar chart-bar--red"
+               [style.width.%]="(statusCounts.refuse || 0) / maxCount * 100"></div>
+        </div>
+        <span class="chart-row__count">{{ statusCounts.refuse || 0 }}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Skills breakdown -->
+  <div class="chart-panel">
+    <h2 class="panel-title">Skills by category</h2>
+
+    <div class="chart-list" *ngIf="skillCategories.length > 0">
+      <div *ngFor="let cat of skillCategories" class="chart-row">
+        <span class="chart-row__label">
+          <span class="chart-dot" [style.background]="cat.color"></span>{{ cat.name }}
+        </span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar"
+               [style.width.%]="cat.count / maxSkillCount * 100"
+               [style.background]="cat.color"></div>
+        </div>
+        <span class="chart-row__count">{{ cat.count }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="skillCategories.length === 0" class="chart-empty">
+      No skills data yet
+    </div>
+
+    <!-- Skills library link -->
+    <a class="skills-cta" routerLink="/admin/tags">
+      <span>Manage skills library</span>
+      <span class="skills-cta__arrow">→</span>
+    </a>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════
+     USER MANAGEMENT
+══════════════════════════ -->
+<section class="users-panel animate-in delay-3">
+
+  <h2 class="panel-title">User management</h2>
+
+  <!-- Candidates -->
+  <div class="user-section">
+    <div class="user-section__header">
+      <span class="user-section__role user-section__role--green">Candidates</span>
+      <span class="user-count">{{ users.candidats?.length || 0 }}</span>
+    </div>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users.candidats">
+          <td class="td-id">{{ user.id }}</td>
+          <td class="td-name">{{ user.nom }}</td>
+          <td class="td-email">{{ user.email }}</td>
+          <td class="td-action">
+            <button (click)="deleteUser(user.id, 'candidat')" class="delete-btn">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="!users.candidats?.length">
+          <td colspan="4" class="td-empty">No candidates registered</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recruiters -->
+  <div class="user-section">
+    <div class="user-section__header">
+      <span class="user-section__role user-section__role--blue">Recruiters</span>
+      <span class="user-count">{{ users.recruteurs?.length || 0 }}</span>
+    </div>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users.recruteurs">
+          <td class="td-id">{{ user.id }}</td>
+          <td class="td-name">{{ user.nom }}</td>
+          <td class="td-email">{{ user.email }}</td>
+          <td class="td-action">
+            <button (click)="deleteUser(user.id, 'recruteur')" class="delete-btn">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="!users.recruteurs?.length">
+          <td colspan="4" class="td-empty">No recruiters registered</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Admins -->
+  <div class="user-section">
+    <div class="user-section__header">
+      <span class="user-section__role user-section__role--amber">Administrators</span>
+      <span class="user-count">{{ users.administrateurs?.length || 0 }}</span>
+    </div>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users.administrateurs">
+          <td class="td-id">{{ user.id }}</td>
+          <td class="td-name">{{ user.nom }}</td>
+          <td class="td-email">{{ user.email }}</td>
+          <td class="td-action">
+            <button (click)="deleteUser(user.id, 'administrateur')" class="delete-btn">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="!users.administrateurs?.length">
+          <td colspan="4" class="td-empty">No administrators registered</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+<router-outlet></router-outlet>
