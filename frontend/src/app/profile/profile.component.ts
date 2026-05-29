@@ -28,6 +28,7 @@ interface Candidat {
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./profile.component.scss'],
   template: `
     <div style="max-width: 1200px; margin: 0 auto;">
       <!-- Header -->
@@ -90,7 +91,7 @@ interface Candidat {
                 <p style="font-weight: 600; color: var(--lime);">CV uploaded</p>
                 <p class="mono" style="font-size: 0.75rem; color: var(--text-muted);">{{candidat?.cvUrl}}</p>
               </div>
-              <a [href]="'http://localhost:8000/api/files/cv/' + candidat?.cvUrl" target="_blank" class="btn-primary" style="background: var(--lime);">View</a>
+               <a [href]="'http://localhost:8000/api/files/cv/' + (candidat?.cvUrl || '')" target="_blank" class="btn-primary" style="background: var(--lime);">View</a>
             </div>
             
             <div *ngIf="!candidat?.cvUrl" style="padding: 1rem; background: rgba(217,119,6,0.1); border: 1px solid var(--amber); border-radius: 8px;">
@@ -102,7 +103,7 @@ interface Candidat {
               <div>
                 <p style="font-weight: 600; color: var(--lime);">Cover Letter uploaded</p>
               </div>
-              <a [href]="'http://localhost:8000/api/files/lettre/' + candidat?.lettreMotivationUrl" target="_blank" class="btn-primary" style="background: var(--lime);">View</a>
+               <a [href]="'http://localhost:8000/api/files/lettre/' + (candidat?.lettreMotivationUrl || '')" target="_blank" class="btn-primary" style="background: var(--lime);">View</a>
             </div>
             
             <div *ngIf="!candidat?.lettreMotivationUrl" style="padding: 1rem; background: rgba(217,119,6,0.1); border: 1px solid var(--amber); border-radius: 8px;">
@@ -186,14 +187,17 @@ interface Candidat {
         <!-- CV Upload -->
         <div class="card">
           <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem;">CV (Curriculum Vitae)</h2>
-          <div *ngIf="candidat && candidat.cvUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div *ngIf="candidat && candidat.cvUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <svg style="width: 20px; height: 20px; color: var(--lime);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               <span style="color: var(--text);">CV uploaded</span>
             </div>
-            <a [href]="'http://localhost:8000/api/files/cv/' + candidat?.cvUrl" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;">View CV</a>
+            <div style="display: flex; gap: 0.5rem;">
+              <a [href]="'http://localhost:8000/api/files/cv/' + candidat.cvUrl" target="_blank" class="btn-primary" style="background: var(--lime);">View CV</a>
+              <button (click)="deleteCv()" [disabled]="deletingCv" class="btn-primary" style="background: #ef4444;">{{ deletingCv ? 'Deleting...' : 'Delete' }}</button>
+            </div>
           </div>
           <input type="file" (change)="onCvSelected($event)" accept=".pdf"
             style="width: 100%; padding: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text);"/>
@@ -206,14 +210,17 @@ interface Candidat {
         <!-- Cover Letter Upload -->
         <div class="card">
           <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem;">Cover Letter (Lettre de motivation)</h2>
-          <div *ngIf="candidat && candidat.lettreMotivationUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div *ngIf="candidat && candidat.lettreMotivationUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <svg style="width: 20px; height: 20px; color: var(--lime);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               <span style="color: var(--text);">Cover letter uploaded</span>
             </div>
-            <a [href]="'http://localhost:8000/api/files/lettre/' + candidat?.lettreMotivationUrl" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;">View Letter</a>
+            <div style="display: flex; gap: 0.5rem;">
+              <a [href]="'http://localhost:8000/api/files/lettre/' + candidat.lettreMotivationUrl" target="_blank" class="btn-primary" style="background: var(--lime);">View Letter</a>
+              <button (click)="deleteLettre()" [disabled]="deletingLettre" class="btn-primary" style="background: #ef4444;">{{ deletingLettre ? 'Deleting...' : 'Delete' }}</button>
+            </div>
           </div>
           <input type="file" (change)="onLettreSelected($event)" accept=".pdf"
             style="width: 100%; padding: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text);"/>
@@ -287,13 +294,34 @@ export class ProfileComponent implements OnInit {
   lettreFile: File | null = null;
   uploadingCv = false;
   uploadingLettre = false;
+  deletingCv = false;
+  deletingLettre = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      alert('Please login first');
+      // Try to fallback to stored user (in case of SPA reload) so uploads and tags still work
+      const userJson = localStorage.getItem('user');
+      if (userJson) {
+        try {
+          const user = JSON.parse(userJson);
+          if (user && user.id) {
+            this.currentUserId = user.id;
+          }
+        } catch (e) {
+          // ignore parse errors
+        }
+      }
+
+      // still attempt to load tags (may be public) and candidate if we have an id fallback
+      this.loadTags();
+      if (this.currentUserId) this.loadCandidat();
+      if (!token && !this.currentUserId) {
+        // user truly not logged in
+        alert('Please login first');
+      }
       return;
     }
     this.loadCurrentUser();
@@ -307,7 +335,18 @@ export class ProfileComponent implements OnInit {
         this.loadCandidat();
         this.loadTags();
       },
-      error: () => { this.loadTags(); }
+      error: () => {
+        // Token may be expired — fallback to stored user if available
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+          try {
+            const user = JSON.parse(userJson);
+            if (user && user.id) this.currentUserId = user.id;
+          } catch (e) { }
+        }
+        this.loadTags();
+        if (this.currentUserId) this.loadCandidat();
+      }
     });
   }
 
@@ -324,8 +363,10 @@ export class ProfileComponent implements OnInit {
   }
 
   loadTags() {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
-    this.http.get<Tag[]>('http://localhost:8000/api/tags', { headers }).subscribe({
+    // Tags may be publicly available; avoid sending an invalid/expired token header
+    const token = localStorage.getItem('accessToken');
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : undefined;
+    this.http.get<Tag[]>('http://localhost:8000/api/tags', headers ? { headers } : {}).subscribe({
       next: (tags) => {
         this.allTags = tags;
         this.categories = [...new Set(tags.map(t => t.categorie))];
@@ -334,7 +375,9 @@ export class ProfileComponent implements OnInit {
         });
         this.loadMySkills();
       },
-      error: () => this.loading = false
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
@@ -349,7 +392,9 @@ export class ProfileComponent implements OnInit {
         skills.forEach((skill: any) => {
           this.selectedSkills[skill.tag.id] = skill.niveau;
         });
-      }
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 
@@ -446,41 +491,97 @@ export class ProfileComponent implements OnInit {
   }
 
   uploadCv() {
-    if (!this.cvFile || !this.currentUserId) return;
+    const candidateId = this.currentUserId || (() => { try { const u = JSON.parse(localStorage.getItem('user')||'null'); return u?.id; } catch(e){return null;} })();
+    if (!this.cvFile) {
+      alert('Please select a CV file first');
+      return;
+    }
+    if (!candidateId) {
+      alert('Unable to determine candidate account. Please refresh and try again.');
+      return;
+    }
     this.uploadingCv = true;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
     const formData = new FormData();
     formData.append('file', this.cvFile);
-    formData.append('candidatId', this.currentUserId.toString());
-    
-    this.http.post('http://localhost:8000/api/files/upload-cv', formData).subscribe({
+    formData.append('candidatId', candidateId.toString());
+
+    this.http.post('http://localhost:8000/api/files/upload-cv', formData, { headers, responseType: 'text' as 'json' }).subscribe({
       next: () => {
         this.uploadingCv = false;
         this.loadCandidat();
         alert('CV uploaded successfully!');
       },
-      error: () => {
+      error: (err) => {
         this.uploadingCv = false;
-        alert('Failed to upload CV');
+        console.error('CV upload failed', err);
+        const message = err?.error || 'Failed to upload CV';
+        alert(typeof message === 'string' ? message : 'Failed to upload CV');
       }
     });
   }
 
   uploadLettre() {
-    if (!this.lettreFile || !this.currentUserId) return;
+    const candidateId = this.currentUserId || (() => { try { const u = JSON.parse(localStorage.getItem('user')||'null'); return u?.id; } catch(e){return null;} })();
+    if (!this.lettreFile) {
+      alert('Please select a cover letter file first');
+      return;
+    }
+    if (!candidateId) {
+      alert('Unable to determine candidate account. Please refresh and try again.');
+      return;
+    }
     this.uploadingLettre = true;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
     const formData = new FormData();
     formData.append('file', this.lettreFile);
-    formData.append('candidatId', this.currentUserId.toString());
-    
-    this.http.post('http://localhost:8000/api/files/upload-lettre', formData).subscribe({
+    formData.append('candidatId', candidateId.toString());
+
+    this.http.post('http://localhost:8000/api/files/upload-lettre', formData, { headers, responseType: 'text' as 'json' }).subscribe({
       next: () => {
         this.uploadingLettre = false;
         this.loadCandidat();
         alert('Cover letter uploaded successfully!');
       },
-      error: () => {
+      error: (err) => {
         this.uploadingLettre = false;
-        alert('Failed to upload cover letter');
+        console.error('Cover letter upload failed', err);
+        const message = err?.error || 'Failed to upload cover letter';
+        alert(typeof message === 'string' ? message : 'Failed to upload cover letter');
+      }
+    });
+  }
+
+  deleteCv() {
+    if (!this.candidat?.cvUrl) return;
+    this.deletingCv = true;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
+    this.http.delete(`http://localhost:8000/api/files/cv/${this.candidat.cvUrl}`, { headers, responseType: 'text' as 'json' }).subscribe({
+      next: () => {
+        this.deletingCv = false;
+        this.loadCandidat();
+        alert('CV deleted successfully');
+      },
+      error: () => {
+        this.deletingCv = false;
+        alert('Failed to delete CV');
+      }
+    });
+  }
+
+  deleteLettre() {
+    if (!this.candidat?.lettreMotivationUrl) return;
+    this.deletingLettre = true;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
+    this.http.delete(`http://localhost:8000/api/files/lettre/${this.candidat.lettreMotivationUrl}`, { headers, responseType: 'text' as 'json' }).subscribe({
+      next: () => {
+        this.deletingLettre = false;
+        this.loadCandidat();
+        alert('Cover letter deleted successfully');
+      },
+      error: () => {
+        this.deletingLettre = false;
+        alert('Failed to delete cover letter');
       }
     });
   }

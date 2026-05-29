@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.Arrays;
 
 @Configuration
 @EnableMethodSecurity
@@ -72,9 +71,11 @@ public class SecurityConfig {
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize -> authorize
+					.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/files/**", "/api/offres/with-tags", "/api/tags/**", "/api/offres/open").permitAll()
 					.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-					.requestMatchers("/api/administrateurs/**").hasRole("ADMIN")
-					.requestMatchers("/api/recruteurs/**").hasAnyRole("ADMIN", "RECRUTEUR")
+					.requestMatchers("/api/administrateurs/**").hasAnyRole("ADMIN", "ADMINISTRATEUR")
+					.requestMatchers("/api/recruteurs/**").hasAnyRole("ADMIN", "ADMINISTRATEUR", "RECRUTEUR")
 					.anyRequest().authenticated()
 			)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

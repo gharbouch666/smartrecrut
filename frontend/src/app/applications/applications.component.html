@@ -1,0 +1,190 @@
+<!-- Page header -->
+<div class="apps-header">
+  <div class="apps-header__left">
+    <h1 class="apps-header__title">{{ isCandidate ? 'My Applications' : 'Applications' }}</h1>
+    <p class="apps-header__subtitle">{{ isCandidate ? 'Track your job applications' : 'Track candidates through the recruitment pipeline' }}</p>
+  </div>
+
+  <div *ngIf="!isCandidate" class="apps-filter">
+    <label class="apps-filter-label">Min Score:</label>
+    <select [(ngModel)]="minScoreFilter" (change)="applyFilters()" class="apps-filter-select">
+      <option [value]="0">All</option>
+      <option [value]="70">>= 70%</option>
+      <option [value]="50">>= 50%</option>
+      <option [value]="30">>= 30%</option>
+    </select>
+  </div>
+</div>
+
+<!-- ── Candidate View: Simple List ── -->
+<div *ngIf="isCandidate" class="apps-list">
+  <div *ngFor="let app of myApplications" class="apps-list-item">
+    <div class="apps-list-item__header">
+      <h3 class="apps-list-item__title">{{ app.offre.titre }}</h3>
+      <span
+        class="apps-list-item__status"
+        [class.apps-list-item__status--a_trier]="app.statut === 'A_TRIER'"
+        [class.apps-list-item__status--entretien]="app.statut === 'ENTRETIEN'"
+        [class.apps-list-item__status--retenu]="app.statut === 'RETENU'"
+        [class.apps-list-item__status--refuse]="app.statut === 'REFUSE'">
+        {{ app.statut === 'A_TRIER'   ? 'To Review'  :
+           app.statut === 'ENTRETIEN' ? 'Interview'  :
+           app.statut === 'RETENU'    ? 'Accepted'   :
+           app.statut === 'REFUSE'    ? 'Rejected'   : app.statut }}
+      </span>
+    </div>
+
+    <div class="apps-list-item__meta">
+      <span class="apps-list-item__score"
+        [class.apps-score-high]="(app.scoreTotal || 0) >= 80"
+        [class.apps-score-mid]  ="((app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80)"
+        [class.apps-score-low]  ="((app.scoreTotal || 0) < 50)">
+        {{ formatScore(app.scoreTotal) }}%
+      </span>
+      <span class="apps-list-item__date">
+        Applied: {{ app.datePostulation | date:'mediumDate' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="myApplications.length === 0" class="apps-list-empty">
+    <div class="apps-list-empty__icon-box">
+      <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+    </div>
+    <h3 class="apps-list-empty__title">No applications yet</h3>
+    <p class="apps-list-empty__desc">Browse jobs and apply to get started</p>
+    <a routerLink="/jobs" class="btn-primary">Browse Jobs</a>
+  </div>
+</div>
+
+<!-- ── Recruiter View: Kanban Board ── -->
+<div *ngIf="!isCandidate" cdkDropListGroup class="apps-kanban-grid">
+
+  <!-- To Review -->
+  <div class="apps-kanban-col">
+    <div class="apps-kanban-col__head apps-kanban-col__head--amber">
+      <div class="apps-kanban-col__header">
+        <h2 class="apps-kanban-col__title">To Review</h2>
+        <span class="apps-kanban-col__count">{{ aTrier.length }}</span>
+      </div>
+    </div>
+    <div cdkDropList [cdkDropListData]="aTrier" (cdkDropListDropped)="drop($event, 'A_TRIER')" class="apps-kanban-col__body">
+      <div *ngFor="let app of aTrier" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+        <div class="apps-kanban-card__top">
+          <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
+          <span class="apps-kanban-card__score"
+            [class.apps-score-high]="(app.scoreTotal || 0) >= 80"
+            [class.apps-score-mid]  ="((app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80)"
+            [class.apps-score-low]  ="((app.scoreTotal || 0) < 50)">
+            {{ formatScore(app.scoreTotal) }}%
+          </span>
+        </div>
+        <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
+        <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
+          <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
+          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
+        </div>
+      </div>
+      <div *ngIf="aTrier.length === 0" class="apps-kanban-empty">No applications</div>
+    </div>
+  </div>
+
+  <!-- Interview -->
+  <div class="apps-kanban-col">
+    <div class="apps-kanban-col__head apps-kanban-col__head--blue">
+      <div class="apps-kanban-col__header">
+        <h2 class="apps-kanban-col__title">Interview</h2>
+        <span class="apps-kanban-col__count">{{ entretien.length }}</span>
+      </div>
+    </div>
+    <div cdkDropList [cdkDropListData]="entretien" (cdkDropListDropped)="drop($event, 'ENTRETIEN')" class="apps-kanban-col__body">
+      <div *ngFor="let app of entretien" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+        <div class="apps-kanban-card__top">
+          <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
+          <span class="apps-kanban-card__score"
+            [class.apps-score-high]="(app.scoreTotal || 0) >= 80"
+            [class.apps-score-mid]  ="((app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80)"
+            [class.apps-score-low]  ="((app.scoreTotal || 0) < 50)">
+            {{ formatScore(app.scoreTotal) }}%
+          </span>
+        </div>
+        <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
+        <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
+          <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
+          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
+        </div>
+      </div>
+      <div *ngIf="entretien.length === 0" class="apps-kanban-empty">No applications</div>
+    </div>
+  </div>
+
+  <!-- Hired -->
+  <div class="apps-kanban-col">
+    <div class="apps-kanban-col__head apps-kanban-col__head--green">
+      <div class="apps-kanban-col__header">
+        <h2 class="apps-kanban-col__title">Hired</h2>
+        <span class="apps-kanban-col__count">{{ retenu.length }}</span>
+      </div>
+    </div>
+    <div cdkDropList [cdkDropListData]="retenu" (cdkDropListDropped)="drop($event, 'RETENU')" class="apps-kanban-col__body">
+      <div *ngFor="let app of retenu" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+        <div class="apps-kanban-card__top">
+          <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
+          <span class="apps-kanban-card__score"
+            [class.apps-score-high]="(app.scoreTotal || 0) >= 80"
+            [class.apps-score-mid]  ="((app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80)"
+            [class.apps-score-low]  ="((app.scoreTotal || 0) < 50)">
+            {{ formatScore(app.scoreTotal) }}%
+          </span>
+        </div>
+        <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
+        <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
+          <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
+          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
+        </div>
+      </div>
+      <div *ngIf="retenu.length === 0" class="apps-kanban-empty">No applications</div>
+    </div>
+  </div>
+
+  <!-- Rejected -->
+  <div class="apps-kanban-col">
+    <div class="apps-kanban-col__head apps-kanban-col__head--red">
+      <div class="apps-kanban-col__header">
+        <h2 class="apps-kanban-col__title">Rejected</h2>
+        <span class="apps-kanban-col__count">{{ refuse.length }}</span>
+      </div>
+    </div>
+    <div cdkDropList [cdkDropListData]="refuse" (cdkDropListDropped)="drop($event, 'REFUSE')" class="apps-kanban-col__body">
+      <div *ngFor="let app of refuse" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+        <div class="apps-kanban-card__top">
+          <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
+          <span class="apps-kanban-card__score"
+            [class.apps-score-high]="(app.scoreTotal || 0) >= 80"
+            [class.apps-score-mid]  ="((app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80)"
+            [class.apps-score-low]  ="((app.scoreTotal || 0) < 50)">
+            {{ formatScore(app.scoreTotal) }}%
+          </span>
+        </div>
+        <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
+        <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
+          <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
+          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
+        </div>
+      </div>
+      <div *ngIf="refuse.length === 0" class="apps-kanban-empty">No applications</div>
+    </div>
+  </div>
+
+</div>

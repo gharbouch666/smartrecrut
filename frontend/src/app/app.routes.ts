@@ -3,6 +3,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CandidatesComponent } from './candidates/candidates.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { ApplicationsComponent } from './applications/applications.component';
+import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { TagsComponent } from './admin/tags/tags.component';
@@ -48,6 +49,11 @@ export const routes: Routes = [
   { 
     path: 'profile', 
     component: ProfileComponent,
+    data: { roles: ['CANDIDAT'] }
+  },
+  { 
+    path: 'settings', 
+    component: SettingsComponent,
     data: { roles: ['CANDIDAT'] }
   },
   { 

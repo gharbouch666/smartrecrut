@@ -1,53 +1,59 @@
-<div class="page-header" style="margin-bottom: 2rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
+<div class="page-header mb-8 tags-page-header">
+  <div class="tags-header-left">
     <div>
       <h1 class="page-title">Skills Library</h1>
       <p class="page-subtitle">Manage technical tags and competencies</p>
     </div>
-    <button class="btn-primary" (click)="showAddForm = true">
-      + New Skill
-    </button>
+    <button class="btn-primary" (click)="showAddForm = true">+ New Skill</button>
   </div>
 </div>
 
-<div *ngIf="showAddForm" class="card" style="margin-bottom: 1.5rem;">
-  <h2 class="page-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Add New Skill</h2>
-  <form [formGroup]="tagForm" (ngSubmit)="addTag()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-    <input formControlName="libelle" placeholder="Skill name (e.g. React)" class="field">
-    <input formControlName="categorie" placeholder="Category (TECH, SOFT, LANG)" class="field">
-    <div style="grid-column: 1 / -1; display: flex; gap: 0.75rem;">
-      <button type="submit" [disabled]="tagForm.invalid" class="btn-primary">Add Skill</button>
-      <button type="button" (click)="showAddForm = false" class="btn-secondary">Cancel</button>
+<div *ngIf="showAddForm" class="card mb-6 tags-card">
+  <h2 class="tags-panel__title">{{ editingTag ? 'Edit Skill' : 'Add New Skill' }}</h2>
+  <form [formGroup]="tagForm" (ngSubmit)="saveTag()" class="tags-form">
+    <div class="tags-form-group">
+      <label class="tags-field-label">Skill Name</label>
+      <input class="tags-field" formControlName="libelle" placeholder="e.g. React, Python, AWS">
+    </div>
+    <div class="tags-form-group">
+      <label class="tags-field-label">Category</label>
+      <select class="tags-field" formControlName="categorie">
+        <option value="TECH">TECH - Technical</option>
+        <option value="SOFT">SOFT - Soft Skills</option>
+        <option value="LANG">LANG - Languages</option>
+        <option value="TOOL">TOOL - Tools</option>
+        <option value="FRAME">FRAME - Frameworks</option>
+      </select>
+    </div>
+    <div class="tags-form-group tags-form-group--full">
+      <button type="submit" [disabled]="tagForm.invalid" class="btn-primary">{{ editingTag ? 'Update' : 'Add' }}</button>
+      <button type="button" (click)="cancelAdd()" class="btn-ghost">Cancel</button>
     </div>
   </form>
 </div>
 
-<div *ngIf="loading" style="display: flex; justify-content: center; padding: 4rem;">
-  <div class="loading-spinner"></div>
+<div *ngIf="loading" class="tags-loading">
+  <div class="tags-spinner"></div>
 </div>
 
-<div *ngIf="!loading && tags.length === 0" class="card" style="text-align: center; padding: 4rem;">
-  <svg style="width: 4rem; height: 4rem; margin: 0 auto 1rem; color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div *ngIf="!loading && tags.length === 0" class="tags-empty">
+  <svg class="tags-empty__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
   </svg>
-  <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">No Skills Yet</h3>
-  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Add your first technical skill to get started</p>
+  <h3 class="tags-empty__title">No Skills Yet</h3>
+  <p>Add your first technical skill to get started</p>
   <button class="btn-primary" (click)="showAddForm = true">Add First Skill</button>
 </div>
 
-<div *ngIf="!loading && tags.length > 0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-  <div *ngFor="let tag of tags" class="card" style="cursor: pointer;">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-      <h3 style="font-size: 1.125rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{tag.libelle}}</h3>
-      <span class="pill pill-blue">{{tag.categorie}}</span>
+<div *ngIf="!loading && tags.length > 0" class="tags-grid">
+  <div *ngFor="let tag of tags" class="tags-card--hover tags-card">
+    <div class="tags-card__top">
+      <h3 class="tags-name">{{ tag.libelle }}</h3>
+      <span class="tags-badge">{{ tag.categorie }}</span>
     </div>
-    <div style="display: flex; gap: 0.5rem;">
-      <button (click)="editTag(tag); $event.stopPropagation()" class="btn-primary" style="padding: 0.5rem 0.75rem; font-size: 0.75rem;">
-        Edit
-      </button>
-      <button (click)="deleteTag(tag.id); $event.stopPropagation()" class="btn-danger" style="padding: 0.5rem 0.75rem; font-size: 0.75rem;">
-        Delete
-      </button>
+    <div class="tags-actions">
+      <button (click)="editTag(tag)" class="tags-btn tags-btn--accent">Edit</button>
+      <button (click)="deleteTag(tag.id)" class="tags-btn tags-btn--danger">Delete</button>
     </div>
   </div>
 </div>

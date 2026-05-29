@@ -1,17 +1,7 @@
 // ─────────────────────────────
 // TOKENS
 // ─────────────────────────────
-$accent-blue:   #5c6dff;
-$accent-green:  #b6f542;
-$accent-amber:  #f59e0b;
-$accent-red:    #ef4444;
-$surface:       rgba(18, 21, 28, 0.9);
-$border:        rgba(255, 255, 255, 0.06);
-$text:          #e8eaf2;
-$text-muted:    rgba(160, 168, 195, 0.6);
-$radius-lg:     18px;
-$radius-md:     12px;
-$radius-sm:     8px;
+@use '../_tokens' as *;
 
 // ─────────────────────────────
 // ANIMATION
@@ -203,7 +193,7 @@ $radius-sm:     8px;
 
   &:hover {
     transform: translateY(-3px);
-    border-color: rgba(255,255,255,0.1);
+    border-color: var(--text-muted);
   }
 
   &::after {
@@ -217,7 +207,7 @@ $radius-sm:     8px;
   &--blue::after  { background: $accent-blue; }
   &--green::after { background: $accent-green; }
   &--amber::after { background: $accent-amber; }
-  &--dim::after   { background: rgba(255,255,255,0.12); }
+  &--dim::after   { background: var(--white-12); }
 }
 
 .metric-card__num {
@@ -291,7 +281,7 @@ $radius-sm:     8px;
   gap: 0.5rem;
   font-size: 0.8rem;
   font-weight: 500;
-  color: rgba(160, 168, 195, 0.75);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -308,7 +298,7 @@ $radius-sm:     8px;
 
 .breakdown-bar-wrap {
   height: 4px;
-  background: rgba(255,255,255,0.05);
+  background: var(--white-5);
   border-radius: 99px;
   overflow: hidden;
 }
@@ -362,14 +352,14 @@ $radius-sm:     8px;
   padding: 0.75rem 1rem;
   border-radius: $radius-sm;
   text-decoration: none;
-  color: rgba(160, 168, 195, 0.75);
+  color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 500;
   border: 1px solid transparent;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255,255,255,0.04);
+    background: var(--white-4);
     border-color: $border;
     color: $text;
 
@@ -385,7 +375,7 @@ $radius-sm:     8px;
     background: $surface;
 
     &:hover {
-      background: rgba(255,255,255,0.05);
+      background: var(--white-5);
     }
   }
 }
@@ -448,7 +438,7 @@ $radius-sm:     8px;
 
 .funnel-track {
   height: 3px;
-  background: rgba(255,255,255,0.05);
+  background: var(--white-5);
   border-radius: 99px;
   overflow: hidden;
 }
@@ -465,7 +455,7 @@ $radius-sm:     8px;
 }
 
 .funnel-arrow {
-  color: rgba(255,255,255,0.15);
+  color: var(--white-15);
   font-size: 1.25rem;
   flex-shrink: 0;
   padding-bottom: 1.1rem;
@@ -533,7 +523,7 @@ $radius-sm:     8px;
 .app-title {
   font-weight: 600;
   font-size: 0.9rem;
-  color: rgba($text, 0.85);
+  color: color-mix(in srgb, var(--text), transparent 15%);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -564,9 +554,9 @@ $radius-sm:     8px;
   border: 1px solid;
 
   &.tag--amber { background: rgba($accent-amber, 0.1); border-color: rgba($accent-amber, 0.25); color: $accent-amber; }
-  &.tag--blue  { background: rgba($accent-blue,  0.1); border-color: rgba($accent-blue,  0.25); color: lighten($accent-blue, 20%); }
+  &.tag--blue  { background: rgba($accent-blue,  0.1); border-color: rgba($accent-blue,  0.25); color: #7983ff; }
   &.tag--green { background: rgba($accent-green, 0.1); border-color: rgba($accent-green, 0.2);  color: $accent-green; }
-  &.tag--red   { background: rgba($accent-red,   0.1); border-color: rgba($accent-red,   0.2);  color: lighten($accent-red, 15%); }
+  &.tag--red   { background: rgba($accent-red,   0.1); border-color: rgba($accent-red,   0.2);  color: #f97272; }
 }
 
 // Score
@@ -580,7 +570,7 @@ $radius-sm:     8px;
 
   &.score--high { background: rgba($accent-green, 0.1); border-color: rgba($accent-green, 0.2); color: $accent-green; }
   &.score--mid  { background: rgba($accent-amber, 0.1); border-color: rgba($accent-amber, 0.2); color: $accent-amber; }
-  &.score--low  { background: rgba($accent-red, 0.08);  border-color: rgba($accent-red, 0.18);  color: lighten($accent-red, 15%); }
+  &.score--low  { background: rgba($accent-red, 0.08);  border-color: rgba($accent-red, 0.18);  color: #f97272; }
 }
 
 
@@ -610,7 +600,7 @@ $radius-sm:     8px;
   margin-top: 0.25rem;
   transition: color 0.2s;
 
-  &:hover { color: lighten($accent-blue, 15%); }
+  &:hover { color: #83a3ff; }
 }
 
 

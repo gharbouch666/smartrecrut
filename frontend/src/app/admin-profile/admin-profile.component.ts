@@ -17,6 +17,7 @@ interface Admin {
   selector: 'app-admin-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./admin-profile.component.scss'],
   template: `
     <div style="max-width: 1200px; margin: 0 auto;">
       <!-- Header -->

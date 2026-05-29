@@ -1,53 +1,61 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
-    <div class="p-8 max-w-7xl mx-auto min-h-[calc(100vh-2rem)]">
-      <div class="flex justify-between items-center mb-8">
-        <div class="space-y-1">
-          <h1 class="text-3xl font-bold text-[var(--text)]">Settings</h1>
-          <p class="text-[var(--text-muted)]">Manage your account preferences</p>
-        </div>
-      </div>
-
-      <div class="bg-[var(--card)] rounded-2xl shadow-lg border border-[var(--border)] p-6 mb-6">
-        <h2 class="text-xl font-semibold text-[var(--text)] mb-6">Change Password</h2>
-        <form (ngSubmit)="changePassword()" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-[var(--text)] mb-2">Current Password</label>
-            <input type="password" [(ngModel)]="oldPassword" name="oldPassword" required class="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl focus:border-[var(--accent)] focus:outline-none transition-all text-[var(--text)]">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[var(--text)] mb-2">New Password</label>
-            <input type="password" [(ngModel)]="newPassword" name="newPassword" required class="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl focus:border-[var(--accent)] focus:outline-none transition-all text-[var(--text)]">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[var(--text)] mb-2">Confirm New Password</label>
-            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required class="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl focus:border-[var(--accent)] focus:outline-none transition-all text-[var(--text)]">
-          </div>
-          <button type="submit" class="px-6 py-3 bg-[var(--accent)] text-white rounded-xl font-medium hover:opacity-90 transition-all shadow-lg">Update Password</button>
-        </form>
-        <p *ngIf="message" class="mt-4 text-sm" [class.text-green-500]="message.includes('success')" [class.text-red-500]="message.includes('failed')">{{message}}</p>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
+  profileForm: FormGroup;
+  passwordForm: FormGroup;
   oldPassword = '';
   newPassword = '';
   confirmPassword = '';
   message = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    this.profileForm = this.fb.group({
+      nom: [''],
+      email: [''],
+    });
+    this.passwordForm = this.fb.group({
+      oldPassword: [''],
+      newPassword: [''],
+      confirmPassword: ['']
+    });
+  }
+
+  saveProfile() {
+    this.message = '';
+    const nom = this.profileForm.value.nom;
+    const email = this.profileForm.value.email;
+    const token = localStorage.getItem('accessToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    this.http.put(`http://localhost:8000/api/utilisateurs/profile`, { nom, email }, { headers }).subscribe({
+      next: () => {
+        this.message = 'Profile updated successfully';
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          localStorage.setItem('user', JSON.stringify({ ...user, nom, email }));
+        }
+      },
+      error: (err) => {
+        this.message = err.error || 'Failed to update profile';
+      }
+    });
+  }
 
   changePassword() {
-    if (this.newPassword !== this.confirmPassword) {
+    if (this.passwordForm.invalid) return;
+    const { oldPassword, newPassword, confirmPassword } = this.passwordForm.value;
+    if (newPassword !== confirmPassword) {
       this.message = 'New passwords do not match';
       return;
     }
@@ -56,29 +64,17 @@ export class SettingsComponent {
     const user = userStr ? JSON.parse(userStr) : {};
     const email = user.email || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const payload = { oldPassword: this.oldPassword, newPassword: this.newPassword, confirmPassword: this.confirmPassword };
-    this.http.post(`http://localhost:8000/api/auth/change-password?email=${email}`, payload, { 
+    const payload = { oldPassword, newPassword, confirmPassword };
+    this.http.post(`http://localhost:8000/api/auth/change-password?email=${email}`, payload, {
       headers,
       responseType: 'text'
     }).subscribe({
-      next: (response) => { 
-        this.message = response || 'Password changed successfully'; 
-        this.oldPassword = ''; 
-        this.newPassword = ''; 
-        this.confirmPassword = ''; 
+      next: (response) => {
+        this.message = response || 'Password changed successfully';
+        this.passwordForm.reset();
       },
-      error: (err) => { 
-        console.error('[DEBUG] Password change error:', err);
-        const errMsg = err.error;
-        if (typeof errMsg === 'string') {
-          this.message = errMsg;
-        } else if (errMsg && typeof errMsg.message === 'string') {
-          this.message = errMsg.message;
-        } else if (err.statusText) {
-          this.message = err.statusText;
-        } else {
-          this.message = 'Password change failed';
-        }
+      error: (err) => {
+        this.message = 'Password change failed';
       }
     });
   }

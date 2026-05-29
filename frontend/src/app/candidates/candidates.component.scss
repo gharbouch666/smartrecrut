@@ -1,0 +1,400 @@
+// ─────────────────────────────
+// TOKENS
+// ─────────────────────────────
+@use '../_tokens' as *;
+
+// ─────────────────────────────
+// ANIMATION
+// ─────────────────────────────
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─────────────────────────────
+// CONTAINER
+// ─────────────────────────────
+:host {
+  display: block;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.animate-in {
+  opacity: 0;
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+
+// ─────────────────────────────
+// HEADER
+// ─────────────────────────────
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.25rem 2.5rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      $accent-blue 0%,
+      $accent-green 45%,
+      transparent 100%
+    );
+    opacity: 0.5;
+  }
+}
+
+.page-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  color: $text;
+  line-height: 1;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: $text-muted;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  font-family: 'Manrope', sans-serif;
+}
+
+
+// ─────────────────────────────
+// BUTTONS
+// ─────────────────────────────
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 99px;
+  background: rgba($accent-blue, 0.12);
+  border: 1px solid rgba($accent-blue, 0.28);
+    color: #7983ff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($accent-blue, 0.2);
+    border-color: rgba($accent-blue, 0.45);
+  }
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 99px;
+  background: transparent;
+  border: 1px solid $border;
+  color: $text-muted;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: $border;
+    color: $text;
+  }
+}
+
+
+// ─────────────────────────────
+// INPUTS
+// ─────────────────────────────
+.field {
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  color: $text;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: rgba($accent-blue, 0.45);
+  }
+}
+
+
+// ─────────────────────────────
+// CARD
+// ─────────────────────────────
+.card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+  transition: border-color 0.25s, transform 0.25s;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.1);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+
+// ─────────────────────────────
+// AI SEARCH
+// ─────────────────────────────
+.ai-search {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-search-form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ai-search-tip {
+  font-size: 0.75rem;
+  color: $text-muted;
+  margin-top: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-ai {
+  background: linear-gradient(135deg, $accent-blue, $accent-green);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+
+// ─────────────────────────────
+// ADD FORM
+// ─────────────────────────────
+.add-form {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.add-form-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 1.5rem;
+}
+
+.add-form-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.add-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+
+// ─────────────────────────────
+// CANDIDATES GRID
+// ─────────────────────────────
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.candidate-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+}
+
+.candidate-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: $radius-sm;
+  background: rgba($accent-blue, 0.12);
+  border: 1px solid rgba($accent-blue, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: rgba($accent-blue, 0.9);
+  flex-shrink: 0;
+}
+
+.candidate-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.candidate-name {
+  font-weight: 600;
+  color: $text;
+  margin: 0 0 0.25rem;
+}
+
+.candidate-email {
+  font-size: 0.75rem;
+  color: $text-muted;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0 0 0.25rem;
+}
+
+.candidate-job {
+  font-size: 0.75rem;
+  color: $accent-green;
+  margin: 0;
+}
+
+.candidate-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.candidate-phone {
+  font-size: 0.75rem;
+  color: $text-muted;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-remove {
+  font-size: 0.75rem;
+  color: $accent-red;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-weight: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+// ─────────────────────────────
+// SCORE
+// ─────────────────────────────
+.score-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+}
+
+.score-high { color: $accent-green; }
+.score-mid  { color: $accent-amber; }
+.score-low  { color: #f97272; }
+
+.score-label {
+  font-size: 0.625rem;
+  color: $text-muted;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+
+// ─────────────────────────────
+// EMPTY STATE
+// ─────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: $text-muted;
+  grid-column: 1 / -1;
+}
+
+.empty-state-title {
+  font-weight: 600;
+  color: $text;
+  margin-bottom: 0.5rem;
+}
+
+
+// ─────────────────────────────
+// RESPONSIVE
+// ─────────────────────────────
+@media (max-width: 600px) {
+  .page-header {
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .candidates-grid {
+    grid-template-columns: 1fr;
+  }
+  .add-form-fields {
+    grid-template-columns: 1fr;
+  }
+}

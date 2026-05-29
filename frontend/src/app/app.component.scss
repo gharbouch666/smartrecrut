@@ -1,7 +1,9 @@
+@use '_tokens' as *;
+
 :host {
   display: flex;
   min-height: 100vh;
-  background: var(--ink);
+  background: $surface;
 }
 
 app-sidebar {

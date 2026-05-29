@@ -210,7 +210,7 @@
           [class.score--high]="(app.scoreTotal || 0) >= 80"
           [class.score--mid]="(app.scoreTotal || 0) >= 50 && (app.scoreTotal || 0) < 80"
           [class.score--low]="(app.scoreTotal || 0) < 50">
-          {{ app.scoreTotal || 0 }}%
+          {{ formatScore(app.scoreTotal) }}%
         </span>
       </div>
     </div>

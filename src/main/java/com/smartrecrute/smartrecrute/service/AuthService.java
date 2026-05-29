@@ -64,7 +64,22 @@ public class AuthService implements UserDetailsService {
         }
     }
 
-public void setPasswordDirect(String email, String newPassword) {
+    public Utilisateur updateProfile(String email, String nom, String newEmail) {
+        Utilisateur user = findUserByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (nom != null && !nom.isEmpty()) {
+            user.setNom(nom);
+        }
+        if (newEmail != null && !newEmail.isEmpty()) {
+            user.setEmail(newEmail);
+        }
+        saveUser(user);
+        return user;
+    }
+
+    public void setPasswordDirect(String email, String newPassword) {
         Utilisateur user = findUserByEmail(email);
         if (user == null) {
             throw new RuntimeException("User not found");

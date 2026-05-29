@@ -88,7 +88,7 @@ public class AuthController {
             String email = jwtService.extractUsername(token);
             Utilisateur user = authService.findUserByEmail(email);
             if (user != null) {
-                String roleName = user.getClass().getSimpleName().toUpperCase();
+                String roleName = user.getRole() != null ? user.getRole().name() : user.getClass().getSimpleName().toUpperCase();
                 return ResponseEntity.ok(Map.of(
                     "id", user.getId(),
                     "email", user.getEmail(),

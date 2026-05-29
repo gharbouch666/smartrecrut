@@ -34,6 +34,10 @@ export class DashboardComponent implements OnInit {
     return this.userRole === 'CANDIDAT';
   }
 
+  formatScore(score: number): string {
+    return Math.round(score || 0).toString();
+  }
+
   ngOnInit() {
     const userStr = localStorage.getItem('user');
     if (userStr) {

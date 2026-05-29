@@ -175,7 +175,7 @@
   <div class="user-section">
     <div class="user-section__header">
       <span class="user-section__role user-section__role--green">Candidates</span>
-      <span class="user-count">{{ users.candidats?.length || 0 }}</span>
+      <span class="user-count">{{ users.candidats.length || 0 }}</span>
     </div>
     <table class="user-table">
       <thead>
@@ -195,7 +195,7 @@
             <button (click)="deleteUser(user.id, 'candidat')" class="delete-btn">Delete</button>
           </td>
         </tr>
-        <tr *ngIf="!users.candidats?.length">
+         <tr *ngIf="!users.candidats.length">
           <td colspan="4" class="td-empty">No candidates registered</td>
         </tr>
       </tbody>
@@ -206,7 +206,7 @@
   <div class="user-section">
     <div class="user-section__header">
       <span class="user-section__role user-section__role--blue">Recruiters</span>
-      <span class="user-count">{{ users.recruteurs?.length || 0 }}</span>
+      <span class="user-count">{{ users.recruteurs.length || 0 }}</span>
     </div>
     <table class="user-table">
       <thead>
@@ -226,7 +226,7 @@
             <button (click)="deleteUser(user.id, 'recruteur')" class="delete-btn">Delete</button>
           </td>
         </tr>
-        <tr *ngIf="!users.recruteurs?.length">
+         <tr *ngIf="!users.recruteurs.length">
           <td colspan="4" class="td-empty">No recruiters registered</td>
         </tr>
       </tbody>
@@ -237,7 +237,7 @@
   <div class="user-section">
     <div class="user-section__header">
       <span class="user-section__role user-section__role--amber">Administrators</span>
-      <span class="user-count">{{ users.administrateurs?.length || 0 }}</span>
+      <span class="user-count">{{ users.administrateurs.length || 0 }}</span>
     </div>
     <table class="user-table">
       <thead>
@@ -257,7 +257,7 @@
             <button (click)="deleteUser(user.id, 'administrateur')" class="delete-btn">Delete</button>
           </td>
         </tr>
-        <tr *ngIf="!users.administrateurs?.length">
+         <tr *ngIf="!users.administrateurs.length">
           <td colspan="4" class="td-empty">No administrators registered</td>
         </tr>
       </tbody>

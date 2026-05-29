@@ -71,8 +71,8 @@ public class JwtService {
         final long accessExpiration = currentTime + (300 * 60 * 1000); // 300 minutes 5h
         final long refreshExpiration = currentTime + (24 * 60 * 60 * 1000); // 24 heures
 
-        // Get role from entity - handle both enum and custom implementations
-        String role = utilisateur.getClass().getSimpleName();
+        // Use the actual user role name for JWT claims and authorities
+        String roleName = utilisateur.getRole() != null ? utilisateur.getRole().name() : "CANDIDAT";
         
         final String accessToken = Jwts.builder()
                 .setIssuedAt(new Date(currentTime))
@@ -81,9 +81,9 @@ public class JwtService {
                 .addClaims(Map.of(
                         "nom", utilisateur.getNom(),
                         "type", "access",
-                        "role", role
+                        "role", roleName
                 ))
-                .claim("roles", List.of("ROLE_" + role))
+                .claim("roles", List.of("ROLE_" + roleName))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 

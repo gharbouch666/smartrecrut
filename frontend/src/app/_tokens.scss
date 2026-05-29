@@ -1,0 +1,30 @@
+// ═══════════════════════════════════════════════════════
+// _tokens.scss  —  shared SCSS design tokens
+// ═══════════════════════════════════════════════════════
+// These mirror the CSS custom properties in styles.scss.
+//
+// Numeric values   → used with Sass color functions (lighten/rgba)
+// CSS var aliases  → used as runtime overrides / in rgba() calls
+//                   inside component styles
+//
+// Both maps are kept in sync with :root in styles.scss.
+// ═══════════════════════════════════════════════════════
+
+// ── Numeric tokens (canonical, drive Sass color math) ──
+$accent-blue:   #5c6dff;
+$accent-green:  #b6f542;
+$accent-amber:  #f59e0b;
+$accent-red:    #ef4444;
+$accent-dim:    rgba($accent-blue, 0.12);   // rgba(92,109,255,0.12)
+
+// ── CSS custom property aliases (MUST match :root in styles.scss) ──
+$surface:    var(--surface);   // rgba(18, 21, 28, 0.9)
+$border:     var(--border);    // rgba(255, 255, 255, 0.06)
+$border-subtle: var(--border-subtle); // rgba(255, 255, 255, 0.03)
+$text:       var(--text);      // #e8eaf2
+$text-muted: var(--text-muted); // rgba(160, 168, 195, 0.6)
+
+// ── Radii ──
+$radius-lg:  18px;
+$radius-md:  12px;
+$radius-sm:   8px;

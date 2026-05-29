@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ interface Conversation {
   selector: 'app-chat',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./chat.component.scss'],
   template: `
     <div class="p-8 max-w-7xl mx-auto">
       <div class="page-header mb-8">
@@ -89,31 +90,39 @@ interface Conversation {
     </div>
   `
 })
-export class ChatComponent implements OnInit {
-  messages: Message[] = [];
-  conversations: Conversation[] = [];
-  selectedUser: number | null = null;
-  newMessage = '';
-  currentUserId = 0;
-  userRole = '';
+export class ChatComponent implements OnInit, OnDestroy {
+   messages: Message[] = [];
+   conversations: Conversation[] = [];
+   selectedUser: number | null = null;
+   newMessage = '';
+   currentUserId = 0;
+   userRole = '';
+   private applicationStatusUpdatedListener: () => void = () => {};
 
-  constructor(private http: HttpClient) {}
+   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-    this.userRole = localStorage.getItem('userRole') || '';
-    this.currentUserId = parseInt(localStorage.getItem('userId') || '0');
-    
-    // Check if opening specific conversation from Applications
-    const chatWithId = localStorage.getItem('chatWithId');
-    const chatWithNom = localStorage.getItem('chatWithNom');
-    
-    if (chatWithId) {
-      this.selectedUser = parseInt(chatWithId);
-      this.loadMessages(this.selectedUser);
-    }
-    
-    this.loadConversations();
-  }
+   ngOnInit() {
+     this.userRole = localStorage.getItem('userRole') || '';
+     this.currentUserId = parseInt(localStorage.getItem('userId') || '0');
+     
+     // Check if opening specific conversation from Applications
+     const chatWithId = localStorage.getItem('chatWithId');
+     const chatWithNom = localStorage.getItem('chatWithNom');
+     
+     if (chatWithId) {
+       this.selectedUser = parseInt(chatWithId);
+       this.loadMessages(this.selectedUser);
+     }
+     
+     this.loadConversations();
+
+     this.applicationStatusUpdatedListener = () => this.loadConversations();
+     window.addEventListener('applicationStatusUpdated', this.applicationStatusUpdatedListener);
+   }
+
+   ngOnDestroy() {
+     window.removeEventListener('applicationStatusUpdated', this.applicationStatusUpdatedListener);
+   }
 
   isCandidat(): boolean {
     return this.userRole === 'CANDIDAT';
@@ -140,80 +149,101 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  loadConversations() {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
-    const userId = this.currentUserId;
-    
-    if (this.isAdmin()) {
-      // Admin sees ALL recruiters
-      this.http.get<any>('http://localhost:8000/api/stats/users', { headers }).subscribe({
-        next: (users: any) => {
-          this.conversations = (users.recruteurs || []).map((r: any) => ({
-            id: r.id,
-            nom: r.nom,
-            unreadCount: 0
-          }));
-          this.fetchUnreadCounts(headers, userId);
-        },
-        error: () => this.conversations = []
-      });
-    } 
-    else if (this.isRecruteur()) {
-      // Recruteur sees hired/interview candidates + ALL admins
-      this.http.get<any>('http://localhost:8000/api/stats/users', { headers }).subscribe({
-        next: (users: any) => {
-          // Get all admins first
-          const admins = (users.administrateurs || []).map((a: any) => ({
-            id: a.id,
-            nom: a.nom
-          }));
-          
-          // Then get candidates via separate call
-          this.http.get<any[]>('http://localhost:8000/api/candidatures', { headers }).subscribe({
-            next: (candidatures) => {
-              const grouped = new Map<number, Conversation>();
-              candidatures.forEach((c: any) => {
-                if (c.candidat && (c.statut === 'ENTRETIEN' || c.statut === 'RETENU')) {
-                  grouped.set(c.candidat.id, {
-                    id: c.candidat.id,
-                    nom: c.candidat.nom,
-                    offreTitre: c.offre?.titre
-                  });
+    loadConversations() {
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
+     const userId = this.currentUserId;
+     
+     if (this.isAdmin()) {
+       // Admin sees ALL recruiters
+       this.http.get<any>('http://localhost:8000/api/stats/users', { headers }).subscribe({
+         next: (users: any) => {
+            this.conversations = (users.recruteurs || []).map((r: any) => ({
+              id: r.id,
+              nom: r.nom,
+              unreadCount: 0
+            }));
+            if (this.selectedUser !== null && !this.conversations.some(c => c.id === this.selectedUser)) {
+              this.selectedUser = null;
+              this.messages = [];
+            }
+            this.fetchUnreadCounts(headers, userId);
+         },
+         error: () => this.conversations = []
+       });
+     } 
+     else if (this.isRecruteur()) {
+       // Recruteur sees hired/interview candidates + ALL admins
+       this.http.get<any>('http://localhost:8000/api/stats/users', { headers }).subscribe({
+         next: (users: any) => {
+            // Get all admins first
+            const admins = (users.administrateurs || []).map((a: any) => ({
+              id: a.id,
+              nom: a.nom
+            }));
+            
+            // Then get candidates via separate call - using recruiter's applications
+            this.http.get<any[]>(`http://localhost:8000/api/candidatures/recruteur/${userId}`, { headers }).subscribe({
+              next: (candidatures) => {
+                const grouped = new Map<number, Conversation>();
+                candidatures.forEach((c: any) => {
+                  if (c.candidat && (c.statut === 'ENTRETIEN' || c.statut === 'RETENU')) {
+                    grouped.set(c.candidat.id, {
+                      id: c.candidat.id,
+                      nom: c.candidat.nom,
+                      offreTitre: c.offre?.titre
+                    });
+                  }
+                });
+                // Combine: admins + candidates
+                this.conversations = [...admins, ...Array.from(grouped.values())];
+                if (this.selectedUser !== null && !this.conversations.some(c => c.id === this.selectedUser)) {
+                  this.selectedUser = null;
+                  this.messages = [];
                 }
-              });
-              // Combine: admins + candidates
-              this.conversations = [...admins, ...Array.from(grouped.values())];
-              this.fetchUnreadCounts(headers, userId);
-            },
-            error: () => {
-              this.conversations = admins;
-              this.fetchUnreadCounts(headers, userId);
+                this.fetchUnreadCounts(headers, userId);
+              },
+              error: () => {
+                this.conversations = admins;
+                if (this.selectedUser !== null && !this.conversations.some(c => c.id === this.selectedUser)) {
+                  this.selectedUser = null;
+                  this.messages = [];
+                }
+                this.fetchUnreadCounts(headers, userId);
+              }
+            });
+         },
+         error: () => this.conversations = []
+       });
+     } else {
+        // Candidat sees ONLY recruiters who've accepted them (no admin)
+        this.http.get<any[]>(`http://localhost:8000/api/candidatures/candidat/${userId}`, { headers }).subscribe({
+          next: (candidatures) => {
+            const grouped = new Map<number, Conversation>();
+            candidatures.forEach((c: any) => {
+              if (c.offre && c.offre.recruteur && (c.statut === 'RETENU' || c.statut === 'ENTRETIEN')) {
+                grouped.set(c.offre.recruteur.id, {
+                  id: c.offre.recruteur.id,
+                  nom: c.offre.recruteur.nom,
+                  offreTitre: c.offre.titre
+                });
+              }
+            });
+            this.conversations = Array.from(grouped.values());
+            if (this.selectedUser !== null && !this.conversations.some(c => c.id === this.selectedUser)) {
+              this.selectedUser = null;
+              this.messages = [];
             }
-          });
-        },
-        error: () => this.conversations = []
-      });
-    } else {
-      // Candidat sees ONLY recruiters who've accepted them (no admin)
-      this.http.get<any[]>('http://localhost:8000/api/candidatures', { headers }).subscribe({
-        next: (candidatures) => {
-          const grouped = new Map<number, Conversation>();
-          candidatures.forEach((c: any) => {
-            if (c.offre && c.offre.recruteur && (c.statut === 'RETENU' || c.statut === 'ENTRETIEN')) {
-              grouped.set(c.offre.recruteur.id, {
-                id: c.offre.recruteur.id,
-                nom: c.offre.recruteur.nom,
-                offreTitre: c.offre.titre
-              });
+          },
+          error: () => {
+            this.conversations = [];
+            if (this.selectedUser !== null && !this.conversations.some(c => c.id === this.selectedUser)) {
+              this.selectedUser = null;
+              this.messages = [];
             }
-          });
-          this.conversations = Array.from(grouped.values());
-          this.fetchUnreadCounts(headers, userId);
-        },
-        error: () => this.conversations = []
-      });
-    }
-  }
+          }
+        });
+     }
+   }
 
   selectConversation(user: Conversation) {
     console.log('[DEBUG] selectConversation called:', user.id, user.nom);

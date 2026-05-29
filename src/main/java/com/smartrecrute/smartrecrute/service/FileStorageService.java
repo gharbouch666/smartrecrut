@@ -45,6 +45,11 @@ public class FileStorageService {
         return new FileInputStream(filePath.toFile());
     }
 
+    public void deleteFile(String filename) throws IOException {
+        Path filePath = this.fileStorageLocation.resolve(filename);
+        Files.deleteIfExists(filePath);
+    }
+
     public Path getFileStorageLocation() {
         return fileStorageLocation;
     }

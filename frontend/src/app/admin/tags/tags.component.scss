@@ -1,0 +1,213 @@
+@use '../../_tokens' as *;
+
+:host {
+  display: block;
+  padding: 0;
+}
+
+/* ── Tags page header section ── */
+.tags-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Card block ── */
+.tags-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.75rem 2rem;
+}
+
+/* ── Tags panel title ── */
+.tags-panel__title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 1.5rem;
+}
+
+/* ── Form within tags card ── */
+.tags-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.tags-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  &--full {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.tags-field-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tags-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease;
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder { color: var(--text-faint); }
+  &:focus { border-color: var(--accent); }
+}
+
+/* ── Loading spinner ── */
+.tags-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.tags-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba($accent-blue, 0.2);
+  border-top-color: $accent-blue;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Empty state ── */
+.tags-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: $text-muted;
+
+  &__icon {
+    width: 64px; height: 64px;
+    color: $text-muted;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  &__title {
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 0.5rem;
+  }
+}
+
+/* ── Tags grid ── */
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Individual tag card ── */
+.tags-card--hover {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: default;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 1.25rem;
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(92, 109, 255, 0.15);
+  }
+}
+
+/* ── Tag card internals ── */
+.tags-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tags-name {
+  font-weight: 600;
+  color: $text;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tags-badge {
+  flex-shrink: 0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: rgba($accent-blue, 0.12);
+  color: $accent-blue;
+  font-size: 0.6875rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Hover actions (Edit / Delete) ── */
+.tags-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tags-card--hover:hover .tags-actions {
+  opacity: 1;
+}
+
+.tags-btn {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: center;
+  font-family: 'Manrope', sans-serif;
+
+  &--accent {
+    background: rgba($accent-blue, 0.12);
+    color: $accent-blue;
+    &:hover { background: $accent-blue; color: white; }
+  }
+
+  &--danger {
+    background: rgba($accent-red, 0.1);
+    color: $accent-red;
+    &:hover { background: $accent-red; color: white; }
+  }
+}

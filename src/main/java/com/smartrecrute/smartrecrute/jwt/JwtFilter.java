@@ -28,12 +28,9 @@ public class JwtFilter extends OncePerRequestFilter {
         "/api/auth/register",
         "/api/auth/forgot-password",
         "/api/auth/reset-password",
-        "/api/candidatures",
         "/api/offres/open",
         "/api/offres/with-tags",
-        "/api/tags",
-        "/api/stats",
-        "/api/candidatures/apply"
+        "/api/tags"
     );
 
     @Override

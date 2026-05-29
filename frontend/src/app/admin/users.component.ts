@@ -13,6 +13,7 @@ interface User {
   selector: 'app-users',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./users.component.scss'],
   template: `
     <div style="max-width: 1400px; margin: 0 auto;">
       <div class="page-header">
@@ -60,7 +61,7 @@ interface User {
 
         <!-- Candidates -->
         <div style="margin-bottom: 2rem;">
-          <h3 class="pill pill-green" style="margin-bottom: 1rem;">Candidates ({{users.candidats?.length || 0}})</h3>
+           <h3 class="pill pill-green" style="margin-bottom: 1rem;">Candidates ({{users.candidats.length || 0}})</h3>
           <div class="data-table-wrap">
             <table class="data-table">
               <thead>
@@ -81,7 +82,7 @@ interface User {
                     <button (click)="deleteUser(user.id, 'candidat')" class="btn-danger" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">Delete</button>
                   </td>
                 </tr>
-                <tr *ngIf="!users.candidats?.length">
+                <tr *ngIf="!users.candidats.length">
                   <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No candidates</td>
                 </tr>
               </tbody>
@@ -91,7 +92,7 @@ interface User {
 
         <!-- Recruiters -->
         <div style="margin-bottom: 2rem;">
-          <h3 class="pill pill-blue" style="margin-bottom: 1rem;">Recruiters ({{users.recruteurs?.length || 0}})</h3>
+           <h3 class="pill pill-blue" style="margin-bottom: 1rem;">Recruiters ({{users.recruteurs.length || 0}})</h3>
           <div class="data-table-wrap">
             <table class="data-table">
               <thead>
@@ -122,7 +123,7 @@ interface User {
 
         <!-- Admins -->
         <div>
-          <h3 class="pill pill-amber" style="margin-bottom: 1rem;">Administrateurs ({{users.administrateurs?.length || 0}})</h3>
+          <h3 class="pill pill-amber" style="margin-bottom: 1rem;">Administrateurs ({{users.administrateurs.length || 0}})</h3>
           <div class="data-table-wrap">
             <table class="data-table">
               <thead>
@@ -243,9 +244,9 @@ export class UsersComponent implements OnInit {
     this.editingId = user.id;
     this.editUserData = { nom: user.nom, email: user.email, password: '' };
     // Figure out which type
-    if (this.users.candidats?.find(u => u.id === user.id)) {
+     if (this.users.candidats.find(u => u.id === user.id)) {
       this.editingType = 'candidat';
-    } else if (this.users.recruteurs?.find(u => u.id === user.id)) {
+     } else if (this.users.recruteurs.find(u => u.id === user.id)) {
       this.editingType = 'recruteur';
     } else {
       this.editingType = 'administrateur';

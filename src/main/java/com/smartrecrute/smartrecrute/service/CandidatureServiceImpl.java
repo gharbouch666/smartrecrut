@@ -3,9 +3,12 @@ package com.smartrecrute.smartrecrute.service;
 import com.smartrecrute.smartrecrute.repository.CandidatureRepository;
 import com.smartrecrute.smartrecrute.repository.CandidatRepository;
 import com.smartrecrute.smartrecrute.repository.OffreRepository;
+import com.smartrecrute.smartrecrute.repository.MessageRepository;
 import com.smartrecrute.smartrecrute.entity.Candidature;
 import com.smartrecrute.smartrecrute.entity.Candidat;
+import com.smartrecrute.smartrecrute.entity.Message;
 import com.smartrecrute.smartrecrute.entity.Offre;
+import com.smartrecrute.smartrecrute.entity.Utilisateur;
 import com.smartrecrute.smartrecrute.enums.StatutKanban;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,9 @@ public class CandidatureServiceImpl implements CandidatureService {
 
     @Autowired
     private OffreRepository offreRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Autowired
     private MatchingService matchingService;
@@ -170,6 +176,17 @@ public class CandidatureServiceImpl implements CandidatureService {
             candidature.setStatut(StatutKanban.valueOf(statut));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid statut: " + statut);
+        }
+        // If statut is REFUSE, delete all messages between candidat and recruteur
+        if (candidature.getStatut() == StatutKanban.REFUSE) {
+            Candidat candidat = candidature.getCandidat();
+            Offre offre = candidature.getOffre();
+            if (candidat != null && offre != null && offre.getRecruteur() != null) {
+                Utilisateur recruteur = offre.getRecruteur();
+                List<Message> messages = messageRepository.findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByDateEnvoiAsc(
+                        candidat.getId(), recruteur.getId(), recruteur.getId(), candidat.getId());
+                messageRepository.deleteAll(messages);
+            }
         }
         return repository.save(candidature);
     }

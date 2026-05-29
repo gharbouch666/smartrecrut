@@ -18,6 +18,7 @@ interface Recruteur {
   selector: 'app-recruteur-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./recruteur-profile.component.scss'],
   template: `
     <div style="max-width: 1200px; margin: 0 auto;">
       <!-- Header -->
@@ -246,11 +247,12 @@ export class RecruteurProfileComponent implements OnInit {
       .set('Content-Type', 'application/json');
     
     const passwordData = {
-      currentPassword: this.currentPassword,
-      newPassword: this.newPassword
+      oldPassword: this.currentPassword,
+      newPassword: this.newPassword,
+      confirmPassword: this.confirmPassword
     };
     
-    this.http.post(`http://localhost:8000/api/auth/change-password`, passwordData, { headers }).subscribe({
+    this.http.post(`http://localhost:8000/api/auth/change-password`, passwordData, { headers, responseType: 'text' as 'json' }).subscribe({
       next: () => {
         this.changingPassword = false;
         this.passwordChanged = true;
@@ -263,7 +265,8 @@ export class RecruteurProfileComponent implements OnInit {
       error: (err) => {
         this.changingPassword = false;
         console.error('Password change error:', err);
-        alert('Failed to change password: ' + (err.error?.message || 'Invalid current password'));
+        const errorMessage = typeof err.error === 'string' ? err.error : err.error?.message || 'Failed to change password';
+        alert('Failed to change password: ' + errorMessage);
       }
     });
   }

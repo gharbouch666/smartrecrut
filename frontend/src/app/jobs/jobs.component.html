@@ -1,6 +1,6 @@
-<div style="max-width: 1400px; margin: 0 auto;">
+<div class="page-wrapper">
   <!-- Header -->
-  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="page-header">
     <div>
       <h1 class="page-title">{{isCandidate ? 'Available Jobs' : 'Job Offers'}}</h1>
       <p class="page-subtitle">{{isCandidate ? 'Browse and apply to open positions' : 'Create and manage job opportunities'}}</p>
@@ -11,14 +11,14 @@
   </div>
 
   <!-- Create Form (Recruiter Only) -->
-  <div *ngIf="showForm && isRecruiter" class="card animate-in" style="margin-bottom: 2rem;">
-    <h2 class="page-title" style="font-size: 1.25rem; margin-bottom: 1.5rem;">Create Job Offer</h2>
-    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 1.25rem;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+  <div *ngIf="showForm && isRecruiter" class="card animate-in create-form">
+    <h2 class="page-title create-form__title">Create Job Offer</h2>
+    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+      <div class="create-form__row">
         <input formControlName="titre" placeholder="Job Title *" class="field">
         <input formControlName="localisation" placeholder="Location *" class="field">
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="create-form__row">
         <select formControlName="typeContrat" class="form-select">
           <option value="CDI">CDI (Permanent)</option>
           <option value="CDD">CDD (Contract)</option>
@@ -27,37 +27,37 @@
         </select>
         <input formControlName="departement" placeholder="Department" class="field">
       </div>
-      <textarea formControlName="description" placeholder="Job Description *" rows="4" class="field" style="resize: vertical;"></textarea>
-      
+      <textarea formControlName="description" placeholder="Job Description *" rows="4" class="field"></textarea>
+
       <!-- AI Generate Button -->
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button type="button" (click)="generateWithAI()" [disabled]="aiLoading" class="btn-primary" style="background: linear-gradient(135deg, #7C3AED, #A855F7);">
+      <div class="create-form__ai-row">
+        <button type="button" (click)="generateWithAI()" [disabled]="aiLoading" class="btn-ai">
           {{aiLoading ? 'Generating...' : '🤖 AI Generate Description'}}
         </button>
-        <span *ngIf="aiDescription" class="mono" style="font-size: 0.75rem; color: var(--green);">✓ Generated!</span>
+        <span *ngIf="aiDescription" class="mono ai-generated-badge">✓ Generated!</span>
       </div>
-      <div *ngIf="aiDescription" style="margin-top: 0.75rem; padding: 1rem; background: var(--surface); border-radius: 8px; border: 1px solid var(--accent); max-height: 200px; overflow-y: auto;">
+      <div *ngIf="aiDescription" class="ai-result-box">
         <p style="white-space: pre-wrap; font-size: 0.875rem; color: var(--text);">{{aiDescription}}</p>
       </div>
-      
-      <div style="border-top: 1px solid var(--border); padding-top: 1.25rem;">
-        <h3 style="font-weight: 600; color: var(--text); margin-bottom: 1rem;">Required Skills</h3>
-        <div *ngFor="let cat of categories" style="margin-bottom: 1rem;">
-          <h4 class="mono" style="font-size: 0.75rem; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase;">{{cat}}</h4>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+
+      <!-- Required Skills -->
+      <div class="divider">
+        <h3 class="section-title">Required Skills</h3>
+        <div *ngFor="let cat of categories">
+          <h4 class="mono section-subtitle">{{cat}}</h4>
+          <div class="skill-tags">
             <button *ngFor="let tag of tagsByCategory[cat]" type="button"
               (click)="toggleTagSelection(tag.id, !isTagRequired(tag.id))"
-              style="padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.8125rem; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer;"
-              [style.background]="isTagSelected(tag.id) ? 'var(--accent)' : 'transparent'"
-              [style.color]="isTagSelected(tag.id) ? 'white' : 'var(--text)'"
-              [style.border-color]="isTagSelected(tag.id) ? 'var(--accent)' : 'var(--border)'">
+              class="skill-tag"
+              [class.skill-tag--selected]="isTagSelected(tag.id)">
               {{tag.libelle}}
             </button>
           </div>
         </div>
       </div>
-      
-      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 0.5rem;">
+
+      <!-- Actions -->
+      <div class="create-form__actions">
         <button type="button" (click)="toggleForm()" class="btn-ghost">Cancel</button>
         <button type="submit" class="btn-primary">Publish</button>
       </div>
@@ -65,56 +65,53 @@
   </div>
 
   <!-- Jobs Grid -->
-  <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
+  <div class="grid">
     <div *ngFor="let job of jobs" class="job-card animate-in">
       <div class="job-card-header">
         <div>
           <h3 class="job-title">{{job.titre}}</h3>
           <p class="job-meta">{{job.localisation}} &middot; {{job.typeContrat}}</p>
         </div>
-        <span class="pill" [class.pill-green]="job.statut === 'OUVERTE' || !job.statut" [class.pill-amber]="job.statut === 'FERMEE'">
+        <span class="pill"
+          [class.pill-green]="job.statut === 'OUVERTE' || !job.statut"
+          [class.pill-amber]="job.statut === 'FERMEE'">
           {{job.statut || 'Open'}}
         </span>
       </div>
       <p class="job-desc">{{job.description}}</p>
-      
+
       <!-- Required Skills for Candidates -->
-      <div *ngIf="isCandidate && job.tags?.length" style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
-        <span class="mono" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Required Skills:</span>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.5rem;">
-          <span *ngFor="let tag of job.tags" 
-            style="padding: 0.25rem 0.5rem; background: var(--accent-dim); color: var(--accent); border-radius: 4px; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;">
+      <div *ngIf="isCandidate && job.tags?.length" class="divider">
+        <span class="mono section-subtitle">Required Skills:</span>
+        <div class="skill-tags">
+          <span *ngFor="let tag of job.tags" class="skill-chip">
             {{tag.tag?.libelle}}
           </span>
         </div>
       </div>
-      
+
       <!-- Apply Button for Candidates -->
       <div *ngIf="isCandidate && job.statut !== 'FERMEE'" class="job-card-footer">
-        <button *ngIf="hasApplied(job.id)" disabled class="btn-primary" style="width: 100%; justify-content: center; background: var(--lime);">
-          Applied
-        </button>
-        <button *ngIf="!hasApplied(job.id) && applyingToJob !== job.id" (click)="applyToJob(job.id)" class="btn-primary" style="width: 100%; justify-content: center;">
-          Apply Now
-        </button>
-        <button *ngIf="applyingToJob === job.id" disabled class="btn-primary" style="width: 100%; justify-content: center; opacity: 0.5;">
-          Applying...
-        </button>
+        <div class="apply-buttons">
+          <button *ngIf="hasApplied(job.id)" disabled class="btn-primary apply-btn apply-btn--applied">Applied</button>
+          <button *ngIf="!hasApplied(job.id) && applyingToJob !== job.id" (click)="applyToJob(job.id)" class="btn-primary apply-btn" >Apply Now</button>
+          <button *ngIf="applyingToJob === job.id" disabled class="btn-primary apply-btn apply-btn--loading">Applying...</button>
+        </div>
       </div>
-      
+
       <!-- Actions for Recruiter -->
       <div *ngIf="isRecruiter" class="job-card-footer">
-        <div class="mono" style="font-size: 0.75rem; color: var(--text-muted);">Min Score: {{job.scoreMinimum || 50}}%</div>
-        <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
-          <button (click)="editJob(job)" class="btn-ghost" style="flex: 1; justify-content: center;">Edit</button>
-          <button (click)="deleteJob(job.id)" class="btn-ghost" style="flex: 1; justify-content: center; color: var(--rose);">Delete</button>
+        <div class="mono job-score-label">Min Score: {{job.scoreMinimum || 50}}%</div>
+        <div class="recruiter-actions">
+          <button (click)="editJob(job)" class="btn-ghost recruiter-btn">Edit</button>
+          <button (click)="deleteJob(job.id)" class="btn-ghost recruiter-btn recruiter-btn--delete">Delete</button>
         </div>
       </div>
     </div>
-    
+
     <!-- Empty State -->
-    <div *ngIf="jobs.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-muted);">
-      <h3 style="font-weight: 600; color: var(--text); margin-bottom: 0.5rem;">{{isCandidate ? 'No jobs available' : 'No job offers yet'}}</h3>
+    <div *ngIf="jobs.length === 0" class="empty-state">
+      <h3>{{isCandidate ? 'No jobs available' : 'No job offers yet'}}</h3>
       <p>{{isCandidate ? 'Check back later for open positions' : 'Create your first job offer to get started'}}</p>
     </div>
   </div>
