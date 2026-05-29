@@ -56,6 +56,8 @@ export class ResetPasswordComponent implements OnInit {
       confirmPassword: this.resetForm.get('confirmPassword')?.value
     };
 
+    console.log('Reset password request body:', resetData);
+
     this.http.post(`${environment.apiUrl}/auth/reset-password`, resetData).subscribe({
       next: () => {
         this.message = 'Password reset successful! You can now log in.';
@@ -63,7 +65,8 @@ export class ResetPasswordComponent implements OnInit {
       },
       error: (error) => {
         console.error('Reset password error:', error);
-        this.message = error.error?.message || 'An error occurred. Please try again.';
+        const backendMessage = error.error?.message || (typeof error.error === 'string' ? error.error : null);
+        this.message = backendMessage || error.statusText || 'An error occurred. Please try again.';
       }
     });
   }

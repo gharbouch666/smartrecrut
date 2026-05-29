@@ -9,7 +9,12 @@ import com.smartrecrute.smartrecrute.entity.Administrateur;
 import com.smartrecrute.smartrecrute.entity.Candidat;
 import com.smartrecrute.smartrecrute.entity.Recruteur;
 import com.smartrecrute.smartrecrute.entity.Utilisateur;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +34,15 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     private PasswordService passwordService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
     // DON'T inject passwordEncoder - causes circular dependency!
 
@@ -124,29 +138,68 @@ public class AuthService implements UserDetailsService {
     }
 
     public void forgotPassword(ForgotPasswordRequest request) {
-        // In a real application, you would:
-        // 1. Find user by email
-        // 2. Generate a reset token
-        // 3. Store token with expiration
-        // 4. Send email with reset link
-        // For now, just validate user exists
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new RuntimeException("Email is required");
+        }
         Utilisateur user = findUserByEmail(request.getEmail());
         if (user == null) {
             throw new RuntimeException("User not found");
         }
-        // TODO: Implement email sending and token generation
+
+        String code = tokenService.generateCode();
+        tokenService.saveToken(user, code);
+        sendForgotPasswordEmail(user, code);
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-        // In a real application, you would:
-        // 1. Validate token
-        // 2. Check token expiration
-        // 3. Find user and update password
-        // For now, just basic validation
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new RuntimeException("Email is required");
+        }
+        if (request.getCode() == null || request.getCode().isBlank()) {
+            throw new RuntimeException("Verification code is required");
+        }
+        if (request.getNewPassword() == null || request.getConfirmPassword() == null) {
+            throw new RuntimeException("New password and confirmation are required");
+        }
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new RuntimeException("Passwords do not match");
         }
-        // TODO: Implement token validation and password reset
+        if (!tokenService.validateCode(request.getCode())) {
+            throw new RuntimeException("Invalid or expired verification code");
+        }
+
+        Utilisateur user = tokenService.getUtilisateurByCode(request.getCode());
+        if (user == null) {
+            throw new RuntimeException("Invalid verification code");
+        }
+        if (!user.getEmail().equalsIgnoreCase(request.getEmail())) {
+            throw new RuntimeException("Email does not match verification code");
+        }
+
+        String encodedNewPassword = passwordService.encodePassword(request.getNewPassword());
+        user.setMotDePasse(encodedNewPassword);
+        saveUser(user);
+        tokenService.deleteCode(request.getToken());
+    }
+
+    private void sendForgotPasswordEmail(Utilisateur user, String code) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+            String fromAddress = mailFrom != null && !mailFrom.isBlank() ? mailFrom : "no-reply@smartrecrute.com";
+            helper.setFrom(fromAddress);
+            helper.setTo(user.getEmail());
+            helper.setSubject("SmartRecrute password reset code");
+            String body = "Hello " + user.getNom() + ",\n\n" +
+                    "Your password reset code is: " + code + "\n\n" +
+                    "Enter this code on the reset password page. The code expires in 15 minutes.\n\n" +
+                    "If you did not request this, please ignore this email.\n\n" +
+                    "SmartRecrute Team";
+            helper.setText(body, false);
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send reset email: " + e.getMessage());
+        }
     }
 
     public Utilisateur findUserByEmail(String email) {
