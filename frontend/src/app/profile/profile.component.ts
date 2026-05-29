@@ -32,7 +32,7 @@ interface Candidat {
   template: `
     <div style="max-width: 1200px; margin: 0 auto;">
       <!-- Header -->
-      <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="page-header">
         <div>
           <h1 class="page-title">My Profile</h1>
           <p class="page-subtitle">Manage your information and documents</p>
@@ -56,7 +56,7 @@ interface Candidat {
               {{candidat?.nom?.charAt(0)?.toUpperCase() || 'U'}}
             </div>
             <div>
-              <h2 class="page-title" style="font-size: 1.5rem;">{{candidat?.nom || 'Your Name'}}</h2>
+              <h2 class="card-heading">{{candidat?.nom || 'Your Name'}}</h2>
               <p class="mono" style="font-size: 0.875rem; color: var(--text-muted);">{{candidat?.email}}</p>
             </div>
           </div>
@@ -83,7 +83,7 @@ interface Candidat {
 
         <!-- Documents Card -->
         <div class="card">
-          <h2 class="page-title" style="font-size: 1.25rem; margin-bottom: 1.5rem;">Documents</h2>
+          <h2 class="card-heading">Documents</h2>
           
           <div style="display: flex; flex-direction: column; gap: 1rem;">
             <div *ngIf="candidat?.cvUrl" style="padding: 1rem; background: rgba(22,163,74,0.1); border: 1px solid var(--lime); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
@@ -148,7 +148,7 @@ interface Candidat {
       <!-- Skills Tab -->
       <div *ngIf="activeTab === 'skills'" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <div *ngFor="let cat of categories" class="card">
-          <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem; text-transform: capitalize;">{{cat}}</h2>
+          <h2 class="card-heading" style="text-transform: capitalize;">{{cat}}</h2>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
             <button *ngFor="let tag of tagsByCategory[cat]" type="button"
               (click)="toggleTag(tag.id)"
@@ -164,7 +164,7 @@ interface Candidat {
 
         <!-- Selected Skills Panel -->
         <div *ngIf="hasSelectedSkills()" class="card">
-          <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem;">Set Expertise Level</h2>
+          <h2 class="card-heading">Set Expertise Level</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
             <div *ngFor="let tagId of getSelectedTagIds()" style="display: flex; flex-direction: column; gap: 0.25rem;">
               <label class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">{{getTagName(tagId)}}</label>
@@ -186,7 +186,7 @@ interface Candidat {
       <div *ngIf="activeTab === 'docs'" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <!-- CV Upload -->
         <div class="card">
-          <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem;">CV (Curriculum Vitae)</h2>
+          <h2 class="card-heading">CV (Curriculum Vitae)</h2>
           <div *ngIf="candidat && candidat.cvUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <svg style="width: 20px; height: 20px; color: var(--lime);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,7 +209,7 @@ interface Candidat {
 
         <!-- Cover Letter Upload -->
         <div class="card">
-          <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1rem;">Cover Letter (Lettre de motivation)</h2>
+          <h2 class="card-heading">Cover Letter (Lettre de motivation)</h2>
           <div *ngIf="candidat && candidat.lettreMotivationUrl" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <svg style="width: 20px; height: 20px; color: var(--lime);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +234,7 @@ interface Candidat {
       <!-- Personal Info Tab -->
       <div *ngIf="activeTab === 'info'">
         <div *ngIf="candidat" class="card">
-          <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1.5rem;">Personal Information</h2>
+          <h2 class="card-heading">Personal Information</h2>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
             <div>
               <label class="form-label">Date of Birth</label>

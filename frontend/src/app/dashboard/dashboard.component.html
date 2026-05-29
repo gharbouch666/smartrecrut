@@ -75,19 +75,19 @@
     <div class="action-panel">
       <h2 class="panel-title">Quick actions</h2>
       <div class="action-list">
-        <a class="action-link" href="/jobs/new">
+        <a class="action-link" routerLink="/jobs">
           <span class="action-link__text">Post a new job</span>
           <span class="action-link__arrow">→</span>
         </a>
-        <a class="action-link" href="/candidates">
+        <a class="action-link" routerLink="/candidates">
           <span class="action-link__text">View all candidates</span>
           <span class="action-link__arrow">→</span>
         </a>
-<a class="action-link" href="/applications">
+        <a class="action-link" routerLink="/applications">
            <span class="action-link__text">Review applications</span>
            <span class="action-link__arrow">→</span>
          </a>
-        <a class="action-link" href="/admin-profile">
+        <a class="action-link" routerLink="/admin-profile">
            <span class="action-link__text">View Profile</span>
            <span class="action-link__arrow">→</span>
          </a>
@@ -155,9 +155,9 @@
   </div>
 
 <div class="action-list action-list--row animate-in delay-3">
-     <a class="action-link" href="/jobs/new"><span class="action-link__text">Post new job</span><span class="action-link__arrow">→</span></a>
-     <a class="action-link" href="/applications"><span class="action-link__text">Review applications</span><span class="action-link__arrow">→</span></a>
-     <a class="action-link" href="/recruteur-profile"><span class="action-link__text">View Profile</span><span class="action-link__arrow">→</span></a>
+    <a class="action-link" routerLink="/jobs"><span class="action-link__text">Post new job</span><span class="action-link__arrow">→</span></a>
+    <a class="action-link" routerLink="/applications"><span class="action-link__text">Review applications</span><span class="action-link__arrow">→</span></a>
+    <a class="action-link" routerLink="/recruteur-profile"><span class="action-link__text">View Profile</span><span class="action-link__arrow">→</span></a>
    </div>
 </ng-container>
 
@@ -167,13 +167,12 @@
 ══════════════════════════ -->
 <ng-container *ngIf="isCandidate">
 
-  <div class="metrics-row animate-in delay-1">
-    <div class="metric-hero">
-      <span class="metric-hero__label">Jobs Applied</span>
-      <span class="metric-hero__num">{{ myApplications.length }}</span>
-      <span class="metric-hero__sub">total submissions</span>
-    </div>
-    <div class="metrics-secondary">
+  <div class="metrics-row metrics-row--solo animate-in delay-1">
+    <div class="metrics-secondary three-up">
+      <div class="metric-card metric-card--blue">
+        <span class="metric-card__num">{{ myApplications.length }}</span>
+        <span class="metric-card__label">Jobs Applied</span>
+      </div>
       <div class="metric-card metric-card--green">
         <span class="metric-card__num">{{ inConsiderationCount }}</span>
         <span class="metric-card__label">In consideration</span>

@@ -51,17 +51,10 @@ interface Admin {
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Only show name and email as requested -->
               <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Role</p>
-                <p style="font-weight: 500; color: var(--text);">{{admin?.role || 'Admin'}}</p>
-              </div>
-              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Status</p>
-                <p style="font-weight: 500; color: var(--text);">{{admin?.actif ? 'Active' : 'Inactive'}}</p>
-              </div>
-              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Member Since</p>
-                <p style="font-weight: 500; color: var(--text);">{{admin?.dateCreation | date:'mediumDate'}}</p>
+                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Email</p>
+                <p style="font-weight: 500; color: var(--text);">{{admin?.email}}</p>
               </div>
             </div>
           </div>
@@ -210,7 +203,7 @@ export class AdminProfileComponent implements OnInit {
       .set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`)
       .set('Content-Type', 'application/json');
     
-    const updateData = {
+    const updateData: any = {
       nom: this.admin.nom,
       email: this.admin.email
     };

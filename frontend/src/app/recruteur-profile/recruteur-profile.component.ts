@@ -52,17 +52,10 @@ interface Recruteur {
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Only show name and email as requested -->
               <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Position</p>
-                <p style="font-weight: 500; color: var(--text);">{{recruteur?.poste || 'Not set'}}</p>
-              </div>
-              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Status</p>
-                <p style="font-weight: 500; color: var(--text);">{{recruteur?.actif ? 'Active' : 'Inactive'}}</p>
-              </div>
-              <div style="padding: 0.75rem; background: var(--surface); border-radius: 8px;">
-                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Member Since</p>
-                <p style="font-weight: 500; color: var(--text);">{{recruteur?.dateCreation | date:'mediumDate'}}</p>
+                <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase;">Email</p>
+                <p style="font-weight: 500; color: var(--text);">{{recruteur?.email}}</p>
               </div>
             </div>
           </div>
@@ -114,15 +107,15 @@ interface Recruteur {
            <div class="card">
              <h2 class="page-title" style="font-size: 1rem; margin-bottom: 1.5rem;">Personal Information</h2>
              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-               <div>
-                 <label class="form-label">Full Name</label>
-                 <input type="text" [(ngModel)]="recruteur!.nom" class="field"/>
+                 <div>
+                   <label class="form-label">Full Name</label>
+                   <input type="text" [(ngModel)]="recruteur!.nom" class="field"/>
+                 </div>
+                 <div>
+                   <label class="form-label">Email</label>
+                   <input type="email" [(ngModel)]="recruteur!.email" class="field"/>
+                 </div>
                </div>
-               <div>
-                 <label class="form-label">Email</label>
-                 <input type="email" [(ngModel)]="recruteur!.email" class="field"/>
-               </div>
-             </div>
            </div>
          </div>
 
@@ -212,10 +205,9 @@ export class RecruteurProfileComponent implements OnInit {
       .set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`)
       .set('Content-Type', 'application/json');
     
-    const updateData = {
+    const updateData: any = {
       nom: this.recruteur.nom,
-      email: this.recruteur.email,
-      poste: this.recruteur.poste
+      email: this.recruteur.email
     };
     
     this.http.put(`http://localhost:8000/api/recruteurs/${this.recruteur.id}`, updateData, { headers }).subscribe({

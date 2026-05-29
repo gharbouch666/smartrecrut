@@ -125,6 +125,11 @@
   }
 }
 
+/* When metrics-row contains only secondary metrics (candidate view) */
+.metrics-row.metrics-row--solo {
+  grid-template-columns: 1fr;
+}
+
 // Hero metric
 .metric-hero {
   background: $surface;
@@ -176,6 +181,21 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 1rem;
+}
+
+/* Variant for three-uniform metrics (candidate dashboard) */
+.metrics-secondary.three-up {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Make three-up cards larger and equal height */
+.metrics-secondary.three-up .metric-card {
+  padding: 2rem;
+  min-height: 140px;
+  justify-content: center;
+}
+.metrics-secondary.three-up .metric-card__num {
+  font-size: 2.6rem;
 }
 
 .metric-card {

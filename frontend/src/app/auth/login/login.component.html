@@ -1,4 +1,4 @@
-<div class="auth-layout">
+<div class="auth-layout auth-dark">
   <!-- Back to Home Button -->
   <a routerLink="/" class="back-home-btn">← Back to Home</a>
 
@@ -26,34 +26,33 @@
       <h2 class="auth-form-title">Welcome back</h2>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="form-group" style="margin-bottom: 1.25rem;">
+        <div class="form-group">
           <label class="form-label">Email address</label>
           <input type="email" formControlName="email" 
             class="field"
             placeholder="you@example.com">
-          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="mono" style="color: var(--rose); font-size: 0.75rem; margin-top: 0.5rem;">Valid email required</div>
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">Valid email required</div>
         </div>
 
-        <div class="form-group" style="margin-bottom: 1.25rem;">
+        <div class="form-group">
           <label class="form-label">Password</label>
           <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" 
             class="field"
             placeholder="Enter your password">
-          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="mono" style="color: var(--rose); font-size: 0.75rem; margin-top: 0.5rem;">Password required</div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">Password required</div>
         </div>
 
-        <div style="text-align: right; margin-bottom: 1.5rem;">
-          <a routerLink="/forgot-password" class="mono" style="font-size: 0.75rem; color: var(--accent);">Forgot password?</a>
+        <div class="form-footer">
+          <a routerLink="/forgot-password" class="auth-link">Forgot password?</a>
         </div>
 
-        <button type="submit" [disabled]="loginForm.invalid" 
-          class="btn-primary" style="width: 100%; justify-content: center;">
+        <button type="submit" [disabled]="loginForm.invalid" class="btn-primary btn-block">
           Sign in
         </button>
       </form>
 
-      <p style="text-align: center; font-size: 0.875rem; color: var(--text-muted); margin-top: 1.5rem;">
-        Don't have an account? <a routerLink="/register" style="color: var(--accent); font-weight: 600;">Create one</a>
+      <p class="auth-footer-text">
+        Don't have an account? <a routerLink="/register" class="auth-link">Create one</a>
       </p>
     </div>
   </div>

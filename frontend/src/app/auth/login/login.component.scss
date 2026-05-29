@@ -1,17 +1,1 @@
-.back-home-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  transition: all 0.2s;
-  z-index: 10;
-}
-
-.back-home-btn:hover {
-  color: var(--accent);
-  background: var(--accent-dim);
-}
+/* Back-home button styling is now provided by shared auth styles in frontend/src/styles.scss */
