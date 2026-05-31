@@ -72,7 +72,7 @@
       </div>
     </div>
     <div cdkDropList [cdkDropListData]="aTrier" (cdkDropListDropped)="drop($event, 'A_TRIER')" class="apps-kanban-col__body">
-      <div *ngFor="let app of aTrier" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+      <div *ngFor="let app of aTrier" cdkDrag class="apps-kanban-card">
         <div class="apps-kanban-card__top">
           <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
           <span class="apps-kanban-card__score"
@@ -85,8 +85,7 @@
         <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
         <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
           <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
-          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
-          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Explain Score</button>
           <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
         </div>
       </div>
@@ -103,7 +102,7 @@
       </div>
     </div>
     <div cdkDropList [cdkDropListData]="entretien" (cdkDropListDropped)="drop($event, 'ENTRETIEN')" class="apps-kanban-col__body">
-      <div *ngFor="let app of entretien" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+      <div *ngFor="let app of entretien" cdkDrag class="apps-kanban-card">
         <div class="apps-kanban-card__top">
           <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
           <span class="apps-kanban-card__score"
@@ -116,8 +115,7 @@
         <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
         <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
           <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
-          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
-          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Explain Score</button>
           <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
         </div>
       </div>
@@ -134,7 +132,7 @@
       </div>
     </div>
     <div cdkDropList [cdkDropListData]="retenu" (cdkDropListDropped)="drop($event, 'RETENU')" class="apps-kanban-col__body">
-      <div *ngFor="let app of retenu" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+      <div *ngFor="let app of retenu" cdkDrag class="apps-kanban-card">
         <div class="apps-kanban-card__top">
           <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
           <span class="apps-kanban-card__score"
@@ -147,8 +145,7 @@
         <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
         <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
           <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
-          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
-          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Explain Score</button>
           <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
         </div>
       </div>
@@ -165,7 +162,7 @@
       </div>
     </div>
     <div cdkDropList [cdkDropListData]="refuse" (cdkDropListDropped)="drop($event, 'REFUSE')" class="apps-kanban-col__body">
-      <div *ngFor="let app of refuse" cdkDrag class="apps-kanban-card" (click)="showBreakdown(app)">
+      <div *ngFor="let app of refuse" cdkDrag class="apps-kanban-card">
         <div class="apps-kanban-card__top">
           <span class="apps-kanban-card__name">{{ app.candidat.nom }}</span>
           <span class="apps-kanban-card__score"
@@ -178,8 +175,7 @@
         <p class="apps-kanban-card__job">{{ app.offre.titre }}</p>
         <div *ngIf="isRecruteur()" class="apps-kanban-card__actions">
           <button (click)="openChat(app.candidat.id, app.candidat.nom); $event.stopPropagation()">Chat</button>
-          <button (click)="showBreakdown(app); $event.stopPropagation()">Details</button>
-          <button (click)="explainScore(app); $event.stopPropagation()">Why low?</button>
+          <button (click)="explainScore(app); $event.stopPropagation()">Explain Score</button>
           <button (click)="generateInterviewQuestions(app); $event.stopPropagation()">Questions</button>
         </div>
       </div>
@@ -187,4 +183,88 @@
     </div>
   </div>
 
+</div>
+
+<!-- Explain Score Modal -->
+<div *ngIf="showExplainScoreModal" class="apps-modal-overlay" (click)="showExplainScoreModal = false">
+  <div class="apps-modal" (click)="$event.stopPropagation()">
+    <div class="apps-modal__header">
+      <h2>Score Explanation</h2>
+      <button class="apps-modal__close" (click)="showExplainScoreModal = false">✕</button>
+    </div>
+    <div class="apps-modal__body">
+      <p *ngIf="selectedApp" class="apps-modal__subtitle">{{ selectedApp.candidat.nom }} - {{ selectedApp.offre.titre }}</p>
+      <div *ngIf="explainScoreLoading" class="apps-modal__loading">Loading explanation...</div>
+      <div *ngIf="!explainScoreLoading && explainScoreExplanation" class="apps-modal__content">
+        {{ explainScoreExplanation }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interview Questions Modal -->
+<div *ngIf="showInterviewModal" class="apps-modal-overlay" (click)="showInterviewModal = false">
+  <div class="apps-modal" (click)="$event.stopPropagation()">
+    <div class="apps-modal__header">
+      <h2>Interview Questions</h2>
+      <button class="apps-modal__close" (click)="showInterviewModal = false">✕</button>
+    </div>
+    <div class="apps-modal__body">
+      <p *ngIf="selectedApp" class="apps-modal__subtitle">{{ selectedApp.candidat.nom }} - {{ selectedApp.offre.titre }}</p>
+      <div *ngIf="interviewLoading" class="apps-modal__loading">Generating questions...</div>
+      <div *ngIf="!interviewLoading && interviewQuestions.length > 0" class="apps-modal__list">
+        <ol>
+          <li *ngFor="let question of interviewQuestions">{{ question }}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Score Breakdown Modal -->
+<div *ngIf="breakdownModal" class="apps-modal-overlay" (click)="breakdownModal = false">
+  <div class="apps-modal" (click)="$event.stopPropagation()">
+    <div class="apps-modal__header">
+      <h2>Application Details</h2>
+      <button class="apps-modal__close" (click)="breakdownModal = false">✕</button>
+    </div>
+    <div class="apps-modal__body">
+      <p *ngIf="selectedApp" class="apps-modal__subtitle">{{ selectedApp.candidat.nom }} - {{ selectedApp.offre.titre }}</p>
+      <div *ngIf="breakdownLoading" class="apps-modal__loading">Loading details...</div>
+      <div *ngIf="!breakdownLoading && breakdown" class="apps-modal__breakdown">
+        <div class="breakdown-item">
+          <span class="breakdown-label">Total Score:</span>
+          <span class="breakdown-value">{{ formatScore(breakdown.totalScore) }}%</span>
+        </div>
+        <div *ngFor="let item of breakdown.details" class="breakdown-item">
+          <span class="breakdown-label">{{ item.name }}:</span>
+          <span class="breakdown-value">{{ formatScore(item.score) }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Score Breakdown Modal -->
+<div *ngIf="breakdownModal" class="apps-modal-overlay" (click)="breakdownModal = false">
+  <div class="apps-modal" (click)="$event.stopPropagation()">
+    <div class="apps-modal__header">
+      <h2>Application Details</h2>
+      <button class="apps-modal__close" (click)="breakdownModal = false">✕</button>
+    </div>
+    <div class="apps-modal__body">
+      <p *ngIf="selectedApp" class="apps-modal__subtitle">{{ selectedApp.candidat.nom }} - {{ selectedApp.offre.titre }}</p>
+      <div *ngIf="breakdownLoading" class="apps-modal__loading">Loading details...</div>
+      <div *ngIf="!breakdownLoading && breakdown" class="apps-modal__breakdown">
+        <div class="breakdown-item">
+          <span class="breakdown-label">Total Score:</span>
+          <span class="breakdown-value">{{ formatScore(breakdown.totalScore) }}%</span>
+        </div>
+        <div *ngFor="let item of breakdown.details" class="breakdown-item">
+          <span class="breakdown-label">{{ item.name }}:</span>
+          <span class="breakdown-value">{{ formatScore(item.score) }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

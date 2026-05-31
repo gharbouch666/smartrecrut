@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,22 +28,35 @@ public class JwtFilter extends OncePerRequestFilter {
         "/api/auth/login",
         "/api/auth/register",
         "/api/auth/forgot-password",
-        "/api/auth/reset-password",
-        "/api/offres/open",
-        "/api/offres/with-tags",
-        "/api/tags"
+        "/api/auth/reset-password"
     );
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getRequestURI();
-        return PUBLIC_PATHS.contains(path); // Only skip public paths
+        String method = request.getMethod();
+
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            return true;
+        }
+
+        if (PUBLIC_PATHS.contains(path)) {
+            return true;
+        }
+
+        if ("GET".equalsIgnoreCase(method) && (
+                path.equals("/api/offres/with-tags") ||
+                path.equals("/api/offres/open") ||
+                path.startsWith("/api/tags")
+        )) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String path = request.getRequestURI();
-        
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = null;
         String username = null;
         boolean isTokenExpired = true;
@@ -62,13 +76,18 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!isTokenExpired && username != null) {
             try {
                 UserDetails userDetails = userService.loadUserByUsername(username);
+                System.out.println("JwtFilter: Loaded user " + username + " with authorities: " + userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                System.out.println("JwtFilter: Set auth for " + request.getMethod() + " " + request.getRequestURI());
             } catch (Exception e) {
                 System.out.println("JwtFilter: Auth error: " + e.getMessage());
+                e.printStackTrace();
             }
         } else if (isTokenExpired) {
-            System.out.println("JwtFilter: Token is expired");
+            System.out.println("JwtFilter: Token is expired for " + request.getMethod() + " " + request.getRequestURI());
+        } else {
+            System.out.println("JwtFilter: No token for " + request.getMethod() + " " + request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);

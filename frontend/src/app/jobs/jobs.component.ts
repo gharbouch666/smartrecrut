@@ -225,7 +225,11 @@ export class JobsComponent implements OnInit {
           this.selectedJobId = null;
         },
         error: (err) => {
-          console.error('Failed to save job', err);
+          if (err.status === 401 || err.status === 403) {
+            alert('Authorization failed. Please log in again and ensure your recruiter account is active.');
+          } else {
+            console.error('Failed to save job', err);
+          }
         }
       });
     }
@@ -330,7 +334,11 @@ export class JobsComponent implements OnInit {
         this.loadJobs();
       },
       error: (err) => {
-        alert('Failed to delete job: ' + (err.error?.message || err.statusText));
+        if (err.status === 401 || err.status === 403) {
+          alert('Authorization failed. Please log in again and ensure your recruiter account is active.');
+        } else {
+          alert('Failed to delete job: ' + (err.error?.message || err.statusText));
+        }
       }
     });
   }

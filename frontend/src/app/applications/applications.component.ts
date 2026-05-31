@@ -33,10 +33,10 @@ export class ApplicationsComponent implements OnInit {
   currentUserId: number = 0;
   myApplications: Candidature[] = [];
   minScoreFilter: number = 0;
+  selectedApp: Candidature | null = null;
   breakdownModal = false;
   breakdown: any = null;
   breakdownLoading = false;
-  selectedApp: Candidature | null = null;
 
   constructor(private http: HttpClient, private router: Router, private ai: AiService) {}
 
@@ -63,27 +63,6 @@ export class ApplicationsComponent implements OnInit {
 
   passesFilter(app: Candidature, minScore: number): boolean {
     return minScore === 0 || (app.scoreTotal || 0) >= minScore;
-  }
-
-  showBreakdown(app: Candidature) {
-    if (!this.isRecruteur()) return;
-    this.selectedApp = app;
-    this.breakdownModal = true;
-    this.breakdownLoading = true;
-    this.breakdown = null;
-    
-    const token = localStorage.getItem('accessToken');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    this.http.get<any>(`http://localhost:8000/api/candidatures/score-breakdown/${app.candidat.id}/${app.offre.id}`, { headers }).subscribe({
-      next: (data) => {
-        this.breakdown = data;
-        this.breakdownLoading = false;
-      },
-      error: () => {
-        this.breakdownLoading = false;
-      }
-    });
   }
 
   openChat(candidatId: number, candidatNom: string) {
@@ -226,6 +205,7 @@ export class ApplicationsComponent implements OnInit {
   showExplainScoreModal = false;
 
   explainScore(app: Candidature) {
+    this.selectedApp = app;
     this.explainScoreLoading = true;
     this.showExplainScoreModal = true;
     this.explainScoreExplanation = '';
@@ -247,43 +227,64 @@ export class ApplicationsComponent implements OnInit {
             if (res.success && res.explanation) {
               this.explainScoreExplanation = res.explanation;
             } else {
-              this.explainScoreExplanation = res.error || 'Unable to generate explanation';
+              this.explainScoreExplanation = res.error || 'Unable to generate explanation. The AI compares the candidate\'s skills with the job requirements to determine the score.';
             }
           },
           error: () => {
             this.explainScoreLoading = false;
+            this.explainScoreExplanation = 'AI service unavailable. Please start the SmartRecrute AI service on port 8001.\n\nThe score is calculated by comparing candidate skills (tags) against job requirements (tags). Tags marked as required must be present. The AI will provide a detailed analysis of strengths and gaps.';
           }
         });
       },
       error: () => {
         this.explainScoreLoading = false;
+        this.explainScoreExplanation = 'Unable to load candidate skills. Please try again.';
       }
     });
   }
 
   generateInterviewQuestions(app: Candidature) {
+    this.selectedApp = app;
     this.interviewLoading = true;
     this.interviewQuestions = [];
     this.showInterviewModal = true;
     
-    // Extract candidate skills and job title from the application
-    const candidateSkills: string[] = [];
-    const jobTitle = app.offre?.titre || 'Developer';
+    const token = localStorage.getItem('accessToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    this.ai.generateInterviewQuestions(candidateSkills, [], jobTitle).subscribe({
-      next: (res) => {
-        this.interviewLoading = false;
-        if (res.success && res.questions) {
-          this.interviewQuestions = res.questions;
-        } else {
-          this.interviewQuestions = [
-            'Tell me about your experience with the required skills.',
-            'Describe a challenging project you worked on.',
-            'How do you stay updated with new technologies?',
-            'What are your career goals?',
-            'Why do you want to join our team?'
-          ];
-        }
+    // Fetch candidate skills and job requirements
+    this.http.get<any>(`http://localhost:8000/api/candidatures/${app.id}/with-skills`, { headers }).subscribe({
+      next: (skillsData) => {
+        const candidateSkills = skillsData.candidatSkills || [];
+        const jobRequirements = skillsData.jobTags || [];
+        const jobTitle = app.offre?.titre || 'Developer';
+        
+        this.ai.generateInterviewQuestions(candidateSkills, jobRequirements, jobTitle).subscribe({
+          next: (res) => {
+            this.interviewLoading = false;
+            if (res.success && res.questions) {
+              this.interviewQuestions = res.questions;
+            } else {
+              this.interviewQuestions = [
+                'Tell me about your experience with the required skills.',
+                'Describe a challenging project you worked on.',
+                'How do you stay updated with new technologies?',
+                'What are your career goals?',
+                'Why do you want to join our team?'
+              ];
+            }
+          },
+          error: () => {
+            this.interviewLoading = false;
+            this.interviewQuestions = [
+              'Tell me about your experience with the required skills.',
+              'Describe a challenging project you worked on.',
+              'How do you stay updated with new technologies?',
+              'What are your career goals?',
+              'Why do you want to join our team?'
+            ];
+          }
+        });
       },
       error: () => {
         this.interviewLoading = false;
