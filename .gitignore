@@ -36,3 +36,4 @@ build/
 uploads/
 .kilo/
 smartrecrute-ai/.env
+smartrecrute-ai/.venv/
