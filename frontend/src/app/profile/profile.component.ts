@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface Tag {
   id: number;
@@ -207,6 +208,34 @@ interface Candidat {
           </button>
         </div>
 
+        <!-- Generated CV Preview -->
+        <div class="card">
+          <h2 class="card-heading">Generate CV from profile</h2>
+          <p class="mono" style="margin-bottom: 1rem; color: var(--text-muted);">
+            Generate a professional CV based on your profile data and selected skills. You can edit it before downloading.
+          </p>
+          <button (click)="generateCv()" class="btn-primary" style="margin-bottom: 1rem;">
+            {{ candidat?.cvUrl ? 'Regenerate CV preview' : 'Generate CV from info' }}
+          </button>
+          <div *ngIf="cvGenerationError" style="color: #ef4444; margin-bottom: 1rem;">{{cvGenerationError}}</div>
+          <div *ngIf="cvPreviewVisible" style="position: relative; display: flex; flex-direction: column; gap: 1rem; background: linear-gradient(135deg, rgba(59,130,246,0.14), rgba(16,185,129,0.08)); border: 1px solid rgba(59,130,246,0.24); border-radius: 18px; padding: 1.25rem 1.25rem 1rem; overflow: hidden; background-image: radial-gradient(circle at top right, rgba(255,255,255,0.45), transparent 20%), radial-gradient(circle at bottom left, rgba(16,185,129,0.16), transparent 22%);">
+            <div style="position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle at 10% 10%, rgba(56,189,248,0.12), transparent 0%), radial-gradient(circle at 90% 15%, rgba(16,185,129,0.12), transparent 0%), radial-gradient(circle at 50% 95%, rgba(59,130,246,0.08), transparent 0%); opacity: 0.9;"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+              <label class="form-label" style="font-size: 1rem; font-weight: 700; color: #0f172a;">CV Preview</label>
+              <span style="font-size: 0.875rem; color: #334155;">Editable text and PDF preview</span>
+            </div>
+            <textarea [(ngModel)]="generatedCvText" rows="12" class="field" style="position: relative; z-index: 1; min-height: 220px; white-space: pre-wrap; color: #0f172a; background: rgba(255,255,255,0.98); border: 1px solid rgba(96,165,250,0.35); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);"></textarea>
+            <div style="position: relative; z-index: 1; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+              <button (click)="refreshCvPreview()" class="btn-primary" style="min-width: 190px; background: #2563eb;">Refresh PDF preview</button>
+              <button (click)="downloadGeneratedCv()" class="btn-primary" style="min-width: 170px; background: #10b981;">Download PDF</button>
+              <span class="mono" style="color: #475569;">Edit the preview text, then refresh before downloading.</span>
+            </div>
+            <div *ngIf="cvPreviewUrl" style="position: relative; z-index: 1; margin-top: 1rem; border: 1px solid rgba(59,130,246,0.25); border-radius: 16px; overflow: hidden; height: 420px; background: #ffffff; box-shadow: 0 24px 60px rgba(15,23,42,0.08);">
+              <iframe [src]="cvPreviewUrl" width="100%" height="100%" style="border: none;"></iframe>
+            </div>
+          </div>
+        </div>
+
         <!-- Cover Letter Upload -->
         <div class="card">
           <h2 class="card-heading">Cover Letter (Lettre de motivation)</h2>
@@ -296,8 +325,13 @@ export class ProfileComponent implements OnInit {
   uploadingLettre = false;
   deletingCv = false;
   deletingLettre = false;
+  generatedCvText = '';
+  cvPreviewVisible = false;
+  cvGenerationError = '';
+  cvPreviewUrl: SafeResourceUrl | null = null;
+  private previewBlobUrl: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     const token = localStorage.getItem('accessToken');
@@ -584,5 +618,295 @@ export class ProfileComponent implements OnInit {
         alert('Failed to delete cover letter');
       }
     });
+  }
+
+  buildCvText(): string {
+    if (!this.candidat) {
+      return '';
+    }
+
+    const fullName = this.candidat.nom || 'Candidate Name';
+    const contact = [
+      this.candidat.email,
+      this.candidat.telephone,
+      this.candidat.ville,
+      this.candidat.linkedin
+    ].filter(Boolean).join(' · ');
+    const location = this.candidat.ville ? this.candidat.ville : 'Not provided';
+
+    const lines: string[] = [];
+    lines.push(fullName.toUpperCase());
+    lines.push(contact);
+    lines.push('');
+
+    lines.push('PROFESSIONAL PROFILE');
+    if (this.candidat.experience) {
+      lines.push(`- Results-driven professional with ${this.candidat.experience} of experience delivering polished work in collaborative environments.`);
+      lines.push('- Known for clear communication, strong follow-through, and refined attention to detail.');
+      lines.push('- Skilled at translating complex priorities into highly readable, recruiter-ready deliverables.');
+    } else {
+      lines.push('- Ambitious and adaptable candidate with a strong professional mindset and excellent teamwork skills.');
+      lines.push('- Focused on producing premium-quality work, maintaining sharp organization, and supporting fast-moving projects.');
+      lines.push('- Ready to contribute immediately and grow quickly within a high-performing team.');
+    }
+    lines.push('');
+
+    lines.push('CORE COMPETENCIES');
+    if (this.hasSelectedSkills()) {
+      this.getSelectedTagIds().forEach(tagId => {
+        const tagName = this.getTagName(tagId);
+        const niveau = this.getNiveau(tagId);
+        const levelLabel = niveau === 'EXPERT' ? 'Expert' : niveau === 'INTERMEDIAIRE' ? 'Intermediate' : 'Beginner';
+        lines.push(`- ${tagName} · ${levelLabel}`);
+      });
+    } else {
+      lines.push('- Strong communication and stakeholder collaboration.');
+      lines.push('- Efficient planning, problem solving, and delivery execution.');
+      lines.push('- Professional presentation and attention to quality.');
+    }
+    lines.push('');
+
+    lines.push('CAREER HIGHLIGHTS');
+    if (this.candidat.experience) {
+      lines.push('- Delivered consistent, high-quality results across people-focused and technical assignments.');
+      lines.push('- Developed well-structured processes and communication routines that improved efficiency.');
+    } else {
+      lines.push('- Building a strong foundation in professional delivery, collaboration, and continuous improvement.');
+      lines.push('- Seeking roles where work quality, clarity, and impact matter most.');
+    }
+    lines.push('');
+
+    lines.push('EDUCATION');
+    if (this.candidat.niveauScolaire) {
+      lines.push(`- ${this.candidat.niveauScolaire}`);
+    } else {
+      lines.push('- Education details not provided yet.');
+    }
+    lines.push('');
+
+    lines.push('PERSONAL DETAILS');
+    lines.push(`- Location: ${location}`);
+    if (this.candidat.permisDeConduire) {
+      lines.push(`- Driving license: ${this.candidat.permisDeConduire}`);
+    }
+    if (this.candidat.dateNaissance) {
+      lines.push(`- Date of birth: ${this.candidat.dateNaissance}`);
+    }
+    if (!this.candidat.permisDeConduire && !this.candidat.dateNaissance) {
+      lines.push('- Available immediately for new opportunities.');
+    }
+
+    return lines.join('\n');
+  }
+
+  generateCv() {
+    this.cvGenerationError = '';
+    if (!this.candidat) {
+      this.cvGenerationError = 'Unable to generate CV: candidate data not loaded.';
+      return;
+    }
+    this.generatedCvText = this.buildCvText();
+    this.cvPreviewVisible = true;
+    const blob = this.createPdfBlob(this.generatedCvText, `${this.candidat.nom || 'Candidate'} CV`);
+    this.setCvPreview(blob);
+  }
+
+  downloadGeneratedCv() {
+    if (!this.generatedCvText) {
+      this.cvGenerationError = 'Generate the CV first or edit the preview content.';
+      return;
+    }
+
+    const blob = this.createPdfBlob(this.generatedCvText, `${this.candidat?.nom || 'Candidate'} CV`);
+    const filename = `${(this.candidat?.nom || 'generated_cv').replace(/\s+/g, '_')}.pdf`;
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  refreshCvPreview() {
+    if (!this.generatedCvText) {
+      this.cvGenerationError = 'Generate the CV first before refreshing the preview.';
+      return;
+    }
+    this.cvGenerationError = '';
+    const blob = this.createPdfBlob(this.generatedCvText, `${this.candidat?.nom || 'Candidate'} CV`);
+    this.setCvPreview(blob);
+  }
+
+  private setCvPreview(blob: Blob) {
+    this.clearCvPreviewUrl();
+    this.previewBlobUrl = URL.createObjectURL(blob);
+    this.cvPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.previewBlobUrl);
+  }
+
+  private clearCvPreviewUrl() {
+    if (this.previewBlobUrl) {
+      URL.revokeObjectURL(this.previewBlobUrl);
+      this.previewBlobUrl = null;
+      this.cvPreviewUrl = null;
+    }
+  }
+
+  private escapePdfString(text: string): string {
+    return text
+      .replace(/\\/g, '\\\\')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)')
+      .replace(/\r/g, '')
+      .replace(/\n/g, ' ');
+  }
+
+  private createPdfBlob(content: string, title: string): Blob {
+    const lines = this.wrapText(content, 72);
+    let pdf = '%PDF-1.3\n';
+    let objNum = 1;
+    const objects: {[key: number]: string} = {};
+    objects[objNum] = '<</Type /Catalog /Pages 2 0 R>>';
+    objects[++objNum] = '<</Type /Pages /Kids [3 0 R] /Count 1>>';
+    objects[++objNum] = '<</Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources <</Font <</F1 5 0 R /F2 6 0 R>>>>>>';
+
+    let stream = '';
+    let y = 780;
+    let lineIndex = 0;
+    const accentColor = '0.13 0.49 0.79';
+
+    // Draw decorative background blocks
+    stream += `\nq\n0.94 0.97 1 rg\n40 720 515 120 re\nf\n0.13 0.49 0.79 rg\n40 50 10 720 re\nf\nQ`;
+
+    lines.forEach(line => {
+      const t = line.trim();
+      if (!t) {
+        y -= 16;
+        lineIndex++;
+        return;
+      }
+
+      const isHeading = /^[A-Z0-9 &\.\-]{3,}$/.test(t) && t === t.toUpperCase();
+      const isHr = /^[-─]{6,}$/.test(t);
+      const isBullet = t.startsWith('- ');
+      let txt = t;
+      let x = 40;
+      let f = 'F1';
+      let sz = 10;
+      let color = '0 0 0';
+
+      if (lineIndex === 0) {
+        stream += `\n${accentColor} rg\n40 ${y + 20} m\n555 ${y + 20} l\n555 ${y - 56} l\n40 ${y - 56} l\nf`;
+        color = '1 1 1';
+        f = 'F2';
+        sz = 24;
+        x = 60;
+        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
+        y -= 34;
+        lineIndex++;
+        return;
+      }
+
+      if (lineIndex === 1 && txt.includes('·')) {
+        color = '0 0 0';
+        f = 'F1';
+        sz = 9;
+        x = 60;
+        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
+        y -= 20;
+        stream += '\n0 0 0 rg';
+        lineIndex++;
+        return;
+      }
+
+      if (isHr) {
+        stream += `\n0.5 w\n${accentColor} RG\n40 ${y - 4} m\n555 ${y - 4} l\nS`;
+        y -= 18;
+        lineIndex++;
+        return;
+      }
+
+      if (isHeading) {
+        color = accentColor;
+        f = 'F2';
+        sz = 12;
+        x = 60;
+        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
+        y -= 18;
+        stream += `\n0.3 w\n${accentColor} RG\n40 ${y + 8} m\n555 ${y + 8} l\nS`;
+        y -= 10;
+        lineIndex++;
+        return;
+      }
+
+      if (isBullet) {
+        txt = t.substring(2);
+        x = 68;
+      }
+
+      stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
+      y -= isBullet ? 14 : 16;
+      lineIndex++;
+    });
+
+    objects[++objNum] = `<<\n/Length ${stream.length}\n>>\nstream\n${stream}\nendstream`;
+    objects[++objNum] = '<<\n/Type /Font\n/Subtype /Type1\n/BaseFont /Helvetica\n>>';
+    objects[++objNum] = '<<\n/Type /Font\n/Subtype /Type1\n/BaseFont /Helvetica-Bold\n>>';
+    let offset = pdf.length;
+    const xref: number[] = [];
+    for (let i = 1; i <= objNum; i++) {
+      xref[i] = offset;
+      const s = `${i} 0 obj\n${objects[i]}\nendobj\n`;
+      pdf += s;
+      offset += s.length;
+    }
+    const xrefOff = offset;
+    pdf += `xref\n0 ${objNum + 1}\n0000000000 65535 f \n`;
+    for (let i = 1; i <= objNum; i++) {
+      pdf += xref[i].toString().padStart(10, '0') + ' 00000 n \n';
+    }
+    pdf += `trailer\n<<\n/Size ${objNum + 1}\n/Root 1 0 R\n>>\nstartxref\n${xrefOff}\n%%EOF`;
+    return new Blob([pdf], { type: 'application/pdf' });
+  }
+
+
+  private wrapText(text: string, maxChars: number): string[] {
+    const paragraphs = text.split('\n');
+    const lines: string[] = [];
+
+    for (const paragraph of paragraphs) {
+      const trimmed = paragraph.trim();
+      if (!trimmed) {
+        lines.push('');
+        continue;
+      }
+
+      const isHeading = /^[A-Z ]{3,}$/.test(trimmed);
+      const isBullet = trimmed.startsWith('- ');
+      if (isHeading) {
+        lines.push(trimmed);
+        continue;
+      }
+
+      const content = isBullet ? trimmed.substring(2) : trimmed;
+      const words = content.split(' ');
+      let current = isBullet ? '- ' : '';
+      let remaining = isBullet ? content : content;
+
+      for (const word of words) {
+        const prefix = current.length > 0 ? current + word : word;
+        if (current.length + word.length + 1 > maxChars) {
+          lines.push(current.trim());
+          current = isBullet ? '  ' + word + ' ' : word + ' ';
+        } else {
+          current += (current.endsWith(' ') || current.length === 0) ? word + ' ' : ' ' + word + ' ';
+        }
+      }
+
+      if (current.trim()) {
+        lines.push(current.trim());
+      }
+    }
+
+    return lines;
   }
 }
