@@ -625,76 +625,62 @@ export class ProfileComponent implements OnInit {
       return '';
     }
 
-    const fullName = this.candidat.nom || 'Candidate Name';
-    const contact = [
+    const fullName = (this.candidat.nom || 'Candidate Name').toUpperCase();
+    const contactParts = [
       this.candidat.email,
       this.candidat.telephone,
-      this.candidat.ville,
-      this.candidat.linkedin
-    ].filter(Boolean).join(' · ');
-    const location = this.candidat.ville ? this.candidat.ville : 'Not provided';
+      this.candidat.ville
+    ].filter(Boolean);
+    const contactLine = contactParts.join(' · ');
 
     const lines: string[] = [];
-    lines.push(fullName.toUpperCase());
-    lines.push(contact);
+    lines.push(fullName);
+    lines.push(contactLine);
     lines.push('');
 
-    lines.push('PROFESSIONAL PROFILE');
+    lines.push('OBJECTIVE');
+    lines.push('');
     if (this.candidat.experience) {
-      lines.push(`- Results-driven professional with ${this.candidat.experience} of experience delivering polished work in collaborative environments.`);
-      lines.push('- Known for clear communication, strong follow-through, and refined attention to detail.');
-      lines.push('- Skilled at translating complex priorities into highly readable, recruiter-ready deliverables.');
+      lines.push(`To participate as a team member in a dynamic work environment focused on promoting business growth by providing superior value and service with ${this.candidat.experience} of experience.`);
     } else {
-      lines.push('- Ambitious and adaptable candidate with a strong professional mindset and excellent teamwork skills.');
-      lines.push('- Focused on producing premium-quality work, maintaining sharp organization, and supporting fast-moving projects.');
-      lines.push('- Ready to contribute immediately and grow quickly within a high-performing team.');
+      lines.push('To participate as a team member in a dynamic work environment focused on promoting business growth by providing superior value and service.');
     }
     lines.push('');
 
-    lines.push('CORE COMPETENCIES');
+    lines.push('EDUCATION');
+    lines.push('');
+    if (this.candidat.niveauScolaire) {
+      lines.push(this.candidat.niveauScolaire);
+    }
+    lines.push('');
+
+    lines.push('SKILLS');
+    lines.push('');
     if (this.hasSelectedSkills()) {
       this.getSelectedTagIds().forEach(tagId => {
         const tagName = this.getTagName(tagId);
         const niveau = this.getNiveau(tagId);
         const levelLabel = niveau === 'EXPERT' ? 'Expert' : niveau === 'INTERMEDIAIRE' ? 'Intermediate' : 'Beginner';
-        lines.push(`- ${tagName} · ${levelLabel}`);
+        lines.push(`${tagName}\t${levelLabel}`);
       });
     } else {
-      lines.push('- Strong communication and stakeholder collaboration.');
-      lines.push('- Efficient planning, problem solving, and delivery execution.');
-      lines.push('- Professional presentation and attention to quality.');
+      lines.push('No skills added yet.');
     }
     lines.push('');
 
-    lines.push('CAREER HIGHLIGHTS');
-    if (this.candidat.experience) {
-      lines.push('- Delivered consistent, high-quality results across people-focused and technical assignments.');
-      lines.push('- Developed well-structured processes and communication routines that improved efficiency.');
-    } else {
-      lines.push('- Building a strong foundation in professional delivery, collaboration, and continuous improvement.');
-      lines.push('- Seeking roles where work quality, clarity, and impact matter most.');
-    }
+    lines.push('INTERNSHIP/TRAININGS');
+    lines.push('');
+    lines.push('Add internship or training details in your profile.');
     lines.push('');
 
-    lines.push('EDUCATION');
-    if (this.candidat.niveauScolaire) {
-      lines.push(`- ${this.candidat.niveauScolaire}`);
-    } else {
-      lines.push('- Education details not provided yet.');
-    }
+    lines.push('POSITION OF RESPONSIBILITY');
+    lines.push('');
+    lines.push('Add positions of responsibility in your profile.');
     lines.push('');
 
-    lines.push('PERSONAL DETAILS');
-    lines.push(`- Location: ${location}`);
-    if (this.candidat.permisDeConduire) {
-      lines.push(`- Driving license: ${this.candidat.permisDeConduire}`);
-    }
-    if (this.candidat.dateNaissance) {
-      lines.push(`- Date of birth: ${this.candidat.dateNaissance}`);
-    }
-    if (!this.candidat.permisDeConduire && !this.candidat.dateNaissance) {
-      lines.push('- Available immediately for new opportunities.');
-    }
+    lines.push('EXTRA-CURRICULAR ACTIVITIES');
+    lines.push('');
+    lines.push('Add extra-curricular activities in your profile.');
 
     return lines.join('\n');
   }
@@ -761,7 +747,13 @@ export class ProfileComponent implements OnInit {
   }
 
   private createPdfBlob(content: string, title: string): Blob {
-    const lines = this.wrapText(content, 72);
+    const lines = this.wrapText(content, 75);
+    const pageWidth = 595;
+    const pageHeight = 842;
+    const marginLeft = 40;
+    const marginRight = 40;
+    const top = 800;
+
     let pdf = '%PDF-1.3\n';
     let objNum = 1;
     const objects: {[key: number]: string} = {};
@@ -770,82 +762,44 @@ export class ProfileComponent implements OnInit {
     objects[++objNum] = '<</Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources <</Font <</F1 5 0 R /F2 6 0 R>>>>>>';
 
     let stream = '';
-    let y = 780;
-    let lineIndex = 0;
-    const accentColor = '0.13 0.49 0.79';
+    let y = top;
 
-    // Draw decorative background blocks
-    stream += `\nq\n0.94 0.97 1 rg\n40 720 515 120 re\nf\n0.13 0.49 0.79 rg\n40 50 10 720 re\nf\nQ`;
-
-    lines.forEach(line => {
-      const t = line.trim();
+    lines.forEach((rawLine, idx) => {
+      const t = rawLine.trim();
       if (!t) {
-        y -= 16;
-        lineIndex++;
-        return;
-      }
-
-      const isHeading = /^[A-Z0-9 &\.\-]{3,}$/.test(t) && t === t.toUpperCase();
-      const isHr = /^[-─]{6,}$/.test(t);
-      const isBullet = t.startsWith('- ');
-      let txt = t;
-      let x = 40;
-      let f = 'F1';
-      let sz = 10;
-      let color = '0 0 0';
-
-      if (lineIndex === 0) {
-        stream += `\n${accentColor} rg\n40 ${y + 20} m\n555 ${y + 20} l\n555 ${y - 56} l\n40 ${y - 56} l\nf`;
-        color = '1 1 1';
-        f = 'F2';
-        sz = 24;
-        x = 60;
-        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
-        y -= 34;
-        lineIndex++;
-        return;
-      }
-
-      if (lineIndex === 1 && txt.includes('·')) {
-        color = '0 0 0';
-        f = 'F1';
-        sz = 9;
-        x = 60;
-        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
-        y -= 20;
-        stream += '\n0 0 0 rg';
-        lineIndex++;
-        return;
-      }
-
-      if (isHr) {
-        stream += `\n0.5 w\n${accentColor} RG\n40 ${y - 4} m\n555 ${y - 4} l\nS`;
-        y -= 18;
-        lineIndex++;
-        return;
-      }
-
-      if (isHeading) {
-        color = accentColor;
-        f = 'F2';
-        sz = 12;
-        x = 60;
-        stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
-        y -= 18;
-        stream += `\n0.3 w\n${accentColor} RG\n40 ${y + 8} m\n555 ${y + 8} l\nS`;
         y -= 10;
-        lineIndex++;
         return;
       }
 
-      if (isBullet) {
-        txt = t.substring(2);
-        x = 68;
-      }
+      const escaped = this.escapePdfString(t);
 
-      stream += `\nBT\n/${f} ${sz} Tf\n${color} rg\n1 0 0 1 ${x} ${y} Tm\n(${this.escapePdfString(txt)}) Tj\nET`;
-      y -= isBullet ? 14 : 16;
-      lineIndex++;
+      if (idx === 0) {
+        // Name - centered, bold, 18pt
+        stream += `BT\n/F2 18 Tf\n0 0 0 rg\n1 0 0 1 ${pageWidth/2} ${y} Tm\n(${escaped}) Tj\nET\n`;
+        y -= 30;
+      } else if (idx === 1) {
+        // Contact - left-aligned, 9pt
+        stream += `BT\n/F1 9 Tf\n0 0 0 rg\n1 0 0 1 ${marginLeft} ${y} Tm\n(${escaped}) Tj\nET\n`;
+        y -= 16;
+      } else if (t === t.toUpperCase() && t.length > 2 && /^[A-Z /-]+$/.test(t)) {
+        // Section header - bold, 10pt, with rule
+        stream += `BT\n/F2 10 Tf\n0 0 0 rg\n1 0 0 1 ${marginLeft} ${y} Tm\n(${escaped}) Tj\nET\n`;
+        y -= 14;
+        stream += `0.5 w\n0.2 0.2 0.2 RG\n${marginLeft} ${y} m\n${pageWidth - marginRight} ${y} l\nS\n`;
+        y -= 10;
+      } else if (t.includes('\t')) {
+        // Skills tabular row - level closer to skill name
+        const parts = t.split('\t');
+        const left = this.escapePdfString(parts[0] || '');
+        const right = this.escapePdfString(parts[1] || '');
+        stream += `BT\n/F2 9 Tf\n0 0 0 rg\n1 0 0 1 ${marginLeft} ${y} Tm\n(${left}) Tj\nET\n`;
+        stream += `BT\n/F1 8 Tf\n0 0 0 rg\n1 0 0 1 ${marginLeft + 220} ${y} Tm\n(${right}) Tj\nET\n`;
+        y -= 13;
+      } else {
+        // Default body text
+        stream += `BT\n/F1 8 Tf\n0 0 0 rg\n1 0 0 1 ${marginLeft} ${y} Tm\n(${escaped}) Tj\nET\n`;
+        y -= 13;
+      }
     });
 
     objects[++objNum] = `<<\n/Length ${stream.length}\n>>\nstream\n${stream}\nendstream`;
