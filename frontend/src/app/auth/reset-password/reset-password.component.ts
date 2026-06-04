@@ -46,28 +46,33 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    if (this.resetForm.invalid) return;
+    onSubmit() {
+      if (this.resetForm.invalid) return;
 
-    const resetData = {
-      email: this.resetForm.get('email')?.value,
-      code: this.resetForm.get('code')?.value?.trim(),
-      newPassword: this.resetForm.get('newPassword')?.value,
-      confirmPassword: this.resetForm.get('confirmPassword')?.value
-    };
+      const resetData = {
+        email: this.resetForm.get('email')?.value,
+        code: this.resetForm.get('code')?.value?.trim(),
+        newPassword: this.resetForm.get('newPassword')?.value,
+        confirmPassword: this.resetForm.get('confirmPassword')?.value
+      };
 
-    console.log('Reset password request body:', resetData);
+      console.log('Reset password request body:', resetData);
 
-    this.http.post(`${environment.apiUrl}/auth/reset-password`, resetData).subscribe({
-      next: () => {
-        this.message = 'Password reset successful! You can now log in.';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
-      },
-      error: (error) => {
-        console.error('Reset password error:', error);
-        const backendMessage = error.error?.message || (typeof error.error === 'string' ? error.error : null);
-        this.message = backendMessage || error.statusText || 'An error occurred. Please try again.';
-      }
-    });
-  }
+      this.http.post(`${environment.apiUrl}/auth/reset-password`, resetData).subscribe({
+        next: () => {
+          this.message = 'Password reset successful! You can now log in.';
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        },
+        error: (error) => {
+          console.error('Reset password error:', error);
+          const backendMessage = error.error?.message || (typeof error.error === 'string' ? error.error : null);
+          this.message = backendMessage || error.statusText || 'An error occurred. Please try again.';
+        }
+      });
+    }
+
+    goHome(event: MouseEvent) {
+      event.preventDefault();
+      this.router.navigate(['/']);
+    }
 }

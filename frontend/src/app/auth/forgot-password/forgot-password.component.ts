@@ -27,21 +27,26 @@ export class ForgotPasswordComponent {
     });
   }
 
-   onSubmit() {
-     if (this.forgotForm.invalid) return;
+    onSubmit() {
+      if (this.forgotForm.invalid) return;
 
-     this.http.post(`${environment.apiUrl}/auth/forgot-password`, 
-       this.forgotForm.value).subscribe({
-       next: () => {
-         this.message = 'If your email exists in our system, you will receive a verification code shortly.';
-         setTimeout(() => {
-           this.router.navigate(['/auth/reset-password'], { queryParams: { email: this.forgotForm.value.email } });
-         }, 2000);
-       },
-       error: (error) => {
-         console.error('Forgot password error:', error);
-         this.message = 'An error occurred. Please try again.';
-       }
-     });
-   }
+      this.http.post(`${environment.apiUrl}/auth/forgot-password`, 
+        this.forgotForm.value).subscribe({
+        next: () => {
+          this.message = 'If your email exists in our system, you will receive a verification code shortly.';
+          setTimeout(() => {
+            this.router.navigate(['/auth/reset-password'], { queryParams: { email: this.forgotForm.value.email } });
+          }, 2000);
+        },
+        error: (error) => {
+          console.error('Forgot password error:', error);
+          this.message = 'An error occurred. Please try again.';
+        }
+      });
+    }
+
+    goHome(event: MouseEvent) {
+      event.preventDefault();
+      this.router.navigate(['/']);
+    }
 }
