@@ -4,8 +4,16 @@
       <h1 class="page-title">Skills Library</h1>
       <p class="page-subtitle">Manage technical tags and competencies</p>
     </div>
-    <button class="btn-primary" (click)="showAddForm = true">+ New Skill</button>
+    <button class="btn-primary" (click)="showAddForm = true; clearMessages()">+ New Skill</button>
   </div>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-error" role="alert">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="successMessage" class="alert alert-success" role="alert">
+  {{ successMessage }}
 </div>
 
 <div *ngIf="showAddForm" class="card mb-6 tags-card">
@@ -18,11 +26,7 @@
     <div class="tags-form-group">
       <label class="tags-field-label">Category</label>
       <select class="tags-field" formControlName="categorie">
-        <option value="TECH">TECH - Technical</option>
-        <option value="SOFT">SOFT - Soft Skills</option>
-        <option value="LANG">LANG - Languages</option>
-        <option value="TOOL">TOOL - Tools</option>
-        <option value="FRAME">FRAME - Frameworks</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
       </select>
     </div>
     <div class="tags-form-group tags-form-group--full">
@@ -42,7 +46,7 @@
   </svg>
   <h3 class="tags-empty__title">No Skills Yet</h3>
   <p>Add your first technical skill to get started</p>
-  <button class="btn-primary" (click)="showAddForm = true">Add First Skill</button>
+  <button class="btn-primary" (click)="showAddForm = true; clearMessages()">Add First Skill</button>
 </div>
 
 <div *ngIf="!loading && tags.length > 0" class="tags-grid">

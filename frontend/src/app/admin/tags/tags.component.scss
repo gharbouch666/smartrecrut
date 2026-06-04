@@ -5,6 +5,30 @@
   padding: 0;
 }
 
+/* ── Alert messages ── */
+.alert {
+  padding: 0.875rem 1.25rem;
+  border-radius: $radius-md;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &-error {
+    background: rgba($accent-red, 0.1);
+    color: $accent-red;
+    border: 1px solid rgba($accent-red, 0.2);
+  }
+
+  &-success {
+    background: rgba($accent-green, 0.1);
+    color: $accent-green;
+    border: 1px solid rgba($accent-green, 0.2);
+  }
+}
+
 /* ── Tags page header section ── */
 .tags-page-header {
   display: flex;
@@ -179,12 +203,6 @@
 .tags-actions {
   display: flex;
   gap: 0.5rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.tags-card--hover:hover .tags-actions {
-  opacity: 1;
 }
 
 .tags-btn {

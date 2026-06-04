@@ -15,6 +15,12 @@ public interface ProfilTagRepository extends JpaRepository<ProfilTag, Long> {
     Optional<ProfilTag> findByCandidatIdAndTagId(Long candidatId, Long tagId);
     void deleteByCandidatId(Long candidatId);
     
+    @Query("SELECT COUNT(p) FROM ProfilTag p WHERE p.tag.id = ?1")
+    long countByTagId(Long tagId);
+    
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM ProfilTag p WHERE p.tag.id = ?1")
+    boolean existsByTagId(Long tagId);
+    
     @Query("SELECT t.libelle, COUNT(p) FROM Tag t JOIN ProfilTag p ON t.id = p.tag.id GROUP BY t.libelle ORDER BY COUNT(p) DESC")
     List<Object[]> countTagsByUsage();
 }

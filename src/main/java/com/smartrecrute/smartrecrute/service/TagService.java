@@ -10,4 +10,7 @@ public interface TagService {
     Tag update(Long id, Tag tag);
     void delete(Long id);
     Tag findByLibelle(String libelle);
+    boolean isTagInUse(Long id);
+    boolean existsByLibelle(String libelle);
+    boolean existsByLibelleAndIdNot(String libelle, Long id);
 }
