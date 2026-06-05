@@ -29,6 +29,11 @@ public class FileController {
     @Autowired
     private JwtService jwtService;
 
+    private boolean isValidPdfOrDocx(String contentType) {
+        return "application/pdf".equals(contentType) || 
+               "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(contentType);
+    }
+
     @PostMapping("/upload-cv")
     public ResponseEntity<String> uploadCV(@RequestHeader(value = "Authorization", required = false) String authHeader,
                                            @RequestParam("file") MultipartFile file,
@@ -40,8 +45,8 @@ public class FileController {
             return ResponseEntity.badRequest().body("Please select a file");
         }
         
-        if (!"application/pdf".equals(file.getContentType())) {
-            return ResponseEntity.badRequest().body("Only PDF files are allowed");
+        if (!isValidPdfOrDocx(file.getContentType())) {
+            return ResponseEntity.badRequest().body("Only PDF and DOCX files are allowed");
         }
 
         try {

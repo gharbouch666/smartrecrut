@@ -223,12 +223,19 @@ public class CandidatureServiceImpl implements CandidatureService {
             }
         }
         
-        // Get job tags
+        // Get job tags and calculate mandatory/bonus breakdown
         List<String> jobTags = new ArrayList<>();
+        List<String> mandatorySkills = new ArrayList<>();
+        List<String> bonusSkills = new ArrayList<>();
         if (candidature.getOffre() != null) {
             List<TagOffre> tagOffres = tagOffreRepository.findByOffreId(candidature.getOffre().getId());
             for (TagOffre to : tagOffres) {
                 if (to.getTag() != null && to.getTag().getLibelle() != null) {
+                    if (to.getObligatoire() != null && to.getObligatoire()) {
+                        mandatorySkills.add(to.getTag().getLibelle());
+                    } else {
+                        bonusSkills.add(to.getTag().getLibelle());
+                    }
                     jobTags.add(to.getTag().getLibelle());
                 }
             }
@@ -236,9 +243,12 @@ public class CandidatureServiceImpl implements CandidatureService {
 
         result.put("candidatSkills", candidatSkills);
         result.put("jobTags", jobTags);
+        result.put("mandatorySkills", mandatorySkills);
+        result.put("bonusSkills", bonusSkills);
         result.put("scoreTotal", candidature.getScoreTotal());
         result.put("jobTitle", candidature.getOffre() != null ? candidature.getOffre().getTitre() : "");
         result.put("candidatName", candidature.getCandidat() != null ? candidature.getCandidat().getNom() : "");
+        result.put("offreId", candidature.getOffre() != null ? candidature.getOffre().getId() : null);
 
         return result;
     }

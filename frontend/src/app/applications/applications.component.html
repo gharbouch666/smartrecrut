@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<!-- ── Candidate View: Simple List ── -->
+<!-- Candidate View: Simple List -->
 <div *ngIf="isCandidate" class="apps-list">
   <div *ngFor="let app of myApplications" class="apps-list-item">
     <div class="apps-list-item__header">
@@ -44,6 +44,9 @@
       <span class="apps-list-item__date">
         Applied: {{ app.datePostulation | date:'mediumDate' }}
       </span>
+    </div>
+    <div class="apps-list-item__actions">
+      <button (click)="explainScore(app); $event.stopPropagation()">Explain Score</button>
     </div>
   </div>
 
@@ -189,7 +192,7 @@
 <div *ngIf="showExplainScoreModal" class="apps-modal-overlay" (click)="showExplainScoreModal = false">
   <div class="apps-modal" (click)="$event.stopPropagation()">
     <div class="apps-modal__header">
-      <h2>Score Explanation</h2>
+      <h2>{{ isCandidate ? 'My Score Explanation' : 'Score Explanation' }}</h2>
       <button class="apps-modal__close" (click)="showExplainScoreModal = false">✕</button>
     </div>
     <div class="apps-modal__body">

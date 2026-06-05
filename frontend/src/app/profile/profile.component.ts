@@ -200,9 +200,9 @@ interface Candidat {
               <button (click)="deleteCv()" [disabled]="deletingCv" class="btn-primary" style="background: #ef4444;">{{ deletingCv ? 'Deleting...' : 'Delete' }}</button>
             </div>
           </div>
-          <input type="file" (change)="onCvSelected($event)" accept=".pdf"
+          <input type="file" (change)="onCvSelected($event)" accept=".pdf,.docx"
             style="width: 100%; padding: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text);"/>
-          <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); margin-top: 0.5rem;">Only PDF files accepted</p>
+          <p class="mono" style="font-size: 0.6875rem; color: var(--text-muted); margin-top: 0.5rem;">PDF or DOCX files accepted</p>
           <button (click)="uploadCv()" [disabled]="uploadingCv || !cvFile" class="btn-primary" style="margin-top: 0.75rem;">
             {{uploadingCv ? 'Uploading...' : 'Upload CV'}}
           </button>

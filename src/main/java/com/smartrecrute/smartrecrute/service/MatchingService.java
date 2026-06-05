@@ -59,6 +59,17 @@ public class MatchingService {
             }
         }
 
+        // Check if any mandatory tag is missing - if so, score is 0%
+        for (TagOffre jobTag : jobTags) {
+            if (jobTag.getObligatoire() != null && jobTag.getObligatoire()) {
+                boolean hasMatchingSkill = candidateSkills.stream()
+                    .anyMatch(cs -> cs.getTag().getId().equals(jobTag.getTag().getId()));
+                if (!hasMatchingSkill) {
+                    return 0.0;
+                }
+            }
+        }
+
         double rawScore = totalWeight > 0 ? (earnedWeight / totalWeight) * 100 : 50;
         return Math.max(0.0, Math.min(100.0, rawScore));
     }
@@ -116,19 +127,40 @@ public class MatchingService {
         List<ProfilTag> candidateSkills = profilTagRepository.findByCandidat(candidat);
 
         List<String> matchedSkills = new ArrayList<>();
-        List<String> missingRequiredSkills = new ArrayList<>();
+        List<String> missingMandatorySkills = new ArrayList<>();
+        List<String> missingBonusSkills = new ArrayList<>();
         List<String> extraSkills = new ArrayList<>();
+        
+        double mandatoryWeight = 0.0;
+        double mandatoryEarnedWeight = 0.0;
+        double bonusWeight = 0.0;
+        double bonusEarnedWeight = 0.0;
 
         for (TagOffre jobTag : jobTags) {
             String skillName = jobTag.getTag().getLibelle();
+            double weight = jobTag.getPoids() != null ? jobTag.getPoids() : 1.0;
             Optional<ProfilTag> matchingSkill = candidateSkills.stream()
                 .filter(cs -> cs.getTag().getId().equals(jobTag.getTag().getId()))
                 .findFirst();
 
-            if (matchingSkill.isPresent()) {
-                matchedSkills.add(skillName);
-            } else if (jobTag.getObligatoire() != null && jobTag.getObligatoire()) {
-                missingRequiredSkills.add(skillName);
+            if (jobTag.getObligatoire() != null && jobTag.getObligatoire()) {
+                mandatoryWeight += weight;
+                if (matchingSkill.isPresent()) {
+                    matchedSkills.add(skillName);
+                    double levelScore = getLevelScore(matchingSkill.get().getNiveau());
+                    mandatoryEarnedWeight += weight * levelScore;
+                } else {
+                    missingMandatorySkills.add(skillName);
+                }
+            } else {
+                bonusWeight += weight;
+                if (matchingSkill.isPresent()) {
+                    matchedSkills.add(skillName);
+                    double levelScore = getLevelScore(matchingSkill.get().getNiveau());
+                    bonusEarnedWeight += weight * levelScore;
+                } else {
+                    missingBonusSkills.add(skillName);
+                }
             }
         }
 
@@ -140,10 +172,17 @@ public class MatchingService {
             }
         }
 
+        double mandatoryScore = mandatoryWeight > 0 ? (mandatoryEarnedWeight / mandatoryWeight) * 100 : 0.0;
+        double bonusScore = bonusWeight > 0 ? (bonusEarnedWeight / bonusWeight) * 100 : 0.0;
+        
         Map<String, Object> breakdown = new HashMap<>();
         breakdown.put("score", calculateScore(candidat, offre));
+        breakdown.put("mandatoryScore", mandatoryScore);
+        breakdown.put("bonusScore", bonusScore);
         breakdown.put("matchedSkills", matchedSkills);
-        breakdown.put("missingRequiredSkills", missingRequiredSkills);
+        breakdown.put("missingRequiredSkills", missingMandatorySkills);
+        breakdown.put("requiredSkillsMissing", missingMandatorySkills.size() > 0);
+        breakdown.put("missingBonusSkills", missingBonusSkills);
         breakdown.put("extraSkills", extraSkills);
         return breakdown;
     }

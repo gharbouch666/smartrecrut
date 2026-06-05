@@ -7,6 +7,7 @@ interface User {
   id: number;
   nom: string;
   email: string;
+  actif?: boolean;
 }
 
 @Component({
@@ -69,6 +70,7 @@ interface User {
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Status</th>
                   <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
@@ -77,13 +79,21 @@ interface User {
                   <td class="mono">{{user.id}}</td>
                   <td>{{user.nom}}</td>
                   <td>{{user.email}}</td>
+                  <td>
+                    <span class="pill" [class.pill-green]="user.actif" [class.pill-gray]="!user.actif">
+                      {{user.actif ? 'Active' : 'Inactive'}}
+                    </span>
+                  </td>
                   <td style="text-align: right;">
                     <button (click)="editUser(user)" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">Edit</button>
+                    <button (click)="toggleUserStatus(user.id, 'candidat')" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">
+                      {{user.actif ? 'Deactivate' : 'Activate'}}
+                    </button>
                     <button (click)="deleteUser(user.id, 'candidat')" class="btn-danger" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">Delete</button>
                   </td>
                 </tr>
                 <tr *ngIf="!users.candidats.length">
-                  <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No candidates</td>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No candidates</td>
                 </tr>
               </tbody>
             </table>
@@ -100,6 +110,7 @@ interface User {
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Status</th>
                   <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
@@ -108,13 +119,21 @@ interface User {
                   <td class="mono">{{user.id}}</td>
                   <td>{{user.nom}}</td>
                   <td>{{user.email}}</td>
+                  <td>
+                    <span class="pill" [class.pill-green]="user.actif" [class.pill-gray]="!user.actif">
+                      {{user.actif ? 'Active' : 'Inactive'}}
+                    </span>
+                  </td>
                   <td style="text-align: right;">
                     <button (click)="editUser(user)" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">Edit</button>
+                    <button (click)="toggleUserStatus(user.id, 'recruteur')" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">
+                      {{user.actif ? 'Deactivate' : 'Activate'}}
+                    </button>
                     <button (click)="deleteUser(user.id, 'recruteur')" class="btn-danger" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">Delete</button>
                   </td>
                 </tr>
                 <tr *ngIf="!users.recruteurs?.length">
-                  <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No recruiters</td>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No recruiters</td>
                 </tr>
               </tbody>
             </table>
@@ -131,6 +150,7 @@ interface User {
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Status</th>
                   <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
@@ -139,13 +159,21 @@ interface User {
                   <td class="mono">{{user.id}}</td>
                   <td>{{user.nom}}</td>
                   <td>{{user.email}}</td>
+                  <td>
+                    <span class="pill" [class.pill-green]="user.actif" [class.pill-gray]="!user.actif">
+                      {{user.actif ? 'Active' : 'Inactive'}}
+                    </span>
+                  </td>
                   <td style="text-align: right;">
                     <button (click)="editUser(user)" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">Edit</button>
+                    <button (click)="toggleUserStatus(user.id, 'administrateur')" class="btn-ghost" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">
+                      {{user.actif ? 'Deactivate' : 'Activate'}}
+                    </button>
                     <button (click)="deleteUser(user.id, 'administrateur')" class="btn-danger" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; margin-left: 0.5rem;">Delete</button>
                   </td>
                 </tr>
                 <tr *ngIf="!users.administrateurs?.length">
-                  <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No administrators</td>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No administrators</td>
                 </tr>
               </tbody>
             </table>
@@ -202,9 +230,40 @@ export class UsersComponent implements OnInit {
   loadUsers() {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
     this.http.get<any>('http://localhost:8000/api/stats/users', { headers }).subscribe({
-      next: (data) => this.users = data,
+      next: (data) => {
+        // Add actif field to each user if not present (default to true)
+        this.users = {
+          candidats: (data.candidats || []).map((u: any) => ({ ...u, actif: u.actif !== false })),
+          recruteurs: (data.recruteurs || []).map((u: any) => ({ ...u, actif: u.actif !== false })),
+          administrateurs: (data.administrateurs || []).map((u: any) => ({ ...u, actif: u.actif !== false }))
+        };
+      },
       error: () => {}
     });
+  }
+
+  toggleUserStatus(id: number, type: string) {
+    const user = this.getUserByType(id, type);
+    if (!user) return;
+    
+    const action = user.actif ? 'deactivate' : 'activate';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('accessToken')}`);
+    
+    this.http.patch(`http://localhost:8000/api/stats/users/${id}/${action}`, {}, { headers }).subscribe({
+      next: () => {
+        if (user) user.actif = !user.actif;
+      },
+      error: (err) => {
+        alert((user.actif ? 'Deactivate' : 'Activate') + ' failed: ' + (err.error?.message || err.status));
+      }
+    });
+  }
+
+  private getUserByType(id: number, type: string): User | undefined {
+    if (type === 'candidat') return this.users.candidats.find(u => u.id === id);
+    if (type === 'recruteur') return this.users.recruteurs.find(u => u.id === id);
+    if (type === 'administrateur') return this.users.administrateurs.find(u => u.id === id);
+    return undefined;
   }
 
   toggleAddUser() {

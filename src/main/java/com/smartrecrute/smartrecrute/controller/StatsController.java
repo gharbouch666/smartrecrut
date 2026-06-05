@@ -85,13 +85,13 @@ public class StatsController {
     public ResponseEntity<Map<String, Object>> getAllUsers() {
         Map<String, Object> users = new HashMap<>();
         users.put("candidats", candidatRepository.findAll().stream()
-            .map(c -> Map.of("id", c.getId(), "nom", c.getNom(), "email", c.getEmail()))
+            .map(c -> Map.of("id", c.getId(), "nom", c.getNom(), "email", c.getEmail(), "actif", c.isActif()))
             .collect(Collectors.toList()));
         users.put("recruteurs", recruteurRepository.findAll().stream()
-            .map(r -> Map.of("id", r.getId(), "nom", r.getNom(), "email", r.getEmail()))
+            .map(r -> Map.of("id", r.getId(), "nom", r.getNom(), "email", r.getEmail(), "actif", r.isActif()))
             .collect(Collectors.toList()));
         users.put("administrateurs", administrateurRepository.findAll().stream()
-            .map(a -> Map.of("id", a.getId(), "nom", a.getNom(), "email", a.getEmail()))
+            .map(a -> Map.of("id", a.getId(), "nom", a.getNom(), "email", a.getEmail(), "actif", a.isActif()))
             .collect(Collectors.toList()));
         return ResponseEntity.ok(users);
     }
@@ -240,6 +240,52 @@ public class StatsController {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/users/{id}/activate")
+    @Transactional
+    public ResponseEntity<Void> activateUser(@PathVariable Long id) {
+        try {
+            candidatRepository.findById(id).ifPresent(c -> {
+                c.setActif(true);
+                candidatRepository.save(c);
+            });
+            recruteurRepository.findById(id).ifPresent(r -> {
+                r.setActif(true);
+                recruteurRepository.save(r);
+            });
+            administrateurRepository.findById(id).ifPresent(a -> {
+                a.setActif(true);
+                administrateurRepository.save(a);
+            });
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println("Activate error: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PatchMapping("/users/{id}/deactivate")
+    @Transactional
+    public ResponseEntity<Void> deactivateUser(@PathVariable Long id) {
+        try {
+            candidatRepository.findById(id).ifPresent(c -> {
+                c.setActif(false);
+                candidatRepository.save(c);
+            });
+            recruteurRepository.findById(id).ifPresent(r -> {
+                r.setActif(false);
+                recruteurRepository.save(r);
+            });
+            administrateurRepository.findById(id).ifPresent(a -> {
+                a.setActif(false);
+                administrateurRepository.save(a);
+            });
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println("Deactivate error: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

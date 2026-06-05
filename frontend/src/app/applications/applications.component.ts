@@ -227,18 +227,18 @@ export class ApplicationsComponent implements OnInit {
             if (res.success && res.explanation) {
               this.explainScoreExplanation = res.explanation;
             } else {
-              this.explainScoreExplanation = res.error || 'Unable to generate explanation. The AI compares the candidate\'s skills with the job requirements to determine the score.';
+              this.explainScoreExplanation = res.error || 'Unable to generate explanation. The AI compares your skills with the job requirements to determine the score.';
             }
           },
           error: () => {
             this.explainScoreLoading = false;
-            this.explainScoreExplanation = 'AI service unavailable. Please start the SmartRecrute AI service on port 8001.\n\nThe score is calculated by comparing candidate skills (tags) against job requirements (tags). Tags marked as required must be present. The AI will provide a detailed analysis of strengths and gaps.';
+            this.explainScoreExplanation = 'AI service unavailable. Please start the SmartRecrute AI service on port 8001.\n\nYour score is calculated by comparing your skills (tags) against job requirements (tags). Tags marked as required must be present. The AI would provide a detailed analysis of your strengths and gaps.';
           }
         });
       },
       error: () => {
         this.explainScoreLoading = false;
-        this.explainScoreExplanation = 'Unable to load candidate skills. Please try again.';
+        this.explainScoreExplanation = 'Unable to load your skills. Please try again.';
       }
     });
   }

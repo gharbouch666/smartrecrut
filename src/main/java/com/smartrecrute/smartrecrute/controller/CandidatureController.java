@@ -100,6 +100,10 @@ public class CandidatureController {
 
     @GetMapping("/{id}/with-skills")
     public ResponseEntity<Map<String, Object>> getCandidatureWithSkills(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getCandidatureWithSkills(id));
+        Map<String, Object> result = service.getCandidatureWithSkills(id);
+        if (result.containsKey("error")) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
     }
 }
