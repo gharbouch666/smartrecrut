@@ -129,8 +129,8 @@
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
       </svg>
-      <span>Dark Mode</span>
-      <span class="mono" style="font-size: 0.7rem; margin-left: auto;">{{theme.isDarkMode() ? 'On' : 'Off'}}</span>
+      <span>{{theme.isDarkMode() ? 'Dark Mode' : 'Light Mode'}}</span>
+      <span class="mono" style="font-size: 0.7rem; margin-left: auto;">{{theme.isDarkMode() ? 'Dark' : 'Light'}}</span>
     </button>
 
     <button (click)="logout()" class="nav-item" style="width: 100%; border: none; background: transparent; cursor: pointer;">

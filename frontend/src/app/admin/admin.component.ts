@@ -84,7 +84,7 @@ export class AdminComponent implements OnInit {
         });
         const colors: { [key: string]: string } = {
           'TECH':     '#5c6dff',
-          'LANGUAGE': '#b6f542',
+          'LANGUAGE': 'var(--green)',
           'SOFT':     '#10b981',
           'TOOL':     '#f59e0b'
         };

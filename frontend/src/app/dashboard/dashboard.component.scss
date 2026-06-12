@@ -20,10 +20,11 @@
   from { width: 0 !important; }
 }
 
+// ─────────────────────────────
+// BASE
+// ─────────────────────────────
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: block;
   padding: 0;
 }
 
@@ -87,7 +88,7 @@
 .role-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: $accent-green;
+  background: var(--green);
   animation: pulse 2.5s ease-in-out infinite;
 }
 
@@ -224,9 +225,9 @@
     border-radius: $radius-sm $radius-sm 0 0;
   }
 
-  &--blue::after  { background: $accent-blue; }
-  &--green::after { background: $accent-green; }
-  &--amber::after { background: $accent-amber; }
+  &--blue::after  { background: var(--accent); }
+  &--green::after { background: var(--green); }
+  &--amber::after { background: var(--amber); }
   &--dim::after   { background: var(--white-12); }
 }
 
@@ -310,10 +311,10 @@
   border-radius: 50%;
   flex-shrink: 0;
 
-  &--amber { background: $accent-amber; }
-  &--blue  { background: $accent-blue; }
-  &--green { background: $accent-green; }
-  &--red   { background: $accent-red; }
+  &--amber { background: var(--amber); }
+  &--blue  { background: var(--accent); }
+  &--green { background: var(--green); }
+  &--red   { background: var(--red); }
 }
 
 .breakdown-bar-wrap {
@@ -328,10 +329,10 @@
   border-radius: 99px;
   animation: bar-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
-  &--amber { background: $accent-amber; }
-  &--blue  { background: $accent-blue; }
-  &--green { background: $accent-green; }
-  &--red   { background: $accent-red; }
+  &--amber { background: var(--amber); }
+  &--blue  { background: var(--accent); }
+  &--green { background: var(--green); }
+  &--red   { background: var(--red); }
 }
 
 .breakdown-pct {
@@ -385,7 +386,7 @@
 
     .action-link__arrow {
       transform: translateX(3px);
-      color: $accent-blue;
+      color: var(--accent);
     }
   }
 
@@ -442,10 +443,10 @@
   font-weight: 800;
   line-height: 1;
 
-  &--amber { color: $accent-amber; }
-  &--blue  { color: $accent-blue; }
-  &--green { color: $accent-green; }
-  &--red   { color: $accent-red; }
+  &--amber { color: var(--amber); }
+  &--blue  { color: var(--accent); }
+  &--green { color: var(--green); }
+  &--red   { color: var(--red); }
 }
 
 .funnel-label {
@@ -468,10 +469,10 @@
   border-radius: 99px;
   animation: bar-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 
-  &--amber { background: $accent-amber; }
-  &--blue  { background: $accent-blue; }
-  &--green { background: $accent-green; }
-  &--red   { background: $accent-red; }
+  &--amber { background: var(--amber); }
+  &--blue  { background: var(--accent); }
+  &--green { background: var(--green); }
+  &--red   { background: var(--red); }
 }
 
 .funnel-arrow {
@@ -573,10 +574,10 @@
   border-radius: 99px;
   border: 1px solid;
 
-  &.tag--amber { background: rgba($accent-amber, 0.1); border-color: rgba($accent-amber, 0.25); color: $accent-amber; }
-  &.tag--blue  { background: rgba($accent-blue,  0.1); border-color: rgba($accent-blue,  0.25); color: #7983ff; }
-  &.tag--green { background: rgba($accent-green, 0.1); border-color: rgba($accent-green, 0.2);  color: $accent-green; }
-  &.tag--red   { background: rgba($accent-red,   0.1); border-color: rgba($accent-red,   0.2);  color: #f97272; }
+  &.tag--amber { background: rgba(var(--amber-rgb), 0.1); border-color: rgba(var(--amber-rgb), 0.25); color: var(--amber); }
+  &.tag--blue  { background: rgba(var(--accent-rgb),  0.1); border-color: rgba(var(--accent-rgb),  0.25); color: var(--accent); }
+  &.tag--green { background: rgba(var(--green-rgb), 0.1); border-color: rgba(var(--green-rgb), 0.2);  color: var(--green); }
+  &.tag--red   { background: rgba(var(--red-rgb),   0.1); border-color: rgba(var(--red-rgb),   0.2);  color: var(--red); }
 }
 
 // Score
@@ -588,9 +589,9 @@
   border-radius: $radius-sm;
   border: 1px solid;
 
-  &.score--high { background: rgba($accent-green, 0.1); border-color: rgba($accent-green, 0.2); color: $accent-green; }
-  &.score--mid  { background: rgba($accent-amber, 0.1); border-color: rgba($accent-amber, 0.2); color: $accent-amber; }
-  &.score--low  { background: rgba($accent-red, 0.08);  border-color: rgba($accent-red, 0.18);  color: #f97272; }
+  &.score--high { background: rgba(var(--green-rgb), 0.1); border-color: rgba(var(--green-rgb), 0.2); color: var(--green); }
+  &.score--mid  { background: rgba(var(--amber-rgb), 0.1); border-color: rgba(var(--amber-rgb), 0.2); color: var(--amber); }
+  &.score--low  { background: rgba(var(--red-rgb), 0.08);  border-color: rgba(var(--red-rgb), 0.18);  color: var(--red); }
 }
 
 
@@ -620,7 +621,7 @@
   margin-top: 0.25rem;
   transition: color 0.2s;
 
-  &:hover { color: #83a3ff; }
+  &:hover { color: var(--accent); }
 }
 
 

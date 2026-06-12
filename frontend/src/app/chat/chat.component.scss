@@ -3,4 +3,26 @@
 :host {
   display: block;
   padding: 0;
+  min-height: calc(100vh - 5rem);
+}
+
+// Chat page header
+.page-header {
+  padding: 0 0 1.5rem 0;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      $accent-blue 0%,
+      $accent-green 45%,
+      transparent 100%
+    );
+    opacity: 0.5;
+  }
 }

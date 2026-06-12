@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { ThemeService } from './core/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,12 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
   imports: [CommonModule, RouterOutlet, SidebarComponent],
   template: `
     @if (showSidebar) {
-      <div class="flex min-h-screen" style="background: var(--ink)">
+      <div class="app-shell" [class.dark]="theme.isDarkMode()" [class.light]="!theme.isDarkMode()">
         <app-sidebar></app-sidebar>
-        <main class="flex-1 ml-72 p-8 overflow-auto" style="background: var(--ink)">
-          <router-outlet></router-outlet>
+        <main class="app-main">
+          <div class="app-content">
+            <router-outlet></router-outlet>
+          </div>
         </main>
       </div>
     } @else {
@@ -24,7 +27,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 export class AppComponent implements OnInit {
   showSidebar = false;
 
-  constructor(public router: Router) {
+  constructor(public router: Router, public theme: ThemeService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateSidebarVisibility(event.urlAfterRedirects);
@@ -33,9 +36,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!document.body.classList.contains('dark')) {
-      document.body.classList.add('dark');
-    }
     this.updateSidebarVisibility(this.router.url);
   }
 

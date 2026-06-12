@@ -24,9 +24,7 @@
 // BASE
 // ─────────────────────────────
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: block;
   padding: 0;
 }
 
@@ -113,7 +111,7 @@
   border-radius: 99px;
   background: rgba($accent-blue, 0.12);
   border: 1px solid rgba($accent-blue, 0.28);
-    color: #7983ff;
+    color: var(--accent);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -243,7 +241,7 @@
   border-radius: 99px;
   background: rgba($accent-blue, 0.15);
   border: 1px solid rgba($accent-blue, 0.3);
-  color: #7983ff;
+  color: var(--accent);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -378,7 +376,7 @@
     border-color: rgba($accent-blue, 0.25);
     color: $text;
 
-    .skills-cta__arrow { transform: translateX(3px); color: $accent-blue; }
+    .skills-cta__arrow { transform: translateX(3px); color: var(--accent); }
   }
 }
 
@@ -421,9 +419,9 @@
   border-radius: 99px;
   border: 1px solid;
 
-  &--green { background: rgba($accent-green, 0.08); border-color: rgba($accent-green, 0.2); color: $accent-green; }
-  &--blue  { background: rgba($accent-blue, 0.08);  border-color: rgba($accent-blue, 0.2);  color: #78a2ff; }
-  &--amber { background: rgba($accent-amber, 0.08); border-color: rgba($accent-amber, 0.2); color: $accent-amber; }
+  &--green { background: rgba(var(--green-rgb), 0.08); border-color: rgba(var(--green-rgb), 0.2); color: var(--green); }
+  &--blue  { background: rgba(var(--accent-rgb), 0.08);  border-color: rgba(var(--accent-rgb), 0.2);  color: var(--accent); }
+  &--amber { background: rgba(var(--amber-rgb), 0.08); border-color: rgba(var(--amber-rgb), 0.2); color: var(--amber); }
 }
 
 .user-count {
@@ -486,16 +484,16 @@
   text-transform: uppercase;
   padding: 0.28rem 0.65rem;
   border-radius: 99px;
-  border: 1px solid rgba($accent-red, 0.2);
-  background: rgba($accent-red, 0.06);
-  color: rgba($accent-red, 0.7);
+  border: 1px solid rgba(var(--red-rgb), 0.2);
+  background: rgba(var(--red-rgb), 0.06);
+  color: var(--red);
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: rgba($accent-red, 0.14);
-    border-color: rgba($accent-red, 0.35);
-    color: #fb5858;
+    background: rgba(var(--red-rgb), 0.14);
+    border-color: rgba(var(--red-rgb), 0.35);
+    color: var(--red);
   }
 }
 

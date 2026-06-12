@@ -5,6 +5,38 @@
   padding: 0;
 }
 
+// Header styling
+.tags-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0 0 1.5rem 0;
+  margin-bottom: 1.5rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      $accent-blue 0%,
+      $accent-green 45%,
+      transparent 100%
+    );
+    opacity: 0.5;
+  }
+}
+
+.tags-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* ── Alert messages ── */
 .alert {
   padding: 0.875rem 1.25rem;
@@ -18,14 +50,14 @@
 
   &-error {
     background: rgba($accent-red, 0.1);
-    color: $accent-red;
-    border: 1px solid rgba($accent-red, 0.2);
+    color: var(--red);
+    border: 1px solid rgba(var(--red-rgb), 0.2);
   }
 
   &-success {
     background: rgba($accent-green, 0.1);
-    color: $accent-green;
-    border: 1px solid rgba($accent-green, 0.2);
+    color: var(--green);
+    border: 1px solid rgba(var(--green-rgb), 0.2);
   }
 }
 
@@ -190,8 +222,8 @@
   flex-shrink: 0;
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  background: rgba($accent-blue, 0.12);
-  color: $accent-blue;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
   font-size: 0.6875rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
@@ -218,14 +250,14 @@
   font-family: 'Manrope', sans-serif;
 
   &--accent {
-    background: rgba($accent-blue, 0.12);
-    color: $accent-blue;
-    &:hover { background: $accent-blue; color: white; }
+    background: rgba(var(--accent-rgb), 0.12);
+    color: var(--accent);
+    &:hover { background: var(--accent); color: white; }
   }
 
   &--danger {
-    background: rgba($accent-red, 0.1);
-    color: $accent-red;
-    &:hover { background: $accent-red; color: white; }
+    background: rgba(var(--red-rgb), 0.1);
+    color: var(--red);
+    &:hover { background: var(--red); color: var(--red-on); }
   }
 }

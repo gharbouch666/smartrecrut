@@ -1,24 +1,21 @@
 @use '../../_tokens' as *;
 
-// Sidebar styles moved from styles.scss and updated to use dashboard tokens
+// Sidebar styles - uses sticky positioning to stay visible but in document flow
 .sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 220px;
+  width: var(--sidebar-width, 220px);
   background: $surface;
   border-right: 1px solid $border;
   display: flex;
   flex-direction: column;
-  z-index: 50;
-  height: 100vh;
+  flex-shrink: 0;
+  height: auto;
+  min-height: 100vh;
 }
 
 .logo-mark {
   width: 32px;
   height: 32px;
-  background: $accent-blue;
+  background: var(--accent);
   color: white;
   font-family: 'Syne', sans-serif;
   font-size: 0.75rem;
@@ -113,7 +110,7 @@
 
 .nav-item.active {
   background: var(--accent-dim);
-  color: $accent-blue;
+  color: var(--accent);
   font-weight: 600;
   box-shadow: 0 0 20px var(--accent-dim);
 }
@@ -126,13 +123,13 @@
   transform: translateY(-50%);
   width: 3px;
   height: 60%;
-  background: $accent-blue;
+  background: var(--accent);
   border-radius: 0 2px 2px 0;
 }
 
 .nav-item .nav-badge {
   margin-left: auto;
-  background: $accent-blue;
+  background: var(--accent);
   color: white;
   font-size: 0.65rem;
   font-weight: 600;
@@ -157,7 +154,7 @@
   height: 40px;
   border-radius: 8px;
   background: var(--accent-dim);
-  color: $accent-blue;
+  color: var(--accent);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
   font-weight: 500;

@@ -213,7 +213,7 @@
   padding: 0.75rem 1.5rem;
   background: rgba($accent-blue, 0.15);
   border: 1px solid rgba($accent-blue, 0.3);
-  color: #7983ff;
+  color: var(--accent);
   font-size: 0.875rem;
   font-weight: 600;
   border-radius: 99px;
@@ -242,15 +242,15 @@
   font-size: 0.875rem;
 
   &--success {
-    background: rgba($accent-green, 0.1);
-    border: 1px solid rgba($accent-green, 0.2);
-    color: $accent-green;
+    background: rgba(var(--green-rgb), 0.1);
+    border: 1px solid rgba(var(--green-rgb), 0.2);
+    color: var(--green);
   }
 
   &--error {
-    background: rgba($accent-red, 0.1);
-    border: 1px solid rgba($accent-red, 0.2);
-    color: #f97272;
+    background: rgba(var(--red-rgb), 0.1);
+    border: 1px solid rgba(var(--red-rgb), 0.2);
+    color: var(--red);
   }
 }
 

@@ -16,8 +16,6 @@
 // ─────────────────────────────
 :host {
   display: block;
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 0;
 }
 
@@ -25,7 +23,6 @@
   opacity: 0;
   animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-
 
 // ─────────────────────────────
 // HEADER
@@ -35,13 +32,10 @@
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  padding: 2.25rem 2.5rem;
-  background: $surface;
-  border: 1px solid $border;
-  border-radius: $radius-lg;
+  padding: 0 0 1.5rem 0;
+  margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
-  margin-bottom: 1.5rem;
 
   &::after {
     content: '';
@@ -91,7 +85,7 @@
   border-radius: 99px;
   background: rgba($accent-blue, 0.12);
   border: 1px solid rgba($accent-blue, 0.28);
-    color: #7983ff;
+    color: var(--accent);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -312,7 +306,7 @@
 
 .candidate-job {
   font-size: 0.75rem;
-  color: $accent-green;
+  color: var(--green);
   margin: 0;
 }
 
@@ -330,7 +324,7 @@
 
 .btn-remove {
   font-size: 0.75rem;
-  color: $accent-red;
+  color: var(--red);
   background: none;
   border: none;
   cursor: pointer;
@@ -352,9 +346,9 @@
   font-weight: 800;
 }
 
-.score-high { color: $accent-green; }
-.score-mid  { color: $accent-amber; }
-.score-low  { color: #f97272; }
+.score-high { color: var(--green); }
+.score-mid  { color: var(--amber); }
+.score-low  { color: var(--red); }
 
 .score-label {
   font-size: 0.625rem;
