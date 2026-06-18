@@ -131,6 +131,11 @@ export class CandidatesComponent implements OnInit {
     });
   }
 
+  formatScore(score: number): string {
+    if (score == null) return '0';
+    return Math.round(score).toString();
+  }
+
   deleteCandidate(id: number) {
     if (!confirm('Delete this candidate?')) return;
     const token = localStorage.getItem('accessToken');

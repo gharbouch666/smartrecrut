@@ -48,124 +48,60 @@
   --radius-xl: 24px;
 }
 
-.app-shell {
-  --sidebar-width: 220px;
-  --bg: #0f1117;
-  --surface: rgba(255, 255, 255, 0.03);
-  --card: rgba(255, 255, 255, 0.025);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  --text: #e5e7eb;
-  --text-muted: rgba(203, 213, 225, 0.65);
-  --text-faint: rgba(255, 255, 255, 0.12);
-  --accent: #5c6dff;
-  --accent-rgb: 92, 109, 255;
-  --accent-dim: rgba(92, 109, 255, 0.12);
-  --accent-hover: #7983ff;
-  --green: #22c55e;
-  --green-rgb: 34, 197, 94;
-  --green-dim: rgba(34, 197, 94, 0.10);
-  --red: #ef4444;
-  --red-rgb: 239, 68, 68;
-  --red-dim: rgba(239, 68, 68, 0.10);
-  --red-on: #111827;
-  --amber: #f59e0b;
-  --amber-rgb: 245, 158, 11;
-  --amber-dim: rgba(245, 158, 11, 0.10);
-  --blue-dim: rgba(92, 109, 255, 0.10);
-  --lime: #22c55e;
-  --lime-rgb: 34, 197, 94;
-  --rose: #ef4444;
-  --glow: #5c6dff;
-  --white-3: rgba(255, 255, 255, 0.03);
-  --white-4: rgba(255, 255, 255, 0.04);
-  --white-5: rgba(255, 255, 255, 0.05);
-  --white-10: rgba(255, 255, 255, 0.10);
-  --white-12: rgba(255, 255, 255, 0.12);
-  --white-15: rgba(255, 255, 255, 0.15);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-}
-
-.app-shell.dark {
-  --sidebar-width: 220px;
-  --bg: #0f1117;
-  --surface: rgba(255, 255, 255, 0.03);
-  --card: rgba(255, 255, 255, 0.025);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  --text: #e5e7eb;
-  --text-muted: rgba(203, 213, 225, 0.65);
-  --text-faint: rgba(255, 255, 255, 0.12);
-  --accent: #5c6dff;
-  --accent-rgb: 92, 109, 255;
-  --accent-dim: rgba(92, 109, 255, 0.12);
-  --accent-hover: #7983ff;
-  --green: #22c55e;
-  --green-rgb: 34, 197, 94;
-  --green-dim: rgba(34, 197, 94, 0.10);
-  --red: #ef4444;
-  --red-rgb: 239, 68, 68;
-  --red-dim: rgba(239, 68, 68, 0.10);
-  --red-on: #111827;
-  --amber: #f59e0b;
-  --amber-rgb: 245, 158, 11;
-  --amber-dim: rgba(245, 158, 11, 0.10);
-  --blue-dim: rgba(92, 109, 255, 0.10);
-  --lime: #22c55e;
-  --lime-rgb: 34, 197, 94;
-  --rose: #ef4444;
-  --glow: #5c6dff;
-  --white-3: rgba(255, 255, 255, 0.03);
-  --white-4: rgba(255, 255, 255, 0.04);
-  --white-5: rgba(255, 255, 255, 0.05);
-  --white-10: rgba(255, 255, 255, 0.10);
-  --white-12: rgba(255, 255, 255, 0.12);
-  --white-15: rgba(255, 255, 255, 0.15);
-}
-
+/* ── Light mode overrides ── */
 .app-shell.light {
-  --sidebar-width: 220px;
-  /* Modern soft palette: warm cream, not cold white */
-  --bg:         #f8f7f4;   /* warm cream field — much softer than gray */
-  --surface:    #fefdfb;   /* crystal but not pure white */
-  --card:       #f5f3ef;   /* warm off-white for panels */
-  --border:     rgba(0, 0, 0, 0.07);
-  --border-subtle: rgba(0, 0, 0, 0.04);
-  --text: #111827;
-  --text-muted: #4b5563;
-  --text-faint: #9ca3af;
-  --accent: #4f46e5;
-  --accent-rgb: 79, 70, 229;
-  --accent-dim: rgba(79, 70, 229, 0.08);
-  --accent-hover: #4338ca;
-  --green: #16a34a;
-  --green-rgb: 22, 163, 74;
-  --green-dim: rgba(22, 163, 74, 0.08);
-  --red: #dc2626;
-  --red-rgb: 220, 38, 38;
-  --red-dim: rgba(220, 38, 38, 0.08);
-  --red-on: #ffffff;
-  --amber: #d97706;
-  --amber-rgb: 217, 119, 6;
-  --amber-dim: rgba(217, 119, 6, 0.08);
-  --blue-dim: rgba(79, 70, 229, 0.08);
-  --lime: #16a34a;
-  --lime-rgb: 22, 163, 74;
-  --rose: #dc2626;
-  --glow: #4f46e5;
-  --white-3: rgba(0, 0, 0, 0.02);
-  --white-4: rgba(0, 0, 0, 0.03);
-  --white-5: rgba(0, 0, 0, 0.04);
-  --white-10: rgba(0, 0, 0, 0.06);
-  --white-12: rgba(0, 0, 0, 0.08);
-  --white-15: rgba(0, 0, 0, 0.10);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --bg:              #ffffff;
+  --surface:         rgba(255, 255, 255, 0.97);
+  --card:            rgba(0, 0, 0, 0.03);
+  --border:          rgba(0, 0, 0, 0.10);
+  --border-subtle:   rgba(0, 0, 0, 0.05);
+  --text:            #1e293b;
+  --text-muted:      rgba(51, 65, 85, 0.65);
+  --text-faint:      rgba(0, 0, 0, 0.18);
+  --accent:          #5c6dff;
+  --accent-dim:      rgba(92, 109, 255, 0.18);
+  --accent-hover:    #7983ff;
+  --green:           #22c55e;
+  --green-dim:       rgba(34, 197, 94, 0.14);
+  --red:             #ef4444;
+  --red-dim:         rgba(239, 68, 68, 0.14);
+  --amber:           #f59e0b;
+  --amber-dim:       rgba(245, 158, 11, 0.14);
+  --blue-dim:        rgba(92, 109, 255, 0.14);
+  --lime:            #22c55e;
+  --rose:            #ef4444;
+  --glow:            #5c6dff;
+  --white-3:   rgba(0, 0, 0, 0.03);
+  --white-4:   rgba(0, 0, 0, 0.04);
+  --white-5:   rgba(0, 0, 0, 0.05);
+  --white-10:  rgba(0, 0, 0, 0.10);
+  --white-12:  rgba(0, 0, 0, 0.12);
+  --white-15:  rgba(0, 0, 0, 0.15);
+}
+
+/* Also scope variables on body so they cascade to sibling <body> backgrounds */
+body.light {
+  --bg:              #ffffff;
+  --surface:         rgba(255, 255, 255, 0.97);
+  --card:            rgba(0, 0, 0, 0.03);
+  --border:          rgba(0, 0, 0, 0.10);
+  --border-subtle:   rgba(0, 0, 0, 0.05);
+  --text:            #1e293b;
+  --text-muted:      rgba(51, 65, 85, 0.65);
+  --text-faint:      rgba(0, 0, 0, 0.18);
+  --accent:          #5c6dff;
+  --accent-dim:      rgba(92, 109, 255, 0.18);
+  --accent-hover:    #7983ff;
+  --green:           #22c55e;
+  --green-dim:       rgba(34, 197, 94, 0.14);
+  --red:             #ef4444;
+  --red-dim:         rgba(239, 68, 68, 0.14);
+  --amber:           #f59e0b;
+  --amber-dim:       rgba(245, 158, 11, 0.14);
+  --blue-dim:        rgba(92, 109, 255, 0.14);
+  --lime:            #22c55e;
+  --rose:            #ef4444;
+  --glow:            #5c6dff;
 }
 
 html { scroll-behavior: smooth; }
@@ -182,28 +118,23 @@ body {
   min-height: 100vh;
 }
 
-/* Critical: Layout styles for app-shell, app-main, and app-content */
-/* Ensures content is properly offset from the sidebar */
 .app-shell {
   display: flex;
   min-height: 100vh;
   background: var(--bg);
 }
 
-/* Sidebar component as flex child */
-app-sidebar {
-  flex-shrink: 0;
-}
-
-main.app-main {
-  flex: 1;
+/* Critical: Layout styles for page-content with sidebar offset */
+main.page-content {
+  margin-left: var(--sidebar-width);
   min-height: 100vh;
   background: var(--bg);
 }
 
 .app-content {
-  max-width: calc(100% - 220px) !important;
-  margin: 0 0 0 220px !important;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 2.5rem 3rem !important;
   min-height: calc(100vh - 5rem);
 }
@@ -211,8 +142,10 @@ main.app-main {
 /* Mobile responsive */
 @media (max-width: 1024px) {
   .app-content {
-    margin-left: 0 !important;
     padding: 1.5rem !important;
+  }
+  main.page-content {
+    margin-left: 0 !important;
   }
 }
 

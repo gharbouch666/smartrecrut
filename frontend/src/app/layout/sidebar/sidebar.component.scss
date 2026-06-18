@@ -1,16 +1,15 @@
 @use '../../_tokens' as *;
 
-// Sidebar styles - uses sticky positioning to stay visible but in document flow
 .sidebar {
-  width: var(--sidebar-width, 220px);
-  background: $surface;
-  border-right: 1px solid $border;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: auto;
-  min-height: 100vh;
-}
+   width: var(--sidebar-width, 220px);
+   background: $surface;
+   border-right: 1px solid $border;
+   display: flex;
+   flex-direction: column;
+   flex-shrink: 0;
+   height: auto;
+   min-height: 100vh;
+  }
 
 .logo-mark {
   width: 32px;
@@ -45,13 +44,13 @@
 }
 
 .sidebar-nav {
-  flex: 1;
-  padding: 1rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow-y: auto;
-}
+    flex: 1;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+  }
 
 .sidebar-footer {
   padding: 0.75rem;

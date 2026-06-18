@@ -59,17 +59,6 @@ public class MatchingService {
             }
         }
 
-        // Check if any mandatory tag is missing - if so, score is 0%
-        for (TagOffre jobTag : jobTags) {
-            if (jobTag.getObligatoire() != null && jobTag.getObligatoire()) {
-                boolean hasMatchingSkill = candidateSkills.stream()
-                    .anyMatch(cs -> cs.getTag().getId().equals(jobTag.getTag().getId()));
-                if (!hasMatchingSkill) {
-                    return 0.0;
-                }
-            }
-        }
-
         double rawScore = totalWeight > 0 ? (earnedWeight / totalWeight) * 100 : 50;
         return Math.max(0.0, Math.min(100.0, rawScore));
     }

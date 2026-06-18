@@ -12,7 +12,7 @@ import { ThemeService } from './core/theme.service';
     @if (showSidebar) {
       <div class="app-shell" [class.dark]="theme.isDarkMode()" [class.light]="!theme.isDarkMode()">
         <app-sidebar></app-sidebar>
-        <main class="app-main">
+        <main class="page-content">
           <div class="app-content">
             <router-outlet></router-outlet>
           </div>

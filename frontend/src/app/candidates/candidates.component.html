@@ -59,7 +59,7 @@
             [class.score-high]="(c.scoreMatching || 0) >= 70"
             [class.score-mid]="(c.scoreMatching || 0) >= 50 && (c.scoreMatching || 0) < 70"
             [class.score-low]="(c.scoreMatching || 0) < 50">
-            {{c.scoreMatching || 0}}%
+            {{formatScore(c.scoreMatching)}}%
           </span>
           <span class="score-label">Score</span>
         </div>

@@ -43,14 +43,29 @@
       <!-- Required Skills -->
       <div class="divider">
         <h3 class="section-title">Required Skills</h3>
+        <p class="text-sm" style="color: var(--text-muted); margin-bottom: 0.5rem;">Click to select/deselect. Selected skills start as optional - use toggle to mark mandatory.</p>
         <div *ngFor="let cat of categories">
           <h4 class="mono section-subtitle">{{cat}}</h4>
           <div class="skill-tags">
             <button *ngFor="let tag of tagsByCategory[cat]" type="button"
-              (click)="toggleTagSelection(tag.id, !isTagRequired(tag.id))"
+              (click)="toggleTagSelection(tag.id)"
               class="skill-tag"
-              [class.skill-tag--selected]="isTagSelected(tag.id)">
+              [class.skill-tag--selected]="isTagSelected(tag.id)"
+              [class.skill-tag--mandatory]="isTagSelected(tag.id) && isTagRequired(tag.id)">
               {{tag.libelle}}
+              <span *ngIf="isTagSelected(tag.id) && isTagRequired(tag.id)" class="mandatory-indicator">*</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="selectedTags.length > 0" style="margin-top: 1rem;">
+          <h4 class="mono section-subtitle">Mark as Mandatory:</h4>
+          <div class="skill-tags">
+            <button *ngFor="let st of selectedTags" type="button"
+              (click)="toggleTagRequirement(st.tagId)"
+              class="skill-tag"
+              [class.skill-tag--mandatory]="st.obligatoire">
+              {{getTagLabel(st.tagId)}}
+              {{st.obligatoire ? '(Mandatory)' : '(Optional)'}}
             </button>
           </div>
         </div>

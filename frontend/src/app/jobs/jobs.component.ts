@@ -126,12 +126,12 @@ export class JobsComponent implements OnInit {
     });
   }
 
-  toggleTagSelection(tagId: number, isRequired: boolean) {
+  toggleTagSelection(tagId: number) {
     const existing = this.selectedTags.find(t => t.tagId === tagId);
     if (existing) {
-      existing.obligatoire = isRequired;
+      this.removeTag(tagId);
     } else {
-      this.selectedTags.push({ tagId, obligatoire: isRequired, poids: 1.0 });
+      this.selectedTags.push({ tagId, obligatoire: false, poids: 1.0 });
     }
   }
 
@@ -158,6 +158,21 @@ export class JobsComponent implements OnInit {
 
   removeTag(tagId: number) {
     this.selectedTags = this.selectedTags.filter(t => t.tagId !== tagId);
+  }
+
+  toggleTagRequirement(tagId: number) {
+    const tag = this.selectedTags.find(t => t.tagId === tagId);
+    if (tag) {
+      tag.obligatoire = !tag.obligatoire;
+    }
+  }
+
+  getTagLabel(tagId: number): string {
+    for (const cat of this.categories) {
+      const tag = this.tagsByCategory[cat]?.find(t => t.id === tagId);
+      if (tag) return tag.libelle;
+    }
+    return '';
   }
 
   toggleForm() {

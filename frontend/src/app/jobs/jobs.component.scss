@@ -227,6 +227,27 @@
       background: rgba($accent-blue, 0.2);
     }
   }
+
+  &.skill-tag--mandatory {
+    background: var(--amber);
+    color: #052e16;
+    border-color: var(--amber);
+
+    &:hover {
+      background: rgba(var(--amber-rgb), 0.2);
+    }
+
+    &.skill-tag--selected {
+      background: var(--amber);
+      color: #052e16;
+      border-color: var(--amber);
+    }
+  }
+
+  .mandatory-indicator {
+    margin-left: 0.25rem;
+    font-weight: bold;
+  }
 }
 
 /* ─── Divider ─── */
