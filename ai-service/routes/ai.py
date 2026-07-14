@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 from typing import List, Optional
-from services.grok_service import (
+from services.ollama_service import (
     generate_job_description,
     generate_interview_questions,
     explain_low_score,

@@ -31,7 +31,7 @@ interface Candidat {
   imports: [CommonModule, FormsModule],
   styleUrls: ['./profile.component.scss'],
   template: `
-    <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="max-width: 1600px; margin: 0 auto;">
       <!-- Header -->
       <div class="page-header">
         <div>

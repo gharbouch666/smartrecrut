@@ -16,7 +16,7 @@ interface User {
   imports: [CommonModule, FormsModule],
   styleUrls: ['./users.component.scss'],
   template: `
-    <div style="max-width: 1400px; margin: 0 auto;">
+    <div style="max-width: 1600px; margin: 0 auto;">
       <div class="page-header">
         <h1 class="page-title">Users Management</h1>
         <p class="page-subtitle">Add, edit, or remove system users</p>

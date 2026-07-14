@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
-export class AiService {
+export class SmartrecruteAiService {
   private baseUrl = 'http://localhost:8001/api/ai';
 
   constructor(private http: HttpClient) {}

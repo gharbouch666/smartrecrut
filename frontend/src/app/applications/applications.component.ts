@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
-import { AiService } from '../core/ai.service';
+import { SmartrecruteAiService } from '../core/smartrecruteAi.service';
 
 interface Candidature {
   id: number;
@@ -38,7 +38,7 @@ export class ApplicationsComponent implements OnInit {
   breakdown: any = null;
   breakdownLoading = false;
 
-  constructor(private http: HttpClient, private router: Router, private ai: AiService) {}
+  constructor(private http: HttpClient, private router: Router, private ai: SmartrecruteAiService) {}
 
   get isCandidate(): boolean {
     return this.userRole === 'CANDIDAT';

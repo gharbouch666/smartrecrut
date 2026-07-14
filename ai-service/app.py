@@ -1,16 +1,16 @@
 """
 SmartRecrute AI Service
-FastAPI service for AI-powered recruitment features using Google Gemini API
+FastAPI service for AI-powered recruitment features using local Ollama
 
 Run: uvicorn main:app --host 0.0.0.0 --port 8001
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes.ai_routes import router as ai_router
+from routes.ai import router as ai_router
 
 app = FastAPI(
     title="SmartRecrute AI API",
-    description="AI-powered recruitment features using Google Gemini",
+    description="AI-powered recruitment features using local Ollama",
     version="1.0.0"
 )
 

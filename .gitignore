@@ -35,5 +35,5 @@ build/
 # Local generated files
 uploads/
 .kilo/
-smartrecrute-ai/.env
-smartrecrute-ai/.venv/
+ai-service/.env
+ai-service/.venv/

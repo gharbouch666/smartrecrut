@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AiService } from '../core/ai.service';
+import { SmartrecruteAiService } from '../core/smartrecruteAi.service';
 
 @Component({
   selector: 'app-candidates',
@@ -45,7 +45,7 @@ export class CandidatesComponent implements OnInit {
     return 0;
   }
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private ai: AiService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private ai: SmartrecruteAiService) {
     this.candidateForm = this.fb.group({
       nom: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],

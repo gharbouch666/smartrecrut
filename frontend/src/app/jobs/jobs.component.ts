@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AiService } from '../core/ai.service';
+import { SmartrecruteAiService } from '../core/smartrecruteAi.service';
 
 interface Tag {
   id: number;
@@ -44,7 +44,7 @@ export class JobsComponent implements OnInit {
   aiLoading = false;
   aiDescription = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private ai: AiService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private ai: SmartrecruteAiService) {
     this.jobForm = this.fb.group({
       titre: ['', Validators.required],
       description: ['', Validators.required],

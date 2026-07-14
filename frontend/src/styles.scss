@@ -8,7 +8,7 @@
 
 :root {
   /* Sidebar width */
-  --sidebar-width: 220px;
+  --sidebar-width: 240px;
 
   /* Dark-default palette (canonical source of truth) — softened */
   --bg:              #0f1117;
@@ -120,22 +120,23 @@ body {
 
 .app-shell {
   display: flex;
+  width: 100%;
   min-height: 100vh;
   background: var(--bg);
 }
 
-/* Critical: Layout styles for page-content with sidebar offset */
+/* Main content takes the remaining width after the sidebar */
 main.page-content {
-  margin-left: var(--sidebar-width);
+  flex: 1 1 auto;
+  min-width: 0;
   min-height: 100vh;
   background: var(--bg);
 }
 
 .app-content {
-  width: 100%;
-  max-width: 1400px;
+  width: min(100%, 1480px);
   margin: 0 auto;
-  padding: 2.5rem 3rem !important;
+  padding: 2rem clamp(1rem, 2.4vw, 2.5rem) !important;
   min-height: calc(100vh - 5rem);
 }
 
@@ -144,9 +145,7 @@ main.page-content {
   .app-content {
     padding: 1.5rem !important;
   }
-  main.page-content {
-    margin-left: 0 !important;
-  }
+
 }
 
 /* Animated premium background */
